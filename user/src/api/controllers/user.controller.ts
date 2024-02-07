@@ -8,6 +8,7 @@ import {
 } from '../../domain/interfaces/use-cases/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
+import { LoginUseCase } from '../../domain/interfaces/use-cases/login.use-case';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -15,19 +16,36 @@ export class UserController implements UserControllerInterface {
     getAllUserUseCase: GetAllUserUseCase;
     getUserUseCase: GetUserUseCase;
     updateUserUseCase: UpdateUserUseCase;
+    loginUseCase: LoginUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
         deleteUserUseCase: DeleteUserUseCase,
         getAllUserUseCase: GetAllUserUseCase,
         getUserUseCase: GetUserUseCase,
-        updateUserUseCase: UpdateUserUseCase
+        updateUserUseCase: UpdateUserUseCase,
+        loginUseCase: LoginUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
         this.getAllUserUseCase = getAllUserUseCase;
         this.getUserUseCase = getUserUseCase;
         this.updateUserUseCase = updateUserUseCase;
+        this.loginUseCase = loginUseCase;
+    }
+    async Login(req: Request, res: Response): Promise<void> {
+        try {
+            const { email, password } = req.body;
+            const userJwt = await this.loginUseCase.execute(email, password);
+
+            req.session = {
+                jwt: userJwt,
+            };
+
+            res.status(200).send(userJwt);
+        } catch (error) {
+            throw error;
+        }
     }
     async createUser(req: Request, res: Response): Promise<void> {
         try {

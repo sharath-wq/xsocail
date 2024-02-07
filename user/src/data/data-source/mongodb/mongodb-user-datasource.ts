@@ -1,4 +1,4 @@
-import { UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
+import { UserModel, UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
 import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
@@ -91,18 +91,19 @@ export class MongoDBUserDataSource implements UserDataSource {
         }
     }
 
-    async findByEmail(email: string): Promise<UserResponseModel | null> {
+    async findByEmail(email: string): Promise<UserModel | null> {
         try {
             const result = await User.findOne({ email: email });
 
             if (result) {
                 return {
                     id: result.id,
-                    username: result.username,
+                    createdAt: result.createdAt,
                     email: result.email,
                     fullName: result.fullName,
-                    createdAt: result.createdAt,
                     isAdmin: result.isAdmin,
+                    password: result.password,
+                    username: result.username,
                 };
             } else {
                 return null;

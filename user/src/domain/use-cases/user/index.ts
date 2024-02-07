@@ -3,5 +3,6 @@ import { UpdateUser } from './update-user.use-case';
 import { DeleteUser } from './delete-user.use-case';
 import { GetAllUsers } from './get-all-user.use-case';
 import { GetUser } from './get-user.use-case';
+import { Login } from './login-user.use-case';
 
-export { CreateUser, UpdateUser, DeleteUser, GetAllUsers, GetUser };
+export { CreateUser, UpdateUser, DeleteUser, GetAllUsers, GetUser, Login };
