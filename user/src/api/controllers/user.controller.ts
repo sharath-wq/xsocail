@@ -43,7 +43,7 @@ export class UserController implements UserControllerInterface {
             await this.deleteUserUseCase.execute(id);
             res.send({ message: 'User Deleted' });
         } catch (error) {
-            res.status(500).send('Something went wrong');
+            throw error;
         }
     }
     async updateUser(req: Request, res: Response): Promise<void> {
@@ -58,7 +58,7 @@ export class UserController implements UserControllerInterface {
             } as UserRequestModel);
             res.status(200).send(updatedUser);
         } catch (error) {
-            res.status(500).send('Something Went Wrong');
+            throw error;
         }
     }
     async getAllUser(req: Request, res: Response): Promise<void> {
@@ -66,7 +66,7 @@ export class UserController implements UserControllerInterface {
             const users = await this.getAllUserUseCase.execute();
             res.send(users);
         } catch (error) {
-            res.status(500).send('Something went wrong');
+            throw error;
         }
     }
     async getUser(req: Request, res: Response): Promise<void> {
@@ -75,7 +75,7 @@ export class UserController implements UserControllerInterface {
             const user = await this.getUserUseCase.execute(id);
             res.send(user);
         } catch (error) {
-            res.status(500).send('Something went wrong');
+            throw error;
         }
     }
 }
