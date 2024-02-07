@@ -6,4 +6,6 @@ export interface UserDataSource {
     deleteOne(id: string): Promise<void>;
     updateOne(id: string, user: UserRequestModel): Promise<UserResponseModel | null>;
     getOne(id: string): Promise<UserResponseModel | null>;
+    findByEmail(email: string): Promise<UserResponseModel | null>;
+    findByUsername(username: string): Promise<UserResponseModel | null>;
 }

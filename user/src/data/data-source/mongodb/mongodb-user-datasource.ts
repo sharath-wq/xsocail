@@ -90,4 +90,46 @@ export class MongoDBUserDataSource implements UserDataSource {
             return null;
         }
     }
+
+    async findByEmail(email: string): Promise<UserResponseModel | null> {
+        try {
+            const result = await User.findOne({ email: email });
+
+            if (result) {
+                return {
+                    id: result.id,
+                    username: result.username,
+                    email: result.email,
+                    fullName: result.fullName,
+                    createdAt: result.createdAt,
+                    isAdmin: result.isAdmin,
+                };
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async findByUsername(username: string): Promise<UserResponseModel | null> {
+        try {
+            const result = await User.findOne({ username: username });
+
+            if (result) {
+                return {
+                    id: result.id,
+                    username: result.username,
+                    email: result.email,
+                    fullName: result.fullName,
+                    createdAt: result.createdAt,
+                    isAdmin: result.isAdmin,
+                };
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    }
 }

@@ -6,4 +6,6 @@ export interface UserRepository {
     updateUser(id: string, data: UserRequestModel): Promise<UserResponseModel | null>;
     getUsers(): Promise<UserResponseModel[] | []>;
     getUser(id: string): Promise<UserResponseModel | null>;
+    getUserByEmail(email: string): Promise<UserResponseModel | null>;
+    getUserByUsername(username: string): Promise<UserResponseModel | null>;
 }

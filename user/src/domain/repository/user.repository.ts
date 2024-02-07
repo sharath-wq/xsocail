@@ -32,4 +32,14 @@ export class UserRepositoryImpl implements UserRepository {
         const result = await this.UserDataSource.getOne(id);
         return result;
     }
+
+    async getUserByEmail(email: string): Promise<UserResponseModel | null> {
+        const result = await this.UserDataSource.findByEmail(email);
+        return result;
+    }
+
+    async getUserByUsername(username: string): Promise<UserResponseModel | null> {
+        const result = await this.UserDataSource.findByUsername(username);
+        return result;
+    }
 }

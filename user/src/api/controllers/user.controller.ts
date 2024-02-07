@@ -34,9 +34,7 @@ export class UserController implements UserControllerInterface {
             const user = await this.createUserUseCase.execute(req.body as UserRequestModel);
             res.status(201).send(user);
         } catch (error) {
-            console.log(error);
-
-            res.status(500).send('Something Went Wrong');
+            throw error;
         }
     }
     async deleteUser(req: Request, res: Response): Promise<void> {
