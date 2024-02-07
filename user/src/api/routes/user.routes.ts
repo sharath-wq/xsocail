@@ -6,6 +6,7 @@ import {
     GetAllUserUseCase,
     GetUserUseCase,
     UpdateUserUseCase,
+    LoginUseCase,
 } from '../../domain/interfaces/use-cases/index';
 import { body } from 'express-validator';
 import { validateRequest } from '@scxsocialcommon/errors';
@@ -15,7 +16,8 @@ export default function UserRouter(
     deleteUserUseCase: DeleteUserUseCase,
     getAllUserUseCase: GetAllUserUseCase,
     getUserUseCase: GetUserUseCase,
-    updateUserUseCase: UpdateUserUseCase
+    updateUserUseCase: UpdateUserUseCase,
+    loginUseCase: LoginUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -23,7 +25,8 @@ export default function UserRouter(
         deleteUserUseCase,
         getAllUserUseCase,
         getUserUseCase,
-        updateUserUseCase
+        updateUserUseCase,
+        loginUseCase
     );
 
     router.get('/', async (req, res) => userController.getAllUser(req, res));
@@ -54,6 +57,16 @@ export default function UserRouter(
         ],
         validateRequest,
         async (req: Request, res: Response) => userController.updateUser(req, res)
+    );
+
+    router.post(
+        '/login',
+        [
+            body('email').isEmail().withMessage('Email must be valid'),
+            body('password').trim().notEmpty().withMessage('Password is required'),
+        ],
+        validateRequest,
+        async (req: Request, res: Response) => userController.Login(req, res)
     );
 
     return router;

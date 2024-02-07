@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import { Password } from '../../../../utils/password';
 
 const UserSchema = new mongoose.Schema(
     {
@@ -83,21 +84,14 @@ const UserSchema = new mongoose.Schema(
     }
 );
 
-UserSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) {
-        next();
+UserSchema.pre('save', async function (done) {
+    if (this.isModified('password')) {
+        const hashed = await Password.toHash(this.get('password'));
+        this.set('password', hashed);
     }
-    const salt = await bcrypt.genSaltSync(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    // if (this.email === "admin") {
-    //     this.isAdmin = true;
-    // }
-    next();
-});
 
-UserSchema.methods.isPasswordMatched = async function (enteredPassword: string) {
-    return await bcrypt.compare(enteredPassword, this.password);
-};
+    done();
+});
 
 const User = mongoose.model('User', UserSchema);
 

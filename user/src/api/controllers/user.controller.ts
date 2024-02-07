@@ -8,6 +8,7 @@ import {
 } from '../../domain/interfaces/use-cases/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
+import { LoginUseCase } from '../../domain/interfaces/use-cases/login.use-case';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -15,28 +16,43 @@ export class UserController implements UserControllerInterface {
     getAllUserUseCase: GetAllUserUseCase;
     getUserUseCase: GetUserUseCase;
     updateUserUseCase: UpdateUserUseCase;
+    loginUseCase: LoginUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
         deleteUserUseCase: DeleteUserUseCase,
         getAllUserUseCase: GetAllUserUseCase,
         getUserUseCase: GetUserUseCase,
-        updateUserUseCase: UpdateUserUseCase
+        updateUserUseCase: UpdateUserUseCase,
+        loginUseCase: LoginUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
         this.getAllUserUseCase = getAllUserUseCase;
         this.getUserUseCase = getUserUseCase;
         this.updateUserUseCase = updateUserUseCase;
+        this.loginUseCase = loginUseCase;
+    }
+    async Login(req: Request, res: Response): Promise<void> {
+        try {
+            const { email, password } = req.body;
+            const userJwt = await this.loginUseCase.execute(email, password);
+
+            req.session = {
+                jwt: userJwt,
+            };
+
+            res.status(200).send(userJwt);
+        } catch (error) {
+            throw error;
+        }
     }
     async createUser(req: Request, res: Response): Promise<void> {
         try {
             const user = await this.createUserUseCase.execute(req.body as UserRequestModel);
             res.status(201).send(user);
         } catch (error) {
-            console.log(error);
-
-            res.status(500).send('Something Went Wrong');
+            throw error;
         }
     }
     async deleteUser(req: Request, res: Response): Promise<void> {
@@ -45,7 +61,7 @@ export class UserController implements UserControllerInterface {
             await this.deleteUserUseCase.execute(id);
             res.send({ message: 'User Deleted' });
         } catch (error) {
-            res.status(500).send('Something went wrong');
+            throw error;
         }
     }
     async updateUser(req: Request, res: Response): Promise<void> {
@@ -60,7 +76,7 @@ export class UserController implements UserControllerInterface {
             } as UserRequestModel);
             res.status(200).send(updatedUser);
         } catch (error) {
-            res.status(500).send('Something Went Wrong');
+            throw error;
         }
     }
     async getAllUser(req: Request, res: Response): Promise<void> {
@@ -68,7 +84,7 @@ export class UserController implements UserControllerInterface {
             const users = await this.getAllUserUseCase.execute();
             res.send(users);
         } catch (error) {
-            res.status(500).send('Something went wrong');
+            throw error;
         }
     }
     async getUser(req: Request, res: Response): Promise<void> {
@@ -77,7 +93,7 @@ export class UserController implements UserControllerInterface {
             const user = await this.getUserUseCase.execute(id);
             res.send(user);
         } catch (error) {
-            res.status(500).send('Something went wrong');
+            throw error;
         }
     }
 }

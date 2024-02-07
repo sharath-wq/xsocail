@@ -1,4 +1,4 @@
-import { UserRequestModel, UserResponseModel } from '../entities/user';
+import { UserModel, UserRequestModel, UserResponseModel } from '../entities/user';
 import { UserRepository } from '../interfaces/repository/user.repository';
 import { UserDataSource } from '../../data/interface/data-source/user-data-source';
 
@@ -30,6 +30,16 @@ export class UserRepositoryImpl implements UserRepository {
 
     async getUser(id: string): Promise<UserResponseModel | null> {
         const result = await this.UserDataSource.getOne(id);
+        return result;
+    }
+
+    async getUserByEmail(email: string): Promise<UserModel | null> {
+        const result = await this.UserDataSource.findByEmail(email);
+        return result;
+    }
+
+    async getUserByUsername(username: string): Promise<UserResponseModel | null> {
+        const result = await this.UserDataSource.findByUsername(username);
         return result;
     }
 }

@@ -1,4 +1,4 @@
-import { UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
+import { UserModel, UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
 import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
@@ -87,6 +87,49 @@ export class MongoDBUserDataSource implements UserDataSource {
             }
         } catch (error) {
             console.log('Cant find User');
+            return null;
+        }
+    }
+
+    async findByEmail(email: string): Promise<UserModel | null> {
+        try {
+            const result = await User.findOne({ email: email });
+
+            if (result) {
+                return {
+                    id: result.id,
+                    createdAt: result.createdAt,
+                    email: result.email,
+                    fullName: result.fullName,
+                    isAdmin: result.isAdmin,
+                    password: result.password,
+                    username: result.username,
+                };
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async findByUsername(username: string): Promise<UserResponseModel | null> {
+        try {
+            const result = await User.findOne({ username: username });
+
+            if (result) {
+                return {
+                    id: result.id,
+                    username: result.username,
+                    email: result.email,
+                    fullName: result.fullName,
+                    createdAt: result.createdAt,
+                    isAdmin: result.isAdmin,
+                };
+            } else {
+                return null;
+            }
+        } catch (error) {
             return null;
         }
     }
