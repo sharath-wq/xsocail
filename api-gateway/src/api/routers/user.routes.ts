@@ -1,9 +1,20 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import { USER_SERVICE_ENDPOINT } from '../endpoints';
+import jwt from 'jsonwebtoken';
 
-export default function UserRouter() {
+import { CreateUserUseCase } from '../../domain/interfaces/use-cases/create-user.use-case';
+import { GetUserUseCase } from '../../domain/interfaces/use-cases/get-user.use-case';
+import { UpdateUserUseCase } from '../../domain/interfaces/use-cases/update-user.use-case';
+
+export default function UserRouter(
+    createUserUseCase: CreateUserUseCase,
+    getUserUseCase: GetUserUseCase,
+    updateUserUseCase: UpdateUserUseCase
+) {
     const router = express.Router();
+
+    // const userController = new UserController
 
     router.get('/', async (req: Request, res: Response) => {
         try {
@@ -96,9 +107,43 @@ export default function UserRouter() {
         try {
             const response = await axios.post(`${USER_SERVICE_ENDPOINT}/users/login`, reqBody);
 
-            req.session = {
-                jwt: response.data.userJwt,
-            };
+            const existingUser = await getUserUseCase.execute(response.data.user.userId);
+
+            if (!existingUser) {
+                const user = await createUserUseCase.execute(response.data.user);
+
+                if (user) {
+                    const userJwt = jwt.sign(
+                        {
+                            userId: user.userId,
+                            isAdmin: user.isAdmin,
+                            username: user.username,
+                        },
+                        process.env.JWT_KEY!
+                    );
+
+                    req.session = {
+                        jwt: userJwt,
+                    };
+                } else {
+                    const newUser = await updateUserUseCase.execute(response.data.user.userId, response.data.user);
+
+                    if (newUser) {
+                        const userJwt = jwt.sign(
+                            {
+                                userId: newUser.userId,
+                                isAdmin: newUser.isAdmin,
+                                username: newUser.username,
+                            },
+                            process.env.JWT_KEY!
+                        );
+
+                        req.session = {
+                            jwt: userJwt,
+                        };
+                    }
+                }
+            }
 
             res.json({ message: 'Login Success' });
         } catch (error) {

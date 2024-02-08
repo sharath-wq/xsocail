@@ -3,6 +3,7 @@ import { UserRepository } from '../../interfaces/repository/user.repository';
 import { LoginUseCase } from '../../interfaces/use-cases/login.use-case';
 import { Password } from '../../../utils/password';
 import jwt from 'jsonwebtoken';
+import { LoginResponseModel } from '../../entities/user';
 
 export class Login implements LoginUseCase {
     UserRepository: UserRepository;
@@ -11,7 +12,7 @@ export class Login implements LoginUseCase {
         this.UserRepository = UserRepository;
     }
 
-    async execute(email: string, password: string): Promise<string> {
+    async execute(email: string, password: string): Promise<LoginResponseModel | null> {
         const existingUser = await this.UserRepository.getUserByEmail(email);
 
         if (!existingUser) {
@@ -24,15 +25,10 @@ export class Login implements LoginUseCase {
             throw new BadRequestError('Invalid Credentialss');
         }
 
-        const userJwt = jwt.sign(
-            {
-                id: existingUser.id,
-                isAdmin: existingUser.isAdmin,
-                username: existingUser.username,
-            },
-            'jsonwebtoken'
-        );
-
-        return userJwt;
+        return {
+            userId: existingUser.id,
+            isAdmin: existingUser.isAdmin,
+            username: existingUser.username,
+        };
     }
 }

@@ -40,9 +40,9 @@ export class UserController implements UserControllerInterface {
     async Login(req: Request, res: Response): Promise<void> {
         try {
             const { email, password } = req.body;
-            const userJwt = await this.loginUseCase.execute(email, password);
+            const user = await this.loginUseCase.execute(email, password);
 
-            res.status(200).send({ userJwt });
+            res.status(200).send({ user });
         } catch (error) {
             throw error;
         }

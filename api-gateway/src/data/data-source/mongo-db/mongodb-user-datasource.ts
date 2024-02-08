@@ -17,19 +17,45 @@ export class MongoDBUserDataSource implements UserDataSource {
             console.log(error);
         }
     }
-    async create(user: UserModel): Promise<void> {
+    async create(user: UserModel): Promise<UserModel | null> {
         try {
-            await User.create(user);
+            const newUser = await User.create(user);
+
+            if (newUser) {
+                return {
+                    userId: user.userId,
+                    username: user.username,
+                    isAdmin: user.isAdmin,
+                };
+            } else {
+                return null;
+            }
         } catch (error) {
             console.log(error);
+            return null;
         }
     }
 
-    async update(userId: string, data: UserModel): Promise<void> {
+    async update(userId: string, data: UserModel): Promise<UserModel | null> {
         try {
-            await User.updateOne({ userId }, data);
+            const updateResult = await User.updateOne({ userId }, data);
+
+            if (updateResult) {
+                const updatedUser = await User.findOne({ userId });
+
+                if (updatedUser) {
+                    return {
+                        userId: updatedUser.userId,
+                        username: updatedUser.username,
+                        isAdmin: updatedUser.isAdmin,
+                    };
+                }
+            }
+
+            return null;
         } catch (error) {
             console.log(error);
+            return null;
         }
     }
 

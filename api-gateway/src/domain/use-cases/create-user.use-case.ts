@@ -2,13 +2,19 @@ import { UserModel } from '../entities/user';
 import { UserRepository } from '../interfaces/repository/user.repository';
 import { CreateUserUseCase } from '../interfaces/use-cases/create-user.use-case';
 
-export class createUser implements CreateUserUseCase {
+export class CreateUser implements CreateUserUseCase {
     UserRepository: UserRepository;
     constructor(UserRepository: UserRepository) {
         this.UserRepository = UserRepository;
     }
 
-    async execute(user: UserModel): Promise<void> {
-        await this.UserRepository.createUser(user);
+    async execute(user: UserModel): Promise<UserModel | null> {
+        const result = await this.UserRepository.createUser(user);
+
+        if (result) {
+            return result;
+        } else {
+            return null;
+        }
     }
 }
