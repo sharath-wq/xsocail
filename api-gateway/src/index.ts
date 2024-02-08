@@ -7,13 +7,17 @@ import { UserRepositoryImpl } from './domain/repository/user.repository';
 import { NotFoundError, errorHandler } from '@scxsocialcommon/errors';
 
 const start = async () => {
-    const datasource = await connect('mongodb://localhost:27017/xsocial');
+    if (!process.env.MONGO_URI) {
+        throw new Error('MONGO URI must be defiend');
+    }
+
+    const datasource = await connect(process.env.MONGO_URI);
 
     if (!datasource) {
         throw new Error('Error Connecting Database');
     }
 
-    app.use('/users', UserRouter());
+    app.use('/api/users', UserRouter());
 
     app.use(errorHandler);
 
