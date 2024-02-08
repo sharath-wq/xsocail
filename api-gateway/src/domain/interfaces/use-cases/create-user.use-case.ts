@@ -1,5 +1,5 @@
 import { UserModel } from '../../entities/user';
 
 export interface CreateUserUseCase {
-    execute(user: UserModel): Promise<void>;
+    execute(user: UserModel): Promise<UserModel | null>;
 }

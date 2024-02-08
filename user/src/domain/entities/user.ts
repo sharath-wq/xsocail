@@ -46,3 +46,9 @@ export interface UserModel {
     };
     isAdmin: boolean;
 }
+
+export interface LoginResponseModel {
+    userId: string;
+    username: string;
+    isAdmin: boolean;
+}

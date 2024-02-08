@@ -7,7 +7,8 @@ export class UpdateUser implements UpdateUserUseCase {
     constructor(UserRepository: UserRepository) {
         this.UserRepository = UserRepository;
     }
-    async execute(userId: string, data: UserModel): Promise<void> {
-        await this.UserRepository.updateUser(userId, data);
+    async execute(userId: string, data: UserModel): Promise<UserModel | null> {
+        const result = await this.UserRepository.updateUser(userId, data);
+        return result;
     }
 }
