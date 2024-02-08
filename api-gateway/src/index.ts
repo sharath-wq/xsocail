@@ -4,7 +4,7 @@ import { connect } from './data/data-source/mongo-db/connection';
 import UserRouter from './api/routers/user.routes';
 
 import { UserRepositoryImpl } from './domain/repository/user.repository';
-import { NotFoundError, errorHandler } from '@scxsocialcommon/errors';
+import { NotFoundError, currentUser, errorHandler } from '@scxsocialcommon/errors';
 import { CreateUser } from './domain/use-cases/create-user.use-case';
 import { GetUser } from './domain/use-cases/get-user.use-case';
 import { UpdateUser } from './domain/use-cases/update-user.use-case';
@@ -29,6 +29,8 @@ const start = async () => {
         new GetUser(new UserRepositoryImpl(datasource)),
         new UpdateUser(new UserRepositoryImpl(datasource))
     );
+
+    app.use(currentUser);
 
     app.use('/api/users', UserMiddleware);
 

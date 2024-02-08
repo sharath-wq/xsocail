@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, response } from 'express';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { USER_SERVICE_ENDPOINT } from '../endpoints';
@@ -17,7 +17,7 @@ export const UserController = (
             const response = await axios.get(`${USER_SERVICE_ENDPOINT}/users`);
             res.json(response.data);
         } catch (error) {
-            handleError(res, error);
+            throw error;
         }
     };
 
@@ -86,23 +86,23 @@ export const UserController = (
                     req.session = {
                         jwt: userJwt,
                     };
-                } else {
-                    const newUser = await updateUserUseCase.execute(response.data.user.userId, response.data.user);
+                }
+            } else {
+                const newUser = await updateUserUseCase.execute(response.data.user.userId, response.data.user);
 
-                    if (newUser) {
-                        const userJwt = jwt.sign(
-                            {
-                                userId: newUser.userId,
-                                isAdmin: newUser.isAdmin,
-                                username: newUser.username,
-                            },
-                            process.env.JWT_KEY!
-                        );
+                if (newUser) {
+                    const userJwt = jwt.sign(
+                        {
+                            userId: newUser.userId,
+                            isAdmin: newUser.isAdmin,
+                            username: newUser.username,
+                        },
+                        process.env.JWT_KEY!
+                    );
 
-                        req.session = {
-                            jwt: userJwt,
-                        };
-                    }
+                    req.session = {
+                        jwt: userJwt,
+                    };
                 }
             }
 
