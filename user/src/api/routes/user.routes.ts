@@ -7,6 +7,7 @@ import {
     GetUserUseCase,
     UpdateUserUseCase,
     LoginUseCase,
+    LogoutUseCase,
 } from '../../domain/interfaces/use-cases/index';
 import { body } from 'express-validator';
 import { validateRequest } from '@scxsocialcommon/errors';
@@ -17,7 +18,8 @@ export default function UserRouter(
     getAllUserUseCase: GetAllUserUseCase,
     getUserUseCase: GetUserUseCase,
     updateUserUseCase: UpdateUserUseCase,
-    loginUseCase: LoginUseCase
+    loginUseCase: LoginUseCase,
+    logoutUseCase: LogoutUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -26,7 +28,8 @@ export default function UserRouter(
         getAllUserUseCase,
         getUserUseCase,
         updateUserUseCase,
-        loginUseCase
+        loginUseCase,
+        logoutUseCase
     );
 
     router.get('/', async (req, res) => userController.getAllUser(req, res));
@@ -68,6 +71,8 @@ export default function UserRouter(
         validateRequest,
         async (req: Request, res: Response) => userController.Login(req, res)
     );
+
+    router.post('/logout', async (req: Request, res: Response) => userController.Logout(req, res));
 
     return router;
 }

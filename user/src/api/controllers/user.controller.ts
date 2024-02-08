@@ -5,10 +5,11 @@ import {
     GetAllUserUseCase,
     GetUserUseCase,
     UpdateUserUseCase,
+    LoginUseCase,
+    LogoutUseCase,
 } from '../../domain/interfaces/use-cases/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
-import { LoginUseCase } from '../../domain/interfaces/use-cases/login.use-case';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -17,6 +18,7 @@ export class UserController implements UserControllerInterface {
     getUserUseCase: GetUserUseCase;
     updateUserUseCase: UpdateUserUseCase;
     loginUseCase: LoginUseCase;
+    logoutUseCase: LogoutUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -24,7 +26,8 @@ export class UserController implements UserControllerInterface {
         getAllUserUseCase: GetAllUserUseCase,
         getUserUseCase: GetUserUseCase,
         updateUserUseCase: UpdateUserUseCase,
-        loginUseCase: LoginUseCase
+        loginUseCase: LoginUseCase,
+        logoutUseCase: LogoutUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -32,6 +35,7 @@ export class UserController implements UserControllerInterface {
         this.getUserUseCase = getUserUseCase;
         this.updateUserUseCase = updateUserUseCase;
         this.loginUseCase = loginUseCase;
+        this.logoutUseCase = logoutUseCase;
     }
     async Login(req: Request, res: Response): Promise<void> {
         try {
@@ -42,11 +46,21 @@ export class UserController implements UserControllerInterface {
                 jwt: userJwt,
             };
 
-            res.status(200).send(userJwt);
+            res.status(200).send({});
         } catch (error) {
             throw error;
         }
     }
+
+    async Logout(req: Request, res: Response): Promise<void> {
+        try {
+            req.session = null;
+            res.send({});
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async createUser(req: Request, res: Response): Promise<void> {
         try {
             const user = await this.createUserUseCase.execute(req.body as UserRequestModel);
