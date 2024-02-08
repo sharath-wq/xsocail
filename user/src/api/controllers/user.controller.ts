@@ -42,11 +42,7 @@ export class UserController implements UserControllerInterface {
             const { email, password } = req.body;
             const userJwt = await this.loginUseCase.execute(email, password);
 
-            req.session = {
-                jwt: userJwt,
-            };
-
-            res.status(200).send({});
+            res.status(200).send({ userJwt });
         } catch (error) {
             throw error;
         }

@@ -95,7 +95,12 @@ export default function UserRouter() {
 
         try {
             const response = await axios.post(`${USER_SERVICE_ENDPOINT}/users/login`, reqBody);
-            res.json(response.data);
+
+            req.session = {
+                jwt: response.data.userJwt,
+            };
+
+            res.json({ message: 'Login Success' });
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 return res.status(error.response?.status || 500).json({
@@ -112,17 +117,10 @@ export default function UserRouter() {
         const reqBody = req.body;
 
         try {
-            const response = await axios.post(`${USER_SERVICE_ENDPOINT}/users/logout`, reqBody);
-            res.json(response.data);
+            req.session = null;
+            res.send({});
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                return res.status(error.response?.status || 500).json({
-                    errors: [{ message: error.message, details: error.response?.data }],
-                });
-            } else {
-                console.error('Error forwarding request', error);
-                res.status(500).json({ errors: [{ message: 'Internal server error' }] });
-            }
+            res.status(500).send('Interanl server error');
         }
     });
 
