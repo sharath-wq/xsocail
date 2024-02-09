@@ -24,3 +24,15 @@ build:
               manual:
                   - src: 'src/**/*.ts'
                     dest: .
+        - image: sharathchandranp/xsocial-client
+          context: client
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'app/**{.js, .jsx}'
+                    dest: .
+                  - src: 'components/**{.js, .jsx}'
+                    dest: .
+                  - src: 'lib/**{.js, .jsx}'
+                    dest: .
