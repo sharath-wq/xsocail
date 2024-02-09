@@ -14,11 +14,13 @@ const LoginPage: React.FC = () => {
                     placeholder='Email'
                     className='border rounded-md px-3 py-2 mb-2 outline-none shadcn-bg-slate-300 shadcn-focus:bg-white'
                 />
+                {false && <span className='text-sm text-red-500 bottom-0 left-0 mt-1 ml-2'>Something went wrong</span>}
                 <Input
                     type='password'
                     placeholder='Password'
                     className='border rounded-md px-3 py-2 mb-4 outline-none shadcn-bg-slate-300 shadcn-focus:bg-white'
                 />
+                {false && <span className='text-sm text-red-500 bottom-0 left-0 mt-1 ml-2'>error</span>}
                 <Button className=' px-4 py-2 rounded-md'>Login</Button>
 
                 <div className='my-4 flex items-center'>
