@@ -1,48 +1,40 @@
-import {
-    AiOutlineHome,
-    AiOutlineSearch,
-    AiOutlineGlobal,
-    AiOutlineMessage,
-    AiOutlineAlert,
-    AiOutlinePlus,
-    AiOutlineUser,
-} from 'react-icons/ai';
+import { Bell, CircleUser, Globe, Home, MessageCircle, PlusCircle, Search } from 'lucide-react';
 
 export const links = [
     {
         label: 'Home',
         link: '/',
-        icon: <AiOutlineHome />,
+        icon: <Home />,
     },
     {
         label: 'Search',
         link: '/search',
-        icon: <AiOutlineSearch />,
+        icon: <Search />,
     },
 
     {
         label: 'Discover',
         link: '/discover',
-        icon: <AiOutlineGlobal />,
+        icon: <Globe />,
     },
     {
         label: 'Chat',
         link: '/chat',
-        icon: <AiOutlineMessage />,
+        icon: <MessageCircle />,
     },
     {
         label: 'Notifications',
         link: '/notifications',
-        icon: <AiOutlineAlert />,
+        icon: <Bell />,
     },
     {
         label: 'Create',
         link: '/create',
-        icon: <AiOutlinePlus />,
+        icon: <PlusCircle />,
     },
     {
         label: 'Account',
         link: '/account',
-        icon: <AiOutlineUser />,
+        icon: <CircleUser />,
     },
 ];

@@ -25,9 +25,6 @@ export default function RootLayout({
         <html lang='en'>
             <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
                 <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-                    <div className='absolute top-5 right-5 sm:block hidden'>
-                        <ModeToggle />
-                    </div>
                     {children}
                 </ThemeProvider>
             </body>

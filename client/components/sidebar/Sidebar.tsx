@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { links } from '@/lib/constants/Links';
 import Link from 'next/link';
+import { LogOut } from 'lucide-react';
 
 const Sidebar = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -25,7 +26,7 @@ const Sidebar = () => {
                             {links.map((link) => (
                                 <li
                                     key={link.label}
-                                    className='p-4 cursor-pointer dark:text-white text-black hover:bg-slate-200 dark:hover:bg-slate-600 flex gap-5 items-center'
+                                    className='p-4 ml-4 font-bold cursor-pointer dark:text-white text-black flex gap-5 items-center rounded-full transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-md hover:bg-slate-200 dark:hover:bg-slate-600'
                                 >
                                     {link.icon}
                                     <Link href={link.link}>{link.label}</Link>
@@ -36,7 +37,8 @@ const Sidebar = () => {
                 </div>
 
                 <div className='p-4 '>
-                    <Button variant={'ghost'} className=' p-2 rounded-md'>
+                    <Button variant={'ghost'} className='p-2 rounded-md flex gap-4'>
+                        <LogOut />
                         Logout
                     </Button>
                 </div>
@@ -69,6 +71,7 @@ const Sidebar = () => {
 
                         <div className='p-4 '>
                             <Button variant={'ghost'} className='dark:text-white text-black p-2 rounded-md'>
+                                <LogOut />
                                 Logout
                             </Button>
                         </div>
