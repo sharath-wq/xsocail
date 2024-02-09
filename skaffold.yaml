@@ -30,9 +30,9 @@ build:
               dockerfile: Dockerfile
           sync:
               manual:
-                  - src: 'app/**{.js, .jsx}'
+                  - src: 'app/**{.js,.jsx,.ts, .tsx}'
                     dest: .
-                  - src: 'components/**{.js, .jsx}'
+                  - src: 'components/**{.js,.jsx, .ts, .tsx}'
                     dest: .
-                  - src: 'lib/**{.js, .jsx}'
+                  - src: 'lib/**{.js,.jsx, .ts, .tsx}'
                     dest: .

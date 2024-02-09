@@ -3,6 +3,7 @@
 import { ButtonLoading } from '@/components/button/LoadingButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
 import useRequest from '@/hooks/useRequest';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -40,7 +41,9 @@ const Register: React.FC = () => {
             password: formData.password,
         },
         onSuccess: () => {
-            setisSubmiting(false);
+            toast({
+                description: 'Registration completed successfully',
+            });
             router.push('/auth/login');
         },
     });
@@ -62,8 +65,6 @@ const Register: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        setisSubmiting(true);
-
         const newErrors = {
             email: formData.email ? '' : 'Email is required',
             fullName: formData.fullName ? '' : 'Full Name is required',
@@ -75,6 +76,8 @@ const Register: React.FC = () => {
         setFormErrors(newErrors);
 
         if (Object.values(newErrors).every((error) => error === '')) {
+            setisSubmiting(true);
+
             try {
                 await doRequest();
                 setisSubmiting(false);
@@ -93,7 +96,7 @@ const Register: React.FC = () => {
         <div className='flex flex-col items-center'>
             {errors}
             <div className='border border-grayBorder p-8 m-2 rounded-md shadow-md flex flex-col w-full sm:w-[400px] shadcn-bg-white shadcn-rounded-md'>
-                <h3 className='text-2xl font-bold mb-10 text-center'>LOGO</h3>
+                <h3 className='text-2xl font-bold mb-10 text-center'>REGISTER</h3>
                 <form className='flex flex-col' onSubmit={handleSubmit}>
                     <Input
                         type='text'
@@ -176,7 +179,7 @@ const Register: React.FC = () => {
             <div className='border border-grayBorder p-6 m-2 rounded-md shadow-md w-full sm:w-[400px] text-center shadcn-bg-white'>
                 <span className=''>
                     Already have an account?{' '}
-                    <Link href='/auth/login' className='text-blue-500'>
+                    <Link href='/auth/login' className='underline font-medium'>
                         Login
                     </Link>
                 </span>
