@@ -123,6 +123,14 @@ export const UserController = (
         }
     };
 
+    const currentUser = async (req: Request, res: Response) => {
+        try {
+            res.send({ currentUser: req.currentUser || null });
+        } catch (error) {
+            res.status(500).send('Internal server error');
+        }
+    };
+
     const handleError = (res: Response, error: any) => {
         if (axios.isAxiosError(error)) {
             res.status(error.response?.status || 500).json({
@@ -142,5 +150,6 @@ export const UserController = (
         updateUser,
         loginUser,
         logoutUser,
+        currentUser,
     };
 };

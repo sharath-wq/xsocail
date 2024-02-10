@@ -30,7 +30,7 @@ const start = async () => {
         new UpdateUser(new UserRepositoryImpl(datasource))
     );
 
-    app.use(currentUser);
+    // app.use(currentUser);
 
     app.use('/api/users', UserMiddleware);
 

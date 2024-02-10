@@ -8,7 +8,7 @@ const createAxiosInstance = ({ req }: CreateAxiosInstanceProps): AxiosInstance =
     if (typeof window === 'undefined') {
         // Server
         return axios.create({
-            baseURL: 'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local',
+            baseURL: 'http://api-gateway-srv:3000',
             headers: req.headers,
         });
     } else {
