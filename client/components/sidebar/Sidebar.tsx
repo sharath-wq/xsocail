@@ -5,12 +5,32 @@ import { Button } from '../ui/button';
 import { links } from '@/lib/constants/Links';
 import Link from 'next/link';
 import { LogOut } from 'lucide-react';
+import useRequest from '@/hooks/useRequest';
+import { useRouter } from 'next/navigation';
+import { toast } from '../ui/use-toast';
 
 const Sidebar = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const router = useRouter();
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const { doRequest } = useRequest({
+        url: '/api/users/logout',
+        method: 'post',
+        body: {},
+        onSuccess: () => {
+            toast({
+                description: 'Logout successful',
+            });
+            router.push('/auth/login');
+        },
+    });
+
+    const handleLogout = () => {
+        doRequest();
     };
 
     return (
@@ -37,7 +57,7 @@ const Sidebar = () => {
                 </div>
 
                 <div className='p-4 '>
-                    <Button variant={'ghost'} className='p-2 rounded-md flex gap-4'>
+                    <Button onClick={handleLogout} variant={'ghost'} className='p-2 rounded-md flex gap-4'>
                         <LogOut />
                         Logout
                     </Button>
@@ -70,7 +90,11 @@ const Sidebar = () => {
                         </nav>
 
                         <div className='p-4 '>
-                            <Button variant={'ghost'} className='dark:text-white text-black p-2 rounded-md'>
+                            <Button
+                                onClick={handleLogout}
+                                variant={'ghost'}
+                                className='dark:text-white text-black p-2 rounded-md'
+                            >
                                 <LogOut />
                                 Logout
                             </Button>

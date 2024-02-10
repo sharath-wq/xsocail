@@ -19,7 +19,7 @@ export default function UserRouter(
     router.delete('/:id', requireAuth, userController.deleteUser);
     router.patch('/:id', requireAuth, userController.updateUser);
     router.post('/login', userController.loginUser);
-    router.post('/logout', requireAuth, userController.logoutUser);
+    router.post('/logout', userController.logoutUser);
     router.get('/currentuser', currentUser, userController.currentUser);
     router.get('/:id', userController.getUserById);
 
