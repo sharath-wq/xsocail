@@ -2,9 +2,18 @@ import { app } from './app';
 import { connect } from './data/data-source/mongodb/connection';
 
 import UserRouter from './api/routes/user.routes';
-import { CreateUser, DeleteUser, GetAllUsers, GetUser, Login, Logout, UpdateUser } from './domain/use-cases/user/index';
+import {
+    CreateUser,
+    CurrentUser,
+    DeleteUser,
+    GetAllUsers,
+    GetUser,
+    Login,
+    Logout,
+    UpdateUser,
+} from './domain/use-cases/user/index';
 import { UserRepositoryImpl } from './domain/repository/user.repository';
-import { NotFoundError, errorHandler } from '@scxsocialcommon/errors';
+import { NotFoundError, currentUser, errorHandler } from '@scxsocialcommon/errors';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -24,10 +33,13 @@ const start = async () => {
         new GetUser(new UserRepositoryImpl(datasource)),
         new UpdateUser(new UserRepositoryImpl(datasource)),
         new Login(new UserRepositoryImpl(datasource)),
-        new Logout()
+        new Logout(),
+        new CurrentUser()
     );
 
-    app.use('/users', UserMiddleware);
+    app.use(currentUser);
+
+    app.use('/api/users', UserMiddleware);
 
     app.use(errorHandler);
 

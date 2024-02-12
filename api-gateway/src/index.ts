@@ -8,6 +8,7 @@ import { NotFoundError, currentUser, errorHandler } from '@scxsocialcommon/error
 import { CreateUser } from './domain/use-cases/create-user.use-case';
 import { GetUser } from './domain/use-cases/get-user.use-case';
 import { UpdateUser } from './domain/use-cases/update-user.use-case';
+import PostRouter from './api/routers/post.routes';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -30,9 +31,13 @@ const start = async () => {
         new UpdateUser(new UserRepositoryImpl(datasource))
     );
 
+    const PostMiddleware = PostRouter();
+
     app.use(currentUser);
 
     app.use('/api/users', UserMiddleware);
+
+    app.use('/api/posts', PostMiddleware);
 
     app.use(errorHandler);
 

@@ -76,7 +76,7 @@ export const UserController = (
                 if (user) {
                     const userJwt = jwt.sign(
                         {
-                            userId: user.userId,
+                            id: user.userId,
                             isAdmin: user.isAdmin,
                             username: user.username,
                         },
@@ -93,7 +93,7 @@ export const UserController = (
                 if (newUser) {
                     const userJwt = jwt.sign(
                         {
-                            userId: newUser.userId,
+                            id: newUser.userId,
                             isAdmin: newUser.isAdmin,
                             username: newUser.username,
                         },
@@ -123,6 +123,14 @@ export const UserController = (
         }
     };
 
+    const currentUser = async (req: Request, res: Response) => {
+        try {
+            res.send({ currentUser: req.currentUser || null });
+        } catch (error) {
+            res.status(500).send('Internal server error');
+        }
+    };
+
     const handleError = (res: Response, error: any) => {
         if (axios.isAxiosError(error)) {
             res.status(error.response?.status || 500).json({
@@ -142,5 +150,6 @@ export const UserController = (
         updateUser,
         loginUser,
         logoutUser,
+        currentUser,
     };
 };

@@ -3,19 +3,19 @@ kind: Config
 deploy:
     kubectl:
         manifests:
-            - ./infra/k8s/*
+            - ./infra/dev-k8s/*
 build:
     local:
         push: false
     artifacts:
-        - image: sharathchandranp/xsocial-api-gateway
-          context: api-gateway
-          docker:
-              dockerfile: Dockerfile
-          sync:
-              manual:
-                  - src: 'src/**/*.ts'
-                    dest: .
+        # - image: sharathchandranp/xsocial-api-gateway
+        #   context: api-gateway
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: 'src/**/*.ts'
+        #             dest: .
         - image: sharathchandranp/xsocial-user
           context: user
           docker:
@@ -23,4 +23,24 @@ build:
           sync:
               manual:
                   - src: 'src/**/*.ts'
+                    dest: .
+        - image: sharathchandranp/xsocial-posts
+          context: post
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'src/**/*.ts'
+                    dest: .
+        - image: sharathchandranp/xsocial-client
+          context: client
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'app/**{.js,.jsx,.ts, .tsx}'
+                    dest: .
+                  - src: 'components/**{.js,.jsx, .ts, .tsx}'
+                    dest: .
+                  - src: 'lib/**{.js,.jsx, .ts, .tsx}'
                     dest: .

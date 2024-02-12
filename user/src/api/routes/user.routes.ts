@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { UserController } from '../controllers/user.controller';
 import {
     CretaeUserUseCase,
@@ -10,7 +10,8 @@ import {
     LogoutUseCase,
 } from '../../domain/interfaces/use-cases/index';
 import { body } from 'express-validator';
-import { validateRequest } from '@scxsocialcommon/errors';
+import { validateRequest, requireAuth, currentUser } from '@scxsocialcommon/errors';
+import { CurrentUserUseCase } from '../../domain/interfaces/use-cases/current-user.use-case';
 
 export default function UserRouter(
     createUserUseCase: CretaeUserUseCase,
@@ -19,7 +20,8 @@ export default function UserRouter(
     getUserUseCase: GetUserUseCase,
     updateUserUseCase: UpdateUserUseCase,
     loginUseCase: LoginUseCase,
-    logoutUseCase: LogoutUseCase
+    logoutUseCase: LogoutUseCase,
+    currentUserUseCase: CurrentUserUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -29,7 +31,8 @@ export default function UserRouter(
         getUserUseCase,
         updateUserUseCase,
         loginUseCase,
-        logoutUseCase
+        logoutUseCase,
+        currentUserUseCase
     );
 
     router.get('/', async (req, res) => userController.getAllUser(req, res));
@@ -46,12 +49,18 @@ export default function UserRouter(
         async (req: Request, res: Response) => userController.createUser(req, res)
     );
 
+    router.get('/currentuser', currentUser, async (req: Request, res: Response, next: NextFunction) =>
+        userController.currentUser(req, res, next)
+    );
+
     router.get('/:id', async (req, res) => userController.getUser(req, res));
 
     router.delete('/:id', async (req, res) => userController.deleteUser(req, res));
 
+    // change the auth check to api gateway
     router.patch(
         '/:id',
+        requireAuth,
         [
             body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
             body('email').isEmail().withMessage('Invalid email address'),

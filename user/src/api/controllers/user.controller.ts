@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import {
     CretaeUserUseCase,
     DeleteUserUseCase,
@@ -11,6 +11,9 @@ import {
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
 
+import jwt from 'jsonwebtoken';
+import { CurrentUserUseCase } from '../../domain/interfaces/use-cases/current-user.use-case';
+
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
     deleteUserUseCase: DeleteUserUseCase;
@@ -19,6 +22,7 @@ export class UserController implements UserControllerInterface {
     updateUserUseCase: UpdateUserUseCase;
     loginUseCase: LoginUseCase;
     logoutUseCase: LogoutUseCase;
+    currentUserUseCase: CurrentUserUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -27,7 +31,8 @@ export class UserController implements UserControllerInterface {
         getUserUseCase: GetUserUseCase,
         updateUserUseCase: UpdateUserUseCase,
         loginUseCase: LoginUseCase,
-        logoutUseCase: LogoutUseCase
+        logoutUseCase: LogoutUseCase,
+        currentUserUseCase: CurrentUserUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -36,11 +41,34 @@ export class UserController implements UserControllerInterface {
         this.updateUserUseCase = updateUserUseCase;
         this.loginUseCase = loginUseCase;
         this.logoutUseCase = logoutUseCase;
+        this.currentUserUseCase = currentUserUseCase;
+    }
+    async currentUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            res.send({ currentUser: req.currentUser || null });
+        } catch (error: any) {
+            next(error);
+        }
     }
     async Login(req: Request, res: Response): Promise<void> {
         try {
             const { email, password } = req.body;
             const user = await this.loginUseCase.execute(email, password);
+
+            if (user) {
+                const userJwt = jwt.sign(
+                    {
+                        id: user.userId,
+                        username: user.username,
+                        isAdmin: user.isAdmin,
+                    },
+                    process.env.JWT_KEY!
+                );
+
+                req.session = {
+                    jwt: userJwt,
+                };
+            }
 
             res.status(200).send({ user });
         } catch (error) {
