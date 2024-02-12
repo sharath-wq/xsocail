@@ -1,103 +1,137 @@
 'use client';
 
-import { ButtonLoading } from '@/components/button/LoadingButton';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
-import useRequest from '@/hooks/useRequest';
+import { z } from 'zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
+import { useRouter } from 'next/navigation';
+import useRequest from '@/hooks/useRequest';
+import { toast } from '@/components/ui/use-toast';
+import { ButtonLoading } from '@/components/button/LoadingButton';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { SignupValidation } from '@/lib/validation';
+
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useForm } from 'react-hook-form';
 
 const Register: React.FC = () => {
-    const [formData, setFormData] = useState({
-        email: '',
-        fullName: '',
-        username: '',
-        password: '',
-        confirmPassword: '',
+    // 1. Define your form.
+    const form = useForm<z.infer<typeof SignupValidation>>({
+        resolver: zodResolver(SignupValidation),
+        defaultValues: {
+            email: '',
+            username: '',
+            fullName: '',
+            password: '',
+            confirmPassword: '',
+        },
     });
 
-    const [formErrors, setFormErrors] = useState({
-        email: '',
-        fullName: '',
-        username: '',
-        password: '',
-        confirmPassword: '',
-    });
+    // 2. Define a submit handler.
+    function onSubmit(values: z.infer<typeof SignupValidation>) {
+        setisSubmiting(true);
+        doRequest(values);
+    }
 
     const [isSubmiting, setisSubmiting] = useState(false);
 
     const router = useRouter();
 
     const { doRequest, errors } = useRequest({
-        url: '/api/users',
+        url: '/api/users/login',
         method: 'post',
-        body: {
-            email: formData.email,
-            username: formData.username,
-            fullName: formData.fullName,
-            password: formData.password,
-        },
+        body: {},
         onSuccess: () => {
+            setisSubmiting(false);
             toast({
-                description: 'Registration completed successfully',
+                description: 'Register Successful',
             });
-            router.push('/auth/login');
+            router.push('/home');
         },
     });
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-
-        setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            [name]: '',
-        }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        const newErrors = {
-            email: formData.email ? '' : 'Email is required',
-            fullName: formData.fullName ? '' : 'Full Name is required',
-            username: formData.username ? '' : 'Username is required',
-            password: formData.password ? '' : 'Password is required',
-            confirmPassword: formData.confirmPassword === formData.password ? '' : 'Passwords do not match',
-        };
-
-        setFormErrors(newErrors);
-
-        if (Object.values(newErrors).every((error) => error === '')) {
-            setisSubmiting(true);
-
-            try {
-                await doRequest();
-                setisSubmiting(false);
-            } catch (error) {
-                setisSubmiting(false);
-            }
-
-            setFormErrors((prevErrors) => ({
-                ...prevErrors,
-                [newErrors.confirmPassword]: newErrors.confirmPassword,
-            }));
-        }
-    };
 
     return (
         <div className='flex flex-col items-center'>
             {errors}
             <div className='border border-grayBorder p-8 m-2 rounded-md shadow-md flex flex-col w-full sm:w-[400px] shadcn-bg-white shadcn-rounded-md'>
                 <h3 className='text-2xl font-bold mb-10 text-center'>REGISTER</h3>
-                <form className='flex flex-col' onSubmit={handleSubmit}>
+
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-4 w-full max-w-5xl'>
+                        <FormField
+                            control={form.control}
+                            name='email'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder='Email' type='text' {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='username'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder='Username' type='text' {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='fullName'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Full Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder='Full Name' type='text' {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='password'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder='Password' type='password' {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='confirmPassword'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Confirm password</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder='Confirm Password' type='password' {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {isSubmiting ? <ButtonLoading /> : <Button className=' px-4 py-2 rounded-md'>Signup</Button>}
+                    </form>
+                </Form>
+
+                {/* <form className='flex flex-col' onSubmit={handleSubmit}>
                     <Input
                         type='text'
                         name='email'
@@ -160,7 +194,7 @@ const Register: React.FC = () => {
                             Signup
                         </Button>
                     )}
-                </form>
+                </form> */}
 
                 <div className='my-4 flex items-center'>
                     <div className='border-t flex-grow'></div>
