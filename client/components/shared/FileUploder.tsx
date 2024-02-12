@@ -2,6 +2,9 @@ import { ImagePlus } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import { Button } from '../ui/button';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
+import { Card, CardContent } from '../ui/card';
+import Image from 'next/image';
 
 type FileUploderProps = {
     fieldChange: (files: File[]) => void;
@@ -10,16 +13,15 @@ type FileUploderProps = {
 
 const FileUploder = ({ fieldChange, mediaUrl }: FileUploderProps) => {
     const [file, setFile] = useState<File[]>([]);
-    const [fileUrl, setFileUrl] = useState('');
+    const [fileUrls, setFileUrls] = useState<string[]>([]);
 
-    const onDrop = useCallback(
-        (acceptedFiles: FileWithPath[]) => {
-            setFile(acceptedFiles);
-            fieldChange(acceptedFiles);
-            setFileUrl(URL.createObjectURL(acceptedFiles[0]));
-        },
-        [file]
-    );
+    const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
+        setFile(acceptedFiles);
+        fieldChange(acceptedFiles);
+
+        const newFileUrls = acceptedFiles.map((file) => URL.createObjectURL(file));
+        setFileUrls(newFileUrls);
+    }, []);
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
@@ -35,16 +37,33 @@ const FileUploder = ({ fieldChange, mediaUrl }: FileUploderProps) => {
         >
             <input className='cursor-pointer' {...getInputProps()} />
 
-            {fileUrl ? (
-                <div className='flex flex-1 justify-center w-full'>
-                    <img src={fileUrl} alt='image' className='h-[480px] w-full rounded-[24px] object-contain' />
-                </div>
+            {fileUrls.length ? (
+                <Carousel className='w-1/2'>
+                    <CarouselContent>
+                        {fileUrls.map((url, index) => (
+                            <CarouselItem key={index}>
+                                <div className='p-1'>
+                                    <Card>
+                                        <CardContent className='flex aspect-square items-center justify-center p-6'>
+                                            <img
+                                                src={url}
+                                                alt={`image-${index}`}
+                                                style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                                            />
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                </Carousel>
             ) : (
                 <div className='flex flex-col items-center justify-center'>
                     <ImagePlus width={96} height={77} />
-                    <h3 className=''>Drag photo here</h3>
+                    <h3>Drag photo here</h3>
                     <p className='text-sm mb-6'>SVG, JPG, JPEG</p>
-
                     <Button variant={'secondary'}>Select from computer</Button>
                 </div>
             )}
