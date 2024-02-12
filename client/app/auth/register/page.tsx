@@ -35,6 +35,8 @@ const Register: React.FC = () => {
     function onSubmit(values: z.infer<typeof SignupValidation>) {
         setisSubmiting(true);
         doRequest(values);
+
+        console.log(values);
     }
 
     const [isSubmiting, setisSubmiting] = useState(false);
@@ -42,7 +44,7 @@ const Register: React.FC = () => {
     const router = useRouter();
 
     const { doRequest, errors } = useRequest({
-        url: '/api/users/login',
+        url: '/api/users',
         method: 'post',
         body: {},
         onSuccess: () => {
@@ -50,7 +52,7 @@ const Register: React.FC = () => {
             toast({
                 description: 'Register Successful',
             });
-            router.push('/home');
+            router.push('/login');
         },
     });
 
@@ -130,71 +132,6 @@ const Register: React.FC = () => {
                         {isSubmiting ? <ButtonLoading /> : <Button className=' px-4 py-2 rounded-md'>Signup</Button>}
                     </form>
                 </Form>
-
-                {/* <form className='flex flex-col' onSubmit={handleSubmit}>
-                    <Input
-                        type='text'
-                        name='email'
-                        placeholder='Email'
-                        className='border rounded-md px-3 py-2 mb-2 outline-none shadcn-bg-slate-300 shadcn-focus:bg-white'
-                        value={formData.email}
-                        onChange={handleInputChange}
-                    />
-                    {formErrors.email && (
-                        <span className='text-sm text-red-500 bottom-0 left-0 mt-1 ml-2'>{formErrors.email}</span>
-                    )}
-                    <Input
-                        type='text'
-                        name='fullName'
-                        placeholder='Full Name'
-                        className='border rounded-md px-3 py-2 mb-2 outline-none shadcn-bg-slate-300 shadcn-focus:bg-white'
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                    />
-                    {formErrors.fullName && (
-                        <span className='text-sm text-red-500 bottom-0 left-0 mt-1 ml-2'>{formErrors.fullName}</span>
-                    )}
-                    <Input
-                        type='text'
-                        name='username'
-                        placeholder='Username'
-                        className='border rounded-md px-3 py-2 mb-2 outline-none shadcn-bg-slate-300 shadcn-focus:bg-white'
-                        value={formData.username}
-                        onChange={handleInputChange}
-                    />
-                    {formErrors.username && (
-                        <span className='text-sm text-red-500 bottom-0 left-0 mt-1 ml-2'>{formErrors.username}</span>
-                    )}
-                    <Input
-                        type='password'
-                        name='password'
-                        placeholder='Password'
-                        className='border rounded-md px-3 py-2 mb-2 outline-none shadcn-bg-slate-300 shadcn-focus:bg-white'
-                        value={formData.password}
-                        onChange={handleInputChange}
-                    />
-                    {formErrors.password && (
-                        <span className='text-sm text-red-500 bottom-0 left-0 mt-1 ml-2'>{formErrors.password}</span>
-                    )}
-                    <Input
-                        type='password'
-                        name='confirmPassword'
-                        placeholder='Confirm Password'
-                        className='border rounded-md px-3 py-2 outline-none shadcn-bg-slate-300 shadcn-focus:bg-white'
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange}
-                    />
-                    {formErrors.confirmPassword && (
-                        <span className='text-sm text-red-500 bottom-0 left-0 mt-1 ml-2'>{formErrors.confirmPassword}</span>
-                    )}
-                    {isSubmiting ? (
-                        <ButtonLoading />
-                    ) : (
-                        <Button type='submit' className='m-4 px-4 py-2 rounded-md'>
-                            Signup
-                        </Button>
-                    )}
-                </form> */}
 
                 <div className='my-4 flex items-center'>
                     <div className='border-t flex-grow'></div>
