@@ -8,11 +8,7 @@ interface UseRequestProps {
     method: Method;
     body: object;
     onSuccess?: (data: any) => void;
-}
-
-interface ErrorResponse {
-    message: string;
-    field: string;
+    contentType?: string;
 }
 
 interface UseRequestResult {
@@ -20,14 +16,22 @@ interface UseRequestResult {
     errors: JSX.Element | null; // Change the type to JSX.Element
 }
 
-const useRequest = ({ url, method, body, onSuccess }: UseRequestProps): UseRequestResult => {
+const useRequest = ({ url, method, body, onSuccess, contentType }: UseRequestProps): UseRequestResult => {
     const [errors, setErrors] = useState<JSX.Element | null>(null); // Change the type to JSX.Element
 
-    const doRequest = async (props: object = {}): Promise<any> => {
+    const doRequest = async (props: object = {}, headers: object = {}): Promise<any> => {
         try {
             setErrors(null);
             // @ts-ignore
-            const response: AxiosResponse = await axios[method](url, { ...body, ...props });
+            const response: AxiosResponse = await axios[method](
+                url,
+                { ...body, ...props },
+                {
+                    headers: {
+                        'Content-Type': contentType,
+                    },
+                }
+            );
 
             if (onSuccess) {
                 onSuccess(response.data);

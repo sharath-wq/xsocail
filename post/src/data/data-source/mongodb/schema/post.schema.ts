@@ -6,10 +6,11 @@ const PostSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        content: {
+        caption: {
             type: String,
+            required: true,
         },
-        media: [
+        imageUrls: [
             {
                 type: String,
             },
@@ -47,6 +48,6 @@ const PostSchema = new mongoose.Schema(
     }
 );
 
-const Post = mongoose.model('User', PostSchema);
+const Post = mongoose.model('Post', PostSchema);
 
 export { Post };

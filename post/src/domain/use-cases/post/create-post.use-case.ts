@@ -1,7 +1,7 @@
 import { CreatePostUseCase } from '../../interfaces/use-cases';
 
 import { PostRepository } from '../../interfaces/repository/post.repository';
-import { PostRequestModel, PostResponseModel } from '../../entities/post';
+import { PostModel, PostRequestModel } from '../../entities/post';
 
 export class CreatePost implements CreatePostUseCase {
     postRepository: PostRepository;
@@ -9,7 +9,7 @@ export class CreatePost implements CreatePostUseCase {
     constructor(postRepository: PostRepository) {
         this.postRepository = postRepository;
     }
-    async execute(post: PostRequestModel, authorId: string): Promise<PostResponseModel | null> {
+    async execute(post: PostRequestModel, authorId: string): Promise<PostModel | null> {
         const result = await this.postRepository.createPost(post, authorId);
         return result;
     }

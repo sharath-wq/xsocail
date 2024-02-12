@@ -1,20 +1,22 @@
 export interface PostRequestModel {
-    content: string;
+    caption: string;
     tags: string[];
+    imageUrls: string[];
 }
 
 export interface PostResponseModel {
     id: string;
-    author: string;
+    tags: string[];
+    imaageUrl: string[];
 }
 
 export interface PostModel {
     id: string;
-    author: string;
-    content: string;
-    media: string[];
+    authorId: string;
+    caption: string;
+    tags: string[];
+    imageUrls: string[];
     likes: string[];
     comments: string[];
     createdAt: Date;
-    tags: string[];
 }

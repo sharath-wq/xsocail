@@ -1,4 +1,4 @@
-import { PostModel, PostRequestModel, PostResponseModel } from '../../../domain/entities/post';
+import { PostModel, PostRequestModel } from '../../../domain/entities/post';
 import { PostDataSource } from '../../interface/data-source/post-data-source';
 
 import { Post } from './schema/post.schema';
@@ -10,27 +10,34 @@ export class MongoDBPostDataSource implements PostDataSource {
 
             return results.map((item) => ({
                 id: item.id,
-                author: item.authorId,
-                content: item.content || '',
-                media: item.media,
+                authorId: item.authorId,
+                caption: item.caption,
+                tags: item.tags,
+                imageUrls: item.imageUrls,
                 likes: item.likes,
                 comments: item.comments,
                 createdAt: item.createdAt,
-                tags: item.tags,
             }));
         } catch (error) {
             console.error('Error finding Posts by author', error);
             throw error;
         }
     }
-    async updateOne(id: string, post: PostRequestModel): Promise<PostResponseModel | null> {
+
+    async updateOne(id: string, post: PostRequestModel): Promise<PostModel | null> {
         try {
             const result = await Post.findByIdAndUpdate(id, post);
 
             if (result) {
                 return {
                     id: result.id,
-                    author: result.authorId,
+                    authorId: result.authorId,
+                    caption: result.caption,
+                    tags: result.tags,
+                    imageUrls: result.imageUrls,
+                    likes: result.likes,
+                    comments: result.comments,
+                    createdAt: result.createdAt,
                 };
             } else {
                 return null;
@@ -41,7 +48,7 @@ export class MongoDBPostDataSource implements PostDataSource {
         }
     }
 
-    async create(post: PostRequestModel, authorId: string): Promise<PostResponseModel | null> {
+    async create(post: PostRequestModel, authorId: string): Promise<PostModel | null> {
         try {
             const result = await Post.create({
                 authorId: authorId,
@@ -50,7 +57,13 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.authorId,
+                    authorId: result.authorId,
+                    caption: result.caption,
+                    tags: result.tags,
+                    imageUrls: result.imageUrls,
+                    likes: result.likes,
+                    comments: result.comments,
+                    createdAt: result.createdAt,
                 };
             } else {
                 return null;
@@ -67,13 +80,13 @@ export class MongoDBPostDataSource implements PostDataSource {
 
             return result.map((item) => ({
                 id: item.id,
-                author: item.authorId,
-                content: item.content || '',
-                media: item.media,
+                authorId: item.authorId,
+                caption: item.caption,
+                tags: item.tags,
+                imageUrls: item.imageUrls,
                 likes: item.likes,
                 comments: item.comments,
                 createdAt: item.createdAt,
-                tags: item.tags,
             }));
         } catch (error) {
             console.error('Error getting Post', error);
@@ -97,13 +110,13 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.authorId,
-                    content: result.content || '',
-                    media: result.media,
+                    authorId: result.authorId,
+                    caption: result.caption,
+                    tags: result.tags,
+                    imageUrls: result.imageUrls,
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
-                    tags: result.tags,
                 };
             } else {
                 return null;
@@ -121,13 +134,13 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.authorId,
-                    content: result.content || '',
-                    media: result.media,
+                    authorId: result.authorId,
+                    caption: result.caption,
+                    tags: result.tags,
+                    imageUrls: result.imageUrls,
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
-                    tags: result.tags,
                 };
             }
 
