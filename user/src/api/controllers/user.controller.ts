@@ -11,6 +11,8 @@ import {
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
 
+import jwt from 'jsonwebtoken';
+
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
     deleteUserUseCase: DeleteUserUseCase;
@@ -41,6 +43,21 @@ export class UserController implements UserControllerInterface {
         try {
             const { email, password } = req.body;
             const user = await this.loginUseCase.execute(email, password);
+
+            if (user) {
+                const userJwt = jwt.sign(
+                    {
+                        id: user.userId,
+                        username: user.username,
+                        isAdmin: user.isAdmin,
+                    },
+                    process.env.JWT_KEY!
+                );
+
+                req.session = {
+                    jwt: userJwt,
+                };
+            }
 
             res.status(200).send({ user });
         } catch (error) {

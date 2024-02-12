@@ -4,7 +4,7 @@ import { connect } from './data/data-source/mongodb/connection';
 import UserRouter from './api/routes/user.routes';
 import { CreateUser, DeleteUser, GetAllUsers, GetUser, Login, Logout, UpdateUser } from './domain/use-cases/user/index';
 import { UserRepositoryImpl } from './domain/repository/user.repository';
-import { NotFoundError, errorHandler } from '@scxsocialcommon/errors';
+import { NotFoundError, currentUser, errorHandler } from '@scxsocialcommon/errors';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -27,7 +27,9 @@ const start = async () => {
         new Logout()
     );
 
-    app.use('/users', UserMiddleware);
+    app.use(currentUser);
+
+    app.use('/api/users', UserMiddleware);
 
     app.use(errorHandler);
 

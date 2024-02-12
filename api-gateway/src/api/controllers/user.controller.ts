@@ -76,7 +76,7 @@ export const UserController = (
                 if (user) {
                     const userJwt = jwt.sign(
                         {
-                            userId: user.userId,
+                            id: user.userId,
                             isAdmin: user.isAdmin,
                             username: user.username,
                         },
@@ -93,7 +93,7 @@ export const UserController = (
                 if (newUser) {
                     const userJwt = jwt.sign(
                         {
-                            userId: newUser.userId,
+                            id: newUser.userId,
                             isAdmin: newUser.isAdmin,
                             username: newUser.username,
                         },

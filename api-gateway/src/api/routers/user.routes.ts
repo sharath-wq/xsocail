@@ -2,7 +2,7 @@ import express from 'express';
 import { CreateUserUseCase } from '../../domain/interfaces/use-cases/create-user.use-case';
 import { GetUserUseCase } from '../../domain/interfaces/use-cases/get-user.use-case';
 import { UpdateUserUseCase } from '../../domain/interfaces/use-cases/update-user.use-case';
-import { UserController } from '../controllers/user.contoller';
+import { UserController } from '../controllers/user.controller';
 
 import { currentUser, requireAuth } from '@scxsocialcommon/errors';
 

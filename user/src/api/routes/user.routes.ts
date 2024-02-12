@@ -10,7 +10,7 @@ import {
     LogoutUseCase,
 } from '../../domain/interfaces/use-cases/index';
 import { body } from 'express-validator';
-import { validateRequest } from '@scxsocialcommon/errors';
+import { validateRequest, requireAuth } from '@scxsocialcommon/errors';
 
 export default function UserRouter(
     createUserUseCase: CretaeUserUseCase,
@@ -50,8 +50,10 @@ export default function UserRouter(
 
     router.delete('/:id', async (req, res) => userController.deleteUser(req, res));
 
+    // change the auth check to api gateway
     router.patch(
         '/:id',
+        requireAuth,
         [
             body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
             body('email').isEmail().withMessage('Invalid email address'),
