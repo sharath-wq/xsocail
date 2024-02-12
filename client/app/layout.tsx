@@ -22,27 +22,27 @@ export default function RootLayout({
 }>) {
     const router = useRouter();
 
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    const [isSuccess, setIsSuccess] = useState<boolean>(true);
 
-    useEffect(() => {
-        (async () => {
-            const { currentUser, error }: any = await getUser();
+    // useEffect(() => {
+    //     (async () => {
+    //         const { currentUser, error }: any = await getUser();
 
-            if (currentUser) {
-                router.push('/home');
-                setIsSuccess(true);
+    //         if (currentUser) {
+    //             router.back();
+    //             setIsSuccess(true);
 
-                return;
-            }
+    //             return;
+    //         }
 
-            if (!currentUser) {
-                router.push('/auth/login');
-                setIsSuccess(true);
+    //         if (!currentUser) {
+    //             router.push('/auth/login');
+    //             setIsSuccess(true);
 
-                return;
-            }
-        })();
-    }, [router]);
+    //             return;
+    //         }
+    //     })();
+    // }, [router]);
 
     return (
         <html lang='en'>
@@ -56,20 +56,20 @@ export default function RootLayout({
     );
 }
 
-async function getUser() {
-    try {
-        const { data } = await axios.get('/api/users/currentuser');
+// async function getUser() {
+//     try {
+//         const { data } = await axios.get('/api/users/currentuser');
 
-        return {
-            currentUser: data.currentUser,
-            error: null,
-        };
-    } catch (e) {
-        const error = e as AxiosError;
+//         return {
+//             currentUser: data.currentUser,
+//             error: null,
+//         };
+//     } catch (e) {
+//         const error = e as AxiosError;
 
-        return {
-            currentUser: null,
-            error,
-        };
-    }
-}
+//         return {
+//             currentUser: null,
+//             error,
+//         };
+//     }
+// }
