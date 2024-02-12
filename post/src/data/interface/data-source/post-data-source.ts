@@ -1,8 +1,8 @@
-import { PostModel, PostRequestModel, PostResponseModel } from '../../../domain/entities/post';
+import { PostModel, PostRequestModel } from '../../../domain/entities/post';
 
 export interface PostDataSource {
-    create(post: PostRequestModel, authorId: string): Promise<PostResponseModel | null>;
-    updateOne(id: string, post: PostRequestModel): Promise<PostResponseModel | null>;
+    create(post: PostRequestModel, authorId: string): Promise<PostModel | null>;
+    updateOne(id: string, post: PostRequestModel): Promise<PostModel | null>;
     getAll(): Promise<PostModel[] | []>;
     deleteOne(id: string): Promise<void>;
     getOne(id: string): Promise<PostModel | null>;

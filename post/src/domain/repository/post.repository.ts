@@ -1,4 +1,4 @@
-import { PostModel, PostRequestModel, PostResponseModel } from '../entities/post';
+import { PostModel, PostRequestModel } from '../entities/post';
 import { PostRepository } from '../interfaces/repository/post.repository';
 import { PostDataSource } from '../../data/interface/data-source/post-data-source';
 
@@ -9,12 +9,12 @@ export class PostRepositoryImpl implements PostRepository {
         this.postDataSource = postDataSource;
     }
 
-    async createPost(post: PostRequestModel, authorId: string): Promise<PostResponseModel | null> {
+    async createPost(post: PostRequestModel, authorId: string): Promise<PostModel | null> {
         const result = await this.postDataSource.create(post, authorId);
         return result;
     }
 
-    async updatePost(id: string, post: PostRequestModel): Promise<PostResponseModel | null> {
+    async updatePost(id: string, post: PostRequestModel): Promise<PostModel | null> {
         const result = await this.postDataSource.updateOne(id, post);
         return result;
     }

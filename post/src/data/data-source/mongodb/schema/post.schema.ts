@@ -6,10 +6,11 @@ const PostSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        content: {
+        caption: {
             type: String,
+            required: true,
         },
-        media: [
+        imageUrls: [
             {
                 type: String,
             },

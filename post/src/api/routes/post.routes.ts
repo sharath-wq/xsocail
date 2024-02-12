@@ -1,6 +1,10 @@
 import express, { Request, Response } from 'express';
 
 import { PostController } from '../controllers/post.controller';
+import multer, { Multer } from 'multer';
+
+const storage = multer.memoryStorage();
+export const upload: Multer = multer({ storage: storage });
 
 import {
     CreatePostUseCase,
@@ -33,8 +37,8 @@ export default function PostRouter(
         postController.getAllPosts(req, res);
     });
 
-    router.post('/', async (req, res) => {
-        postController.createPost(req, res);
+    router.post('/', upload.array('files'), async (req, res, next) => {
+        postController.createPost(req, res, next);
     });
 
     router.patch('/:id', async (req, res, next) => {

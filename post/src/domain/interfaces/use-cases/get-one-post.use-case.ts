@@ -1,5 +1,5 @@
-import { PostResponseModel } from '../../entities/post';
+import { PostModel, PostResponseModel } from '../../entities/post';
 
 export interface GetOnePostUseCase {
-    execute(id: string): Promise<PostResponseModel | null>;
+    execute(id: string): Promise<PostModel | null>;
 }

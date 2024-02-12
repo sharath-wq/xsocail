@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 
+import { cloudinary } from '../../config/cloudinary.config';
+
+import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
+
 import {
     CreatePostUseCase,
     DeletePostUseCase,
@@ -11,6 +15,9 @@ import {
 
 import { PostControllerInterface } from '../interfaces/controllers/post.controller';
 import { NotAuthorizedError, NotFoundError, currentUser } from '@scxsocialcommon/errors';
+
+import { CloudinaryFile } from '../../config/cloudinary.config';
+import sharp from 'sharp';
 
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
@@ -35,15 +42,53 @@ export class PostController implements PostControllerInterface {
         this.getUserPostsUseCase = getUserPostsUseCase;
         this.updatePostUseCase = updatePostUseCase;
     }
-    async createPost(req: Request, res: Response): Promise<void> {
-        const { reqBody } = req.body;
+
+    async createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
         const userId = req.currentUser?.id;
+        const files = req.files as Express.Multer.File[];
+
+        console.log(files);
 
         try {
-            const post = await this.createPostUseCase.execute(reqBody, userId!);
+            const files: CloudinaryFile[] = req.files as CloudinaryFile[];
+            if (!files || files.length === 0) {
+                return next(new Error('No files provided'));
+            }
+
+            const cloudinaryUrls: string[] = [];
+            for (const file of files) {
+                const resizedBuffer: Buffer = await sharp(file.buffer).resize({ width: 800, height: 600 }).toBuffer();
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    {
+                        resource_type: 'auto',
+                        folder: 'posts',
+                    } as any,
+                    (err: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
+                        if (err) {
+                            console.error('Cloudinary upload error:', err);
+                            return next(err);
+                        }
+                        if (!result) {
+                            console.error('Cloudinary upload error: Result is undefined');
+                            return next(new Error('Cloudinary upload result is undefined'));
+                        }
+                        cloudinaryUrls.push(result.secure_url);
+
+                        if (cloudinaryUrls.length === files.length) {
+                            //All files processed now get your images here
+                            req.body.cloudinaryUrls = cloudinaryUrls;
+                            next();
+                        }
+                    }
+                );
+                uploadStream.end(resizedBuffer);
+            }
+
+            const post = await this.createPostUseCase.execute(req.body, userId!);
             res.status(201).send(post);
-        } catch (error) {
-            throw error;
+        } catch (error: any) {
+            console.error('Error creating post:', error);
+            res.status(error.http_code || 500).send({ error: error.message || 'Internal Server Error' });
         }
     }
 
@@ -58,7 +103,7 @@ export class PostController implements PostControllerInterface {
                 throw new NotFoundError();
             }
 
-            if (existingPost.author !== userId) {
+            if (existingPost.authorId !== userId) {
                 throw new NotAuthorizedError();
             }
 
@@ -79,7 +124,7 @@ export class PostController implements PostControllerInterface {
                 throw new NotFoundError();
             }
 
-            if (post.author !== userId) {
+            if (post.authorId !== userId) {
                 throw new NotAuthorizedError();
             }
 
