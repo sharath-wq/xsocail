@@ -18,6 +18,7 @@ import { NotAuthorizedError, NotFoundError, currentUser } from '@scxsocialcommon
 
 import { CloudinaryFile } from '../../config/cloudinary.config';
 import sharp from 'sharp';
+import { PostRequestModel } from '../../domain/entities/post';
 
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
@@ -47,44 +48,50 @@ export class PostController implements PostControllerInterface {
         const userId = req.currentUser?.id;
         const files = req.files as Express.Multer.File[];
 
-        console.log(files);
-
         try {
-            const files: CloudinaryFile[] = req.files as CloudinaryFile[];
-            if (!files || files.length === 0) {
+            const nwePost: PostRequestModel = {
+                caption: req.body.caption,
+                tags: req.body.tags,
+                imageUrls: [],
+            };
+
+            const uploadPromises: Promise<void>[] = [];
+
+            const filesToUpload: CloudinaryFile[] = req.files as CloudinaryFile[];
+            if (!filesToUpload || filesToUpload.length === 0) {
                 return next(new Error('No files provided'));
             }
 
-            const cloudinaryUrls: string[] = [];
-            for (const file of files) {
+            for (const file of filesToUpload) {
                 const resizedBuffer: Buffer = await sharp(file.buffer).resize({ width: 800, height: 600 }).toBuffer();
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    {
-                        resource_type: 'auto',
-                        folder: 'posts',
-                    } as any,
-                    (err: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
-                        if (err) {
-                            console.error('Cloudinary upload error:', err);
-                            return next(err);
+                const uploadPromise = new Promise<void>((resolve, reject) => {
+                    const uploadStream = cloudinary.uploader.upload_stream(
+                        {
+                            resource_type: 'auto',
+                            folder: 'posts',
+                        } as any,
+                        (err: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
+                            if (err) {
+                                console.error('Cloudinary upload error:', err);
+                                reject(err);
+                            } else if (!result) {
+                                console.error('Cloudinary upload error: Result is undefined');
+                                reject(new Error('Cloudinary upload result is undefined'));
+                            } else {
+                                console.log(result.secure_url);
+                                nwePost.imageUrls.push(result.secure_url);
+                                resolve();
+                            }
                         }
-                        if (!result) {
-                            console.error('Cloudinary upload error: Result is undefined');
-                            return next(new Error('Cloudinary upload result is undefined'));
-                        }
-                        cloudinaryUrls.push(result.secure_url);
-
-                        if (cloudinaryUrls.length === files.length) {
-                            //All files processed now get your images here
-                            req.body.cloudinaryUrls = cloudinaryUrls;
-                            next();
-                        }
-                    }
-                );
-                uploadStream.end(resizedBuffer);
+                    );
+                    uploadStream.end(resizedBuffer);
+                });
+                uploadPromises.push(uploadPromise);
             }
 
-            const post = await this.createPostUseCase.execute(req.body, userId!);
+            await Promise.all(uploadPromises);
+
+            const post = await this.createPostUseCase.execute(nwePost, userId!);
             res.status(201).send(post);
         } catch (error: any) {
             console.error('Error creating post:', error);

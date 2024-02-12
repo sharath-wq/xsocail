@@ -37,7 +37,7 @@ export default function PostRouter(
         postController.getAllPosts(req, res);
     });
 
-    router.post('/', upload.array('files'), async (req, res, next) => {
+    router.post('/', upload.array('files[]'), async (req, res, next) => {
         postController.createPost(req, res, next);
     });
 

@@ -5,27 +5,51 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '../ui/textarea';
 import FileUploder from '../shared/FileUploder';
 import { PostValidation } from '@/lib/validation';
+import useRequest from '@/hooks/useRequest';
+import { useState } from 'react';
+import { toast } from '../ui/use-toast';
+import { useRouter } from 'next/navigation';
+import { ButtonLoading } from '../button/LoadingButton';
 
 const PostForm = ({ post }: any) => {
+    const [isSubmiting, setisSubmiting] = useState(false);
+
+    const router = useRouter();
+
     // 1. Define your form.
     const form = useForm<z.infer<typeof PostValidation>>({
         resolver: zodResolver(PostValidation),
         defaultValues: {
             caption: post ? post?.caption : '',
-            file: [],
+            files: [],
             tags: post ? post.tags.join(',') : '',
         },
     });
 
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof PostValidation>) {
-        console.log(values);
+        setisSubmiting(true);
+        doRequest(values);
     }
+
+    const { doRequest, errors } = useRequest({
+        url: '/api/posts',
+        method: 'post',
+        body: {},
+        onSuccess: () => {
+            setisSubmiting(false);
+            toast({
+                description: 'Post Created',
+            });
+            router.push('/home');
+        },
+        contentType: 'multipart/form-data',
+    });
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-9 w-full max-w-5xl '>
@@ -44,7 +68,7 @@ const PostForm = ({ post }: any) => {
                 />
                 <FormField
                     control={form.control}
-                    name='file'
+                    name='files'
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel className=''>Add Photos</FormLabel>
@@ -72,7 +96,7 @@ const PostForm = ({ post }: any) => {
                     <Button variant={'destructive'} type='button'>
                         Cancel
                     </Button>
-                    <Button type='submit'>Submit</Button>
+                    {isSubmiting ? <ButtonLoading /> : <Button type='submit'>Submit</Button>}
                 </div>
             </form>
         </Form>
