@@ -29,7 +29,7 @@ export const links = [
     },
     {
         label: 'Create',
-        link: '/create',
+        link: '/post/new',
         icon: <PlusCircle />,
     },
     {

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 export interface UserControllerInterface {
     createUser(req: Request, res: Response): Promise<void>;
@@ -8,4 +8,5 @@ export interface UserControllerInterface {
     getUser(req: Request, res: Response): Promise<void>;
     Login(req: Request, res: Response): Promise<void>;
     Logout(req: Request, res: Response): Promise<void>;
+    currentUser(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

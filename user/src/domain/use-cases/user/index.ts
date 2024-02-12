@@ -5,5 +5,6 @@ import { GetAllUsers } from './get-all-user.use-case';
 import { GetUser } from './get-user.use-case';
 import { Login } from './login-user.use-case';
 import { Logout } from './logout-user.use-case';
+import { CurrentUser } from './current-user.use-case';
 
-export { CreateUser, UpdateUser, DeleteUser, GetAllUsers, GetUser, Login, Logout };
+export { CreateUser, UpdateUser, DeleteUser, GetAllUsers, GetUser, Login, Logout, CurrentUser };
