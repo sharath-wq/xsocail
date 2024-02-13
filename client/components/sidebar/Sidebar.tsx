@@ -8,6 +8,8 @@ import { LogOut } from 'lucide-react';
 import useRequest from '@/hooks/useRequest';
 import { useRouter } from 'next/navigation';
 import { toast } from '../ui/use-toast';
+import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
+import { useUser } from '@/context/userContext';
 
 const Sidebar = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,12 +35,24 @@ const Sidebar = () => {
         doRequest();
     };
 
+    const { currentUser } = useUser();
+
     return (
         <div className={`flex h-screen fixed left-0 ${isMobileMenuOpen ? 'overflow-hidden' : ''}`}>
             <div className=' w-64 hidden sm:flex justify-between flex-col'>
                 <div className='flex flex-col gap-14'>
-                    <div className='p-4 text-center'>
-                        <h2 className='text-2xl font-bold'>LOGO</h2>
+                    <div className='pt-10 text-center flex items-center justify-center'>
+                        <Avatar className='flex gap-5 items-center'>
+                            <AvatarImage
+                                className='rounded-full'
+                                width={46}
+                                height={46}
+                                src='https://github.com/shadcn.png'
+                                alt='@shadcn'
+                            />
+                            <AvatarFallback>X</AvatarFallback>
+                            <span className='font-bold'>{currentUser?.username}</span>
+                        </Avatar>
                     </div>
 
                     <nav>
