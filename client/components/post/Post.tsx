@@ -13,8 +13,9 @@ import { Bookmark, Heart, MessageCircle, MoreVertical, Send } from 'lucide-react
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
+import { PostData } from '@/types/post';
 
-const Post = () => {
+const Post = ({ authorId, caption, comments, createdAt, id, imageUrls, likes, tags }: PostData) => {
     return (
         <Card>
             <CardHeader>
@@ -57,18 +58,18 @@ const Post = () => {
             <CardContent className='w-full'>
                 <Carousel className='w-full '>
                     <CarouselContent>
-                        {Array.from({ length: 1 }).map((_, index) => (
+                        {Array.from({ length: imageUrls?.length }).map((_, index) => (
                             <CarouselItem key={index}>
                                 <div className='p-1'>
                                     <Card>
                                         <CardContent className='flex aspect-square items-center justify-center p-6'>
                                             <Image
-                                                src={
-                                                    'https://img.freepik.com/premium-photo/enjoying-ice-cream-sunny-day_1048944-4687680.jpg?w=1060'
-                                                }
+                                                src={imageUrls[index]}
                                                 alt={'image'}
-                                                objectFit={'cover'}
-                                                layout={'fill'}
+                                                width={800}
+                                                height={600}
+                                                priority={false}
+                                                placeholder='empty'
                                             />
                                         </CardContent>
                                     </Card>
@@ -101,8 +102,10 @@ const Post = () => {
                 </div>
                 <Separator className='my-2' />
                 <div className='flex w-full ml-8 flex-col items-start'>
-                    <span className='text-2xl'>123 Likes</span>
-                    <span className='text-sm'>44 Comments</span>
+                    <span className='text-3xl'>{caption}</span>
+                    <span className='text-2xl'>{likes?.length} Likes</span>
+                    <span className='text-sm'>{comments?.length} Comments</span>
+                    <span className='text-sm'>{tags && tags.map((tag: string) => tag)}</span>
                 </div>
             </CardFooter>
         </Card>

@@ -47,7 +47,7 @@ const FileUploder = ({ fieldChange, mediaUrl }: FileUploderProps) => {
                                             <img
                                                 src={url}
                                                 alt={`image-${index}`}
-                                                style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                                                style={{ objectFit: 'contain', width: '100%', height: '100%' }}
                                             />
                                         </CardContent>
                                     </Card>
@@ -63,7 +63,9 @@ const FileUploder = ({ fieldChange, mediaUrl }: FileUploderProps) => {
                     <ImagePlus width={96} height={77} />
                     <h3>Drag photo here</h3>
                     <p className='text-sm mb-6'>SVG, JPG, JPEG</p>
-                    <Button variant={'secondary'}>Select from computer</Button>
+                    <Button type='button' variant={'secondary'}>
+                        Select from computer
+                    </Button>
                 </div>
             )}
         </div>

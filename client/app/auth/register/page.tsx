@@ -52,7 +52,7 @@ const Register: React.FC = () => {
             toast({
                 description: 'Register Successful',
             });
-            router.push('/login');
+            router.push('/auth/login');
         },
     });
 
