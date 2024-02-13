@@ -1,5 +1,5 @@
 import mongoose, { mongo } from 'mongoose';
-import { MongoDBUserDataSource } from './mongodb-user-datasource';
+import { MongoDBUserDataSource } from './mongo-db-user-data-source';
 
 export const connect = async (MONGO_URI: string) => {
     try {

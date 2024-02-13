@@ -1,6 +1,6 @@
 import { UserModel } from '../entities/user';
-import { UserRepository } from '../interfaces/repository/user.repository';
-import { UpdateUserUseCase } from '../interfaces/use-cases/update-user.use-case';
+import { UserRepository } from '../interface/repository/user.repository';
+import { UpdateUserUseCase } from '../interface/use-cases/update-user.use-case';
 
 export class UpdateUser implements UpdateUserUseCase {
     UserRepository: UserRepository;

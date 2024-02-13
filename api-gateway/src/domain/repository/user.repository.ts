@@ -1,6 +1,6 @@
 import { UserModel } from '../entities/user';
-import { UserRepository } from '../interfaces/repository/user.repository';
-import { UserDataSource } from '../../data/interfaces/data-source/user-data-source';
+import { UserRepository } from '../interface/repository/user.repository';
+import { UserDataSource } from '../../data/interface/data-source/user-data-source';
 
 export class UserRepositoryImpl implements UserRepository {
     UserDataSource: UserDataSource;

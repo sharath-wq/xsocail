@@ -1,6 +1,6 @@
 import { UserModel } from '../entities/user';
-import { UserRepository } from '../interfaces/repository/user.repository';
-import { GetUserUseCase } from '../interfaces/use-cases/get-user.use-case';
+import { UserRepository } from '../interface/repository/user.repository';
+import { GetUserUseCase } from '../interface/use-cases/get-user.use-case';
 
 export class GetUser implements GetUserUseCase {
     UserRepository: UserRepository;

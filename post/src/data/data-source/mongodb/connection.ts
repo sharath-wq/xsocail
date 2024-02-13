@@ -1,4 +1,4 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 import { MongoDBPostDataSource } from './mongodb-post-datasource';
 
 export const connect = async (MONGO_URI: string) => {

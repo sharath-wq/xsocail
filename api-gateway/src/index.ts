@@ -1,14 +1,7 @@
+import { NotFoundError, currentUser, errorHandler, requireAuth } from '@scxsocialcommon/errors';
 import { app } from './app';
-import { connect } from './data/data-source/mongo-db/connection';
-
-import UserRouter from './api/routers/user.routes';
-
-import { UserRepositoryImpl } from './domain/repository/user.repository';
-import { NotFoundError, currentUser, errorHandler } from '@scxsocialcommon/errors';
-import { CreateUser } from './domain/use-cases/create-user.use-case';
-import { GetUser } from './domain/use-cases/get-user.use-case';
-import { UpdateUser } from './domain/use-cases/update-user.use-case';
-import PostRouter from './api/routers/post.routes';
+import { connect } from 'mongoose';
+import UserRouter from './api/routes/user.router';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -25,19 +18,11 @@ const start = async () => {
         throw new Error('Error Connecting Database');
     }
 
-    const UserMiddleware = UserRouter(
-        new CreateUser(new UserRepositoryImpl(datasource)),
-        new GetUser(new UserRepositoryImpl(datasource)),
-        new UpdateUser(new UserRepositoryImpl(datasource))
-    );
-
-    const PostMiddleware = PostRouter();
+    const UserMiddleware = UserRouter();
 
     app.use(currentUser);
 
-    app.use('/api/users', UserMiddleware);
-
-    app.use('/api/posts', PostMiddleware);
+    app.use('/api/users/', UserMiddleware);
 
     app.use(errorHandler);
 
@@ -46,7 +31,7 @@ const start = async () => {
     });
 
     app.listen(3000, () => {
-        console.log('Auth Server running on port 3000 🚀.');
+        console.log('Auth Server running on port 3000 🚀');
     });
 };
 

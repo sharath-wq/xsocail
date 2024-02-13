@@ -8,14 +8,14 @@ build:
     local:
         push: false
     artifacts:
-        # - image: sharathchandranp/xsocial-api-gateway
-        #   context: api-gateway
-        #   docker:
-        #       dockerfile: Dockerfile
-        #   sync:
-        #       manual:
-        #           - src: 'src/**/*.ts'
-        #             dest: .
+        - image: sharathchandranp/xsocial-api-gateway
+          context: api-gateway
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'src/**/*.ts'
+                    dest: .
         - image: sharathchandranp/xsocial-user
           context: user
           docker:

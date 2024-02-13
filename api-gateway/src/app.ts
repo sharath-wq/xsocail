@@ -6,8 +6,9 @@ import morgan from 'morgan';
 
 const app = express();
 app.set('trust proxy', true);
-app.use(json());
 app.use(morgan('dev'));
+app.use(json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
     cookieSession({
         signed: false,
