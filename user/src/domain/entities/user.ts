@@ -14,7 +14,7 @@ export interface UserResponseModel {
     email: string;
     fullName: string;
     bio?: string;
-    imageUrl?: string;
+    imageUrl: string;
     gender?: 'male' | 'female';
     trackers?: string[];
     tracking?: string[];
@@ -34,7 +34,7 @@ export interface UserModel {
     password: string;
     fullName: string;
     bio?: string;
-    imageUrl?: string;
+    imageUrl: string;
     gender?: 'male' | 'female';
     trackers?: string[];
     tracking?: string[];

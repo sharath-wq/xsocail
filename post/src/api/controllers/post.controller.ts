@@ -14,7 +14,7 @@ import {
 } from '../../domain/interfaces/use-cases/';
 
 import { PostControllerInterface } from '../interfaces/controllers/post.controller';
-import { NotAuthorizedError, NotFoundError, currentUser } from '@scxsocialcommon/errors';
+import { NotAuthorizedError, NotFoundError } from '@scxsocialcommon/errors';
 
 import { CloudinaryFile } from '../../config/cloudinary.config';
 import sharp from 'sharp';

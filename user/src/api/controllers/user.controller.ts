@@ -12,7 +12,8 @@ import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
 
 import jwt from 'jsonwebtoken';
-import { CurrentUserUseCase } from '../../domain/interfaces/use-cases/current-user.use-case';
+import { UserCreatedPublisher } from '../events/pub/user-updated-publisher';
+import { natsWrapper } from '../../../nats-wrapper';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -22,7 +23,6 @@ export class UserController implements UserControllerInterface {
     updateUserUseCase: UpdateUserUseCase;
     loginUseCase: LoginUseCase;
     logoutUseCase: LogoutUseCase;
-    currentUserUseCase: CurrentUserUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -31,8 +31,7 @@ export class UserController implements UserControllerInterface {
         getUserUseCase: GetUserUseCase,
         updateUserUseCase: UpdateUserUseCase,
         loginUseCase: LoginUseCase,
-        logoutUseCase: LogoutUseCase,
-        currentUserUseCase: CurrentUserUseCase
+        logoutUseCase: LogoutUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -41,14 +40,6 @@ export class UserController implements UserControllerInterface {
         this.updateUserUseCase = updateUserUseCase;
         this.loginUseCase = loginUseCase;
         this.logoutUseCase = logoutUseCase;
-        this.currentUserUseCase = currentUserUseCase;
-    }
-    async currentUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            res.send({ currentUser: req.currentUser || null });
-        } catch (error: any) {
-            next(error);
-        }
     }
     async Login(req: Request, res: Response): Promise<void> {
         try {
@@ -88,6 +79,16 @@ export class UserController implements UserControllerInterface {
     async createUser(req: Request, res: Response): Promise<void> {
         try {
             const user = await this.createUserUseCase.execute(req.body as UserRequestModel);
+
+            if (user) {
+                await new UserCreatedPublisher(natsWrapper.client).publish({
+                    userId: user.id,
+                    imageUrl: user.imageUrl,
+                    isAdmin: user.isAdmin,
+                    username: user.username,
+                });
+            }
+
             res.status(201).send(user);
         } catch (error) {
             throw error;

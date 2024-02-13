@@ -27,6 +27,7 @@ const UserSchema = new mongoose.Schema(
         },
         imageUrl: {
             type: String,
+            required: true,
             default: 'https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg',
         },
         gender: {
