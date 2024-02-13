@@ -14,6 +14,7 @@ import { UserControllerInterface } from '../interfaces/controllers/user.controll
 import jwt from 'jsonwebtoken';
 import { UserCreatedPublisher } from '../events/pub/user-updated-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
+import { UserUpdatedPubliser } from '../events/pub/user-created-publisher';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -113,6 +114,16 @@ export class UserController implements UserControllerInterface {
                 bio,
                 fullName,
             } as UserRequestModel);
+
+            if (updatedUser) {
+                await new UserUpdatedPubliser(natsWrapper.client).publish({
+                    userId: updatedUser.id,
+                    imageUrl: updatedUser.imageUrl,
+                    isAdmin: updatedUser.isAdmin,
+                    username: updatedUser.username,
+                });
+            }
+
             res.status(200).send(updatedUser);
         } catch (error) {
             throw error;
