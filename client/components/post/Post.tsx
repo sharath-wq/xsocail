@@ -64,11 +64,11 @@ const Post = () => {
                                         <CardContent className='flex aspect-square items-center justify-center p-6'>
                                             <Image
                                                 src={
-                                                    'https://img.freepik.com/premium-photo/enjoying-ice-cream-sunny-day_1048944-4687680.jpg?w=1060'
+                                                    'https://res.cloudinary.com/djnljzyhb/image/upload/v1707799689/posts/pmby4vdfgc8u7enchklv.jpg'
                                                 }
                                                 alt={'image'}
-                                                objectFit={'cover'}
-                                                layout={'fill'}
+                                                width={800}
+                                                height={600}
                                             />
                                         </CardContent>
                                     </Card>
