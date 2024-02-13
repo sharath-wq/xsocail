@@ -63,7 +63,9 @@ const FileUploder = ({ fieldChange, mediaUrl }: FileUploderProps) => {
                     <ImagePlus width={96} height={77} />
                     <h3>Drag photo here</h3>
                     <p className='text-sm mb-6'>SVG, JPG, JPEG</p>
-                    <Button variant={'secondary'}>Select from computer</Button>
+                    <Button type='button' variant={'secondary'}>
+                        Select from computer
+                    </Button>
                 </div>
             )}
         </div>
