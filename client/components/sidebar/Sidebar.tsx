@@ -47,11 +47,11 @@ const Sidebar = () => {
                                 className='rounded-full'
                                 width={46}
                                 height={46}
-                                src='https://github.com/shadcn.png'
+                                src={currentUser?.imageUrl}
                                 alt='@shadcn'
                             />
                             <AvatarFallback>X</AvatarFallback>
-                            <span className='font-bold'>{currentUser?.username}</span>
+                            <span className='font-bold'>@{currentUser?.username}</span>
                         </Avatar>
                     </div>
 

@@ -9,10 +9,10 @@ const Home: React.FC = () => {
     const router = useRouter();
 
     useEffect(() => {
-        if (currentUser) {
-            router.push('/home');
-        } else {
+        if (!currentUser) {
             router.push('/auth/login');
+        } else {
+            router.push('/home');
         }
     }, [currentUser, router]);
 

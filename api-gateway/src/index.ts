@@ -60,7 +60,7 @@ const start = async () => {
         createProxyMiddleware({
             target: POST_SERVICE_ENDPOINT,
             changeOrigin: true,
-            pathRewrite: { '^/api/posts/': '/' },
+            pathRewrite: { '^/api/posts': '/' },
         })
     );
 

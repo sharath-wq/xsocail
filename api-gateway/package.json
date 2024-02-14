@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@scxsocialcommon/errors": "^1.0.14",
+    "@scxsocialcommon/errors": "^1.0.16",
     "@scxsocialcommon/event": "^1.0.3",
     "@types/axios": "^0.14.0",
     "@types/bcrypt": "^5.0.2",

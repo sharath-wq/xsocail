@@ -60,9 +60,10 @@ export class UserController implements UserControllerInterface {
             if (response.data.user) {
                 const userJwt = jwt.sign(
                     {
-                        id: response.data.user.userId,
+                        userId: response.data.user.userId,
                         username: response.data.user.username,
                         isAdmin: response.data.user.isAdmin,
+                        imageUrl: response.data.user.imageUrl,
                     },
                     process.env.JWT_KEY!
                 );
@@ -133,7 +134,7 @@ export class UserController implements UserControllerInterface {
                 return;
             }
 
-            const user = await this.getUserUseCase.execute(req.currentUser.id);
+            const user = await this.getUserUseCase.execute(req.currentUser.userId);
 
             if (user) {
                 res.send({ currentUser: req.currentUser });

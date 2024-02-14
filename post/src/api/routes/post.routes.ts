@@ -53,9 +53,17 @@ export default function PostRouter(
         }
     );
 
-    router.patch('/:id', async (req: Request, res: Response, next: NextFunction) => {
-        postController.updatePost(req, res, next);
-    });
+    router.patch(
+        '/:id',
+        [
+            body('caption').notEmpty().withMessage('Caption is required'),
+            body('tags').notEmpty().withMessage('Tags is requried'),
+        ],
+        validateRequest,
+        async (req: Request, res: Response, next: NextFunction) => {
+            postController.updatePost(req, res, next);
+        }
+    );
 
     router.get('/:id', async (req, res) => {
         postController.getOnePost(req, res);
