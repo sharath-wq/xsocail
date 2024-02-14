@@ -36,7 +36,7 @@ const start = async () => {
 
     app.use(currentUser);
 
-    app.use('/api/posts', requireAuth, PostMiddleware);
+    app.use(PostMiddleware);
 
     app.use(errorHandler);
 

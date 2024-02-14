@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserControllerInterface } from '../interface/controllers/user.controller';
 import axios from 'axios';
-import { USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
+import { POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import jwt from 'jsonwebtoken';
@@ -93,6 +93,7 @@ export class UserController implements UserControllerInterface {
             res.status(error?.response?.status).send(error.response.data);
         }
     }
+
     async userService(req: Request, res: Response, next: NextFunction): Promise<void> {
         const path = req.originalUrl.replace('/api/users', '');
 

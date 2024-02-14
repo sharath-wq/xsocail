@@ -9,6 +9,10 @@ import { UpdateUser } from './domain/use-cases/update-user.use-case';
 import { natsWrapper } from './nats-wrapper';
 import { UserCreatedListener } from './api/events/user-created-listener';
 import { UserUpdatedListener } from './api/events/user-updated-listener';
+import PostRouter from './api/routes/post.router';
+
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import { POST_SERVICE_ENDPOINT } from './constants/endpoints';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -43,9 +47,22 @@ const start = async () => {
         new UpdateUser(new UserRepositoryImpl(datasource))
     );
 
+    const PostMiddleware = PostRouter();
+
     app.use(currentUser);
 
     app.use('/api/users/', UserMiddleware);
+
+    // Post Service
+    app.use(
+        '/api/posts',
+        requireAuth,
+        createProxyMiddleware({
+            target: POST_SERVICE_ENDPOINT,
+            changeOrigin: true,
+            pathRewrite: { '^/api/posts': '' },
+        })
+    );
 
     app.use(errorHandler);
 
