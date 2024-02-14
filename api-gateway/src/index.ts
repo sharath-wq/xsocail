@@ -8,6 +8,7 @@ import { GetUser } from './domain/use-cases/get-user.use-case';
 import { UpdateUser } from './domain/use-cases/update-user.use-case';
 import { natsWrapper } from './nats-wrapper';
 import { UserCreatedListener } from './api/events/user-created-listener';
+import { UserUpdatedListener } from './api/events/user-updated-listener';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -63,6 +64,7 @@ const start = async () => {
         process.on('SIGTERM', () => natsWrapper.client.close());
 
         new UserCreatedListener(natsWrapper.client, new CreateUser(new UserRepositoryImpl(datasource))).listen();
+        new UserUpdatedListener(natsWrapper.client, new UpdateUser(new UserRepositoryImpl(datasource))).listen;
     } catch (error) {
         console.log(error);
     }

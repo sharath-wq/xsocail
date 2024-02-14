@@ -127,8 +127,18 @@ export class UserController implements UserControllerInterface {
 
     async getCurrentUser(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            // Need to impliment the logic to verify the user
-            res.send({ currentUser: req.currentUser || null });
+            if (!req.currentUser) {
+                res.send({ currentUser: null });
+                return;
+            }
+
+            const user = await this.getUserUseCase.execute(req.currentUser.id);
+
+            if (user) {
+                res.send({ currentUser: req.currentUser });
+            }
+
+            res.send({ currentUser: null });
         } catch (error) {
             next(error);
         }

@@ -23,7 +23,6 @@ export class UserCreatedListener extends Listener<UserCreatedEvent> {
 
         try {
             const user = await this.createUserUseCase.execute(data);
-            console.log(user);
 
             if (user) {
                 msg.ack();
