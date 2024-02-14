@@ -42,7 +42,7 @@ const start = async () => {
 
     app.use(currentUser);
 
-    app.use('/api/users', UserMiddleware);
+    app.use(UserMiddleware);
 
     app.use(errorHandler);
 

@@ -6,6 +6,10 @@ export default function UserRouter() {
 
     const userController = new UserController();
 
+    router.all('/*', async (req, res, next) => {
+        userController.userService(req, res, next);
+    });
+
     router.get('/currentuser', async (req, res, next) => {
         userController.getCurrentUser(req, res, next);
     });

@@ -20,7 +20,8 @@
   "license": "ISC",
   "dependencies": {
     "@scxsocialcommon/errors": "^1.0.14",
-    "@scxsocialcommon/events": "^1.0.1",
+    "@scxsocialcommon/event": "^1.0.3",
+    "@types/axios": "^0.14.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-session": "^2.0.48",
     "@types/express": "^4.17.21",
@@ -28,6 +29,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.9",
     "@types/multer": "^1.4.11",
+    "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.0.1",
     "cookie-session": "^2.0.0",

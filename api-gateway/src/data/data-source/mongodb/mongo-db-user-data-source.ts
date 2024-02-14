@@ -17,6 +17,7 @@ export class MongoDBUserDataSource implements UserDataSource {
             return null;
         }
     }
+
     async create(user: UserModel): Promise<UserModel | null> {
         try {
             const newUser = await User.create(user);
