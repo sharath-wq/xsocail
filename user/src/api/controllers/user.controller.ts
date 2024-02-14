@@ -47,21 +47,6 @@ export class UserController implements UserControllerInterface {
             const { email, password } = req.body;
             const user = await this.loginUseCase.execute(email, password);
 
-            if (user) {
-                const userJwt = jwt.sign(
-                    {
-                        id: user.userId,
-                        username: user.username,
-                        isAdmin: user.isAdmin,
-                    },
-                    process.env.JWT_KEY!
-                );
-
-                req.session = {
-                    jwt: userJwt,
-                };
-            }
-
             res.status(200).send({ user });
         } catch (error) {
             next(error);
@@ -70,7 +55,6 @@ export class UserController implements UserControllerInterface {
 
     async Logout(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            req.session = null;
             res.send({});
         } catch (error) {
             next(error);
