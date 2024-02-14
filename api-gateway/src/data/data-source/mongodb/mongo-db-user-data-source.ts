@@ -1,6 +1,6 @@
 import { UserModel } from '../../../domain/entities/user';
-import { UserDataSource } from '../../interfaces/data-source/user-data-source';
-import { User } from './Schema/user.schema';
+import { UserDataSource } from '../../interface/data-source/user-data-source';
+import { User } from './schema/user';
 
 export class MongoDBUserDataSource implements UserDataSource {
     async getOne(userId: string): Promise<UserModel | null> {
@@ -13,20 +13,17 @@ export class MongoDBUserDataSource implements UserDataSource {
                 return null;
             }
         } catch (error) {
-            return null;
             console.log(error);
+            return null;
         }
     }
+
     async create(user: UserModel): Promise<UserModel | null> {
         try {
             const newUser = await User.create(user);
 
             if (newUser) {
-                return {
-                    userId: user.userId,
-                    username: user.username,
-                    isAdmin: user.isAdmin,
-                };
+                return newUser;
             } else {
                 return null;
             }
@@ -38,18 +35,10 @@ export class MongoDBUserDataSource implements UserDataSource {
 
     async update(userId: string, data: UserModel): Promise<UserModel | null> {
         try {
-            const updateResult = await User.updateOne({ userId }, data);
+            const updateResult = await User.findOneAndUpdate({ userId }, data);
 
             if (updateResult) {
-                const updatedUser = await User.findOne({ userId });
-
-                if (updatedUser) {
-                    return {
-                        userId: updatedUser.userId,
-                        username: updatedUser.username,
-                        isAdmin: updatedUser.isAdmin,
-                    };
-                }
+                return updateResult;
             }
 
             return null;

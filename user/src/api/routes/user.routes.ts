@@ -11,7 +11,6 @@ import {
 } from '../../domain/interfaces/use-cases/index';
 import { body } from 'express-validator';
 import { validateRequest, requireAuth, currentUser } from '@scxsocialcommon/errors';
-import { CurrentUserUseCase } from '../../domain/interfaces/use-cases/current-user.use-case';
 
 export default function UserRouter(
     createUserUseCase: CretaeUserUseCase,
@@ -20,8 +19,7 @@ export default function UserRouter(
     getUserUseCase: GetUserUseCase,
     updateUserUseCase: UpdateUserUseCase,
     loginUseCase: LoginUseCase,
-    logoutUseCase: LogoutUseCase,
-    currentUserUseCase: CurrentUserUseCase
+    logoutUseCase: LogoutUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -31,11 +29,10 @@ export default function UserRouter(
         getUserUseCase,
         updateUserUseCase,
         loginUseCase,
-        logoutUseCase,
-        currentUserUseCase
+        logoutUseCase
     );
 
-    router.get('/', async (req, res) => userController.getAllUser(req, res));
+    router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
 
     router.post(
         '/',
@@ -46,21 +43,16 @@ export default function UserRouter(
             body('fullName').isLength({ min: 1 }).withMessage('Full name is required'),
         ],
         validateRequest,
-        async (req: Request, res: Response) => userController.createUser(req, res)
+        async (req: Request, res: Response, next: NextFunction) => userController.createUser(req, res, next)
     );
 
-    router.get('/currentuser', currentUser, async (req: Request, res: Response, next: NextFunction) =>
-        userController.currentUser(req, res, next)
-    );
+    router.get('/:id', async (req, res, next) => userController.getUser(req, res, next));
 
-    router.get('/:id', async (req, res) => userController.getUser(req, res));
-
-    router.delete('/:id', async (req, res) => userController.deleteUser(req, res));
+    router.delete('/:id', async (req, res, next) => userController.deleteUser(req, res, next));
 
     // change the auth check to api gateway
     router.patch(
         '/:id',
-        requireAuth,
         [
             body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
             body('email').isEmail().withMessage('Invalid email address'),
@@ -68,7 +60,7 @@ export default function UserRouter(
             body('fullName').isLength({ min: 1 }).withMessage('Full name is required'),
         ],
         validateRequest,
-        async (req: Request, res: Response) => userController.updateUser(req, res)
+        async (req: Request, res: Response, next: NextFunction) => userController.updateUser(req, res, next)
     );
 
     router.post(
@@ -78,10 +70,12 @@ export default function UserRouter(
             body('password').trim().notEmpty().withMessage('Password is required'),
         ],
         validateRequest,
-        async (req: Request, res: Response) => userController.Login(req, res)
+        async (req: Request, res: Response, next: NextFunction) => userController.Login(req, res, next)
     );
 
-    router.post('/logout', async (req: Request, res: Response) => userController.Logout(req, res));
+    router.post('/logout', async (req: Request, res: Response, next: NextFunction) =>
+        userController.Logout(req, res, next)
+    );
 
     return router;
 }

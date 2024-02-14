@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: user-depl
+    name: api-gateway-depl
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: user
+            app: api-gateway
     template:
         metadata:
             labels:
-                app: user
+                app: api-gateway
         spec:
             initContainers:
                 - name: wait-for-nats
                   image: busybox
                   command: ['sh', '-c', 'until nc -z nats-srv 4222; do sleep 1; done']
             containers:
-                - name: user
-                  image: sharathchandranp/xsocial-user
+                - name: api-gateway
+                  image: sharathchandranp/xsocial-api-gateway
                   env:
                       - name: NATS_CLIENT_ID
                         valueFrom:
@@ -29,7 +29,7 @@ spec:
                       - name: 'NATS_CLUSTER_ID'
                         value: ecomm
                       - name: MONGO_URI
-                        value: 'mongodb://user-mongo-srv:27017/user'
+                        value: 'mongodb://api-gateway-mongo-srv:27017/api-gateway'
                       - name: JWT_KEY
                         valueFrom:
                             secretKeyRef:
@@ -39,12 +39,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: user-srv
+    name: api-gateway-srv
 spec:
     selector:
-        app: user
+        app: api-gateway
     ports:
-        - name: user
+        - name: api-gateway
           protocol: TCP
           port: 3000
           targetPort: 3000

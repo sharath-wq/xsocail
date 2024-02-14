@@ -14,6 +14,9 @@ import {
     UpdatePostUseCase,
     GetUserPostsUseCase,
 } from '../../domain/interfaces/use-cases';
+import { NextFunction } from 'express-serve-static-core';
+import { body } from 'express-validator';
+import { validateRequest } from '@scxsocialcommon/errors';
 
 export default function PostRouter(
     createPostUseCase: CreatePostUseCase,
@@ -37,11 +40,20 @@ export default function PostRouter(
         postController.getAllPosts(req, res);
     });
 
-    router.post('/', upload.array('files[]'), async (req, res, next) => {
-        postController.createPost(req, res, next);
-    });
+    router.post(
+        '/',
+        upload.array('files[]'),
+        [
+            body('caption').notEmpty().withMessage('Caption is required'),
+            body('tags').notEmpty().withMessage('Tags is requried'),
+        ],
+        validateRequest,
+        async (req: Request, res: Response, next: NextFunction) => {
+            postController.createPost(req, res, next);
+        }
+    );
 
-    router.patch('/:id', async (req, res, next) => {
+    router.patch('/:id', async (req: Request, res: Response, next: NextFunction) => {
         postController.updatePost(req, res, next);
     });
 
@@ -53,8 +65,8 @@ export default function PostRouter(
         postController.getUserPosts(req, res);
     });
 
-    router.delete('/:id', async (req, res) => {
-        postController.deletePost(req, res);
+    router.delete('/:id', async (req, res, next) => {
+        postController.deletePost(req, res, next);
     });
 
     return router;

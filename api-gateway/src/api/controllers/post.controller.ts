@@ -1,94 +1,33 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { IPostController } from '../interface/controllers/post.controller';
 import axios from 'axios';
-import { POST_SERVICE_ENDPOINT } from '../endpoints';
+import FormData from 'form-data';
+import { POST_SERVICE_ENDPOINT, POST_SERVICE_INSTANCE } from '../../constants/endpoints';
 
-export const PostController = () => {
-    const getAllPosts = async (req: Request, res: Response) => {
-        try {
-            const response = await axios.get(`${POST_SERVICE_ENDPOINT}/posts`);
-            res.json(response.data);
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    const createPost = async (req: Request, res: Response) => {
-        const payload: any = {
-            reqBody: req.body,
-            currentUser: req.currentUser,
-        };
+export class PostController implements IPostController {
+    async postService(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const path = req.originalUrl.replace('/api/posts', '');
 
         try {
-            const response = await axios.post(`${POST_SERVICE_ENDPOINT}/posts`, payload);
+            // Create a FormData object for multipart/form-data
+            const formData = new FormData();
 
-            res.json(response.data);
-        } catch (error) {
-            console.log(error);
-            handleError(res, error);
-        }
-    };
+            // Append form fields from req.body
+            for (const key in req.body) {
+                formData.append(key, req.body[key]);
+            }
 
-    const getPostsByUser = async (req: Request, res: Response) => {
-        const userId = req.params.id;
-        try {
-            const response = await axios.get(`${POST_SERVICE_ENDPOINT}/posts/${userId}`);
-            res.json(response.data);
-        } catch (error) {
-            handleError(res, error);
-        }
-    };
-
-    const deletePost = async (req: Request, res: Response) => {
-        const postId = req.params.id;
-        try {
-            const response = await axios.delete(`${POST_SERVICE_ENDPOINT}/posts/${postId}`, req);
-            res.json(response.data);
-        } catch (error) {
-            handleError(res, error);
-        }
-    };
-
-    const updatePost = async (req: Request, res: Response) => {
-        const postId = req.params.id;
-        const payload: any = {
-            reqBody: req.body,
-            currentUser: req.currentUser,
-        };
-        try {
-            const response = await axios.patch(`${POST_SERVICE_ENDPOINT}/posts/${postId}`, payload);
-            res.json(response.data);
-        } catch (error) {
-            handleError(res, error);
-        }
-    };
-
-    const getOnePost = async (req: Request, res: Response) => {
-        const postId = req.params.id;
-        try {
-            const response = await axios.patch(`${POST_SERVICE_ENDPOINT}/posts/${postId}`, req);
-            res.json(response.data);
-        } catch (error) {
-            handleError(res, error);
-        }
-    };
-
-    const handleError = (res: Response, error: any) => {
-        if (axios.isAxiosError(error)) {
-            res.status(error.response?.status || 500).json({
-                errors: [{ message: error.message, details: error.response?.data }],
+            // Make the POST request using axios
+            const response = await axios.post(`${POST_SERVICE_ENDPOINT}${path}`, formData, {
+                headers: {
+                    ...req.headers,
+                    ...formData.getHeaders(), // Set the correct Content-Type header
+                },
             });
-        } else {
-            console.error('Error forwarding request', error);
-            res.status(500).json({ errors: [{ message: 'Internal server error' }] });
-        }
-    };
 
-    return {
-        createPost,
-        updatePost,
-        deletePost,
-        getAllPosts,
-        getPostsByUser,
-        getOnePost,
-    };
-};
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error.response?.status || 500).send(error.response?.data || 'Internal Server Error');
+        }
+    }
+}

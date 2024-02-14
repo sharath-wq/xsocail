@@ -17,13 +17,6 @@ spec:
                             name: api-gateway-srv
                             port:
                                 number: 3000
-                  - path: /posts/?(.*)
-                    pathType: ImplementationSpecific
-                    backend:
-                        service:
-                            name: post-srv
-                            port:
-                                number: 3000
                   - path: /?(.*)
                     pathType: ImplementationSpecific
                     backend:

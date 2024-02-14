@@ -1,155 +1,147 @@
-import { Request, Response, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { UserControllerInterface } from '../interface/controllers/user.controller';
 import axios from 'axios';
+import { POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 import jwt from 'jsonwebtoken';
-import { USER_SERVICE_ENDPOINT } from '../endpoints';
+import { UpdateUserUseCase, CreateUserUseCase, GetUserUseCase } from '../../domain/interface/use-cases';
+import { UserModel } from '../../domain/entities/user';
 
-import { CreateUserUseCase } from '../../domain/interfaces/use-cases/create-user.use-case';
-import { GetUserUseCase } from '../../domain/interfaces/use-cases/get-user.use-case';
-import { UpdateUserUseCase } from '../../domain/interfaces/use-cases/update-user.use-case';
+export class UserController implements UserControllerInterface {
+    createUserUseCase: CreateUserUseCase;
+    getUserUseCase: GetUserUseCase;
+    updateUserUseCase: UpdateUserUseCase;
 
-export const UserController = (
-    createUserUseCase: CreateUserUseCase,
-    getUserUseCase: GetUserUseCase,
-    updateUserUseCase: UpdateUserUseCase
-) => {
-    const getAllUsers = async (req: Request, res: Response) => {
+    constructor(
+        createUserUseCase: CreateUserUseCase,
+        getUserUseCase: GetUserUseCase,
+        updateUserUseCase: UpdateUserUseCase
+    ) {
+        this.createUserUseCase = createUserUseCase;
+        this.updateUserUseCase = updateUserUseCase;
+        this.getUserUseCase = getUserUseCase;
+    }
+
+    async createUser(data: UserModel): Promise<UserModel | null> {
         try {
-            const response = await axios.get(`${USER_SERVICE_ENDPOINT}/users`);
-            res.json(response.data);
+            const user = await this.createUserUseCase.execute(data);
+            if (user) {
+                return user;
+            } else {
+                return null;
+            }
         } catch (error) {
             throw error;
         }
-    };
+    }
 
-    const createUser = async (req: Request, res: Response) => {
-        const reqBody = req.body;
+    async updateUser(userId: string, data: UserModel): Promise<UserModel | null> {
         try {
-            const response = await axios.post(`${USER_SERVICE_ENDPOINT}/users`, reqBody);
-            res.json(response.data);
-        } catch (error) {
-            handleError(res, error);
-        }
-    };
-
-    const getUserById = async (req: Request, res: Response) => {
-        const userId = req.params.id;
-        try {
-            const response = await axios.get(`${USER_SERVICE_ENDPOINT}/users/${userId}`);
-            res.json(response.data);
-        } catch (error) {
-            handleError(res, error);
-        }
-    };
-
-    const deleteUser = async (req: Request, res: Response) => {
-        const userId = req.params.id;
-        try {
-            const response = await axios.delete(`${USER_SERVICE_ENDPOINT}/users/${userId}`);
-            res.json(response.data);
-        } catch (error) {
-            handleError(res, error);
-        }
-    };
-
-    const updateUser = async (req: Request, res: Response) => {
-        const reqBody = req.body;
-        const userId = req.params.id;
-        try {
-            const response = await axios.patch(`${USER_SERVICE_ENDPOINT}/users/${userId}`, reqBody);
-            res.json(response.data);
-        } catch (error) {
-            handleError(res, error);
-        }
-    };
-
-    const loginUser = async (req: Request, res: Response) => {
-        const reqBody = req.body;
-
-        try {
-            const response = await axios.post(`${USER_SERVICE_ENDPOINT}/users/login`, reqBody);
-
-            const existingUser = await getUserUseCase.execute(response.data.user.userId);
-
-            if (!existingUser) {
-                const user = await createUserUseCase.execute(response.data.user);
-
-                if (user) {
-                    const userJwt = jwt.sign(
-                        {
-                            id: user.userId,
-                            isAdmin: user.isAdmin,
-                            username: user.username,
-                        },
-                        process.env.JWT_KEY!
-                    );
-
-                    req.session = {
-                        jwt: userJwt,
-                    };
-                }
+            const user = await this.updateUserUseCase.execute(userId, data);
+            if (user) {
+                return user;
             } else {
-                const newUser = await updateUserUseCase.execute(response.data.user.userId, response.data.user);
+                return null;
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 
-                if (newUser) {
-                    const userJwt = jwt.sign(
-                        {
-                            id: newUser.userId,
-                            isAdmin: newUser.isAdmin,
-                            username: newUser.username,
-                        },
-                        process.env.JWT_KEY!
-                    );
+    async login(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const path = req.originalUrl.replace('/api/users', '');
 
-                    req.session = {
-                        jwt: userJwt,
-                    };
-                }
+        try {
+            const response = await axios.post(`${USER_SERVICE_ENDPOINT}${path}`, {
+                ...req.body,
+            });
+
+            if (response.data.user) {
+                const userJwt = jwt.sign(
+                    {
+                        id: response.data.user.userId,
+                        username: response.data.user.username,
+                        isAdmin: response.data.user.isAdmin,
+                    },
+                    process.env.JWT_KEY!
+                );
+
+                req.session = {
+                    jwt: userJwt,
+                };
             }
 
-            res.json({ message: 'Login Success' });
-        } catch (error) {
-            handleError(res, error);
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error?.response?.status).send(error.response.data);
         }
-    };
+    }
 
-    const logoutUser = async (req: Request, res: Response) => {
-        const reqBody = req.body;
+    async logout(
+        req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
+        res: Response<any, Record<string, any>>,
+        next: NextFunction
+    ): Promise<void> {
+        const path = req.originalUrl.replace('/api/users', '');
 
         try {
+            const response = await axios.post(`${USER_SERVICE_ENDPOINT}${path}`);
             req.session = null;
-            res.send({});
-        } catch (error) {
-            res.status(500).send('Internal server error');
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error?.response?.status).send(error.response.data);
         }
-    };
+    }
 
-    const currentUser = async (req: Request, res: Response) => {
+    async userService(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const path = req.originalUrl.replace('/api/users', '');
+
         try {
-            res.send({ currentUser: req.currentUser || null });
+            let axiosMethod;
+            switch (req.method) {
+                case 'GET':
+                    axiosMethod = axios.get;
+                    break;
+                case 'POST':
+                    axiosMethod = axios.post;
+                    break;
+                case 'PATCH':
+                    axiosMethod = axios.patch;
+                    break;
+                case 'DELETE':
+                    axiosMethod = axios.delete;
+                    break;
+                default:
+                    throw new Error('Unsupported HTTP method');
+            }
+
+            const response = await axiosMethod(
+                `${USER_SERVICE_ENDPOINT}${path}`,
+                req.method === 'GET' ? undefined : { ...req.body }
+            );
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error.response.status).send(error.response.data);
+        }
+    }
+
+    async getCurrentUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            if (!req.currentUser) {
+                res.send({ currentUser: null });
+                return;
+            }
+
+            const user = await this.getUserUseCase.execute(req.currentUser.id);
+
+            if (user) {
+                res.send({ currentUser: req.currentUser });
+            }
+
+            res.send({ currentUser: null });
         } catch (error) {
-            res.status(500).send('Internal server error');
+            next(error);
         }
-    };
-
-    const handleError = (res: Response, error: any) => {
-        if (axios.isAxiosError(error)) {
-            res.status(error.response?.status || 500).json({
-                errors: [{ message: error.message, details: error.response?.data }],
-            });
-        } else {
-            console.error('Error forwarding request', error);
-            res.status(500).json({ errors: [{ message: 'Internal server error' }] });
-        }
-    };
-
-    return {
-        getAllUsers,
-        createUser,
-        getUserById,
-        deleteUser,
-        updateUser,
-        loginUser,
-        logoutUser,
-        currentUser,
-    };
-};
+    }
+}

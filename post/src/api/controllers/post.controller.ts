@@ -14,7 +14,7 @@ import {
 } from '../../domain/interfaces/use-cases/';
 
 import { PostControllerInterface } from '../interfaces/controllers/post.controller';
-import { NotAuthorizedError, NotFoundError, currentUser } from '@scxsocialcommon/errors';
+import { NotAuthorizedError, NotFoundError } from '@scxsocialcommon/errors';
 
 import { CloudinaryFile } from '../../config/cloudinary.config';
 import sharp from 'sharp';
@@ -100,9 +100,9 @@ export class PostController implements PostControllerInterface {
     }
 
     async updatePost(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { reqBody } = req.body;
         const userId = req.currentUser?.id;
         const id = req.params.id;
+
         try {
             const existingPost = await this.getOnePostUseCase.execute(id);
 
@@ -114,14 +114,14 @@ export class PostController implements PostControllerInterface {
                 throw new NotAuthorizedError();
             }
 
-            const updatedPost = await this.updatePostUseCase.execute(id, reqBody, userId!);
+            const updatedPost = await this.updatePostUseCase.execute(id, req.body, userId!);
             res.status(200).send(updatedPost);
         } catch (error: any) {
             next(error);
         }
     }
 
-    async deletePost(req: Request, res: Response): Promise<void> {
+    async deletePost(req: Request, res: Response, next: NextFunction): Promise<void> {
         const userId = req.currentUser?.id;
         const id = req.params.id;
         try {
@@ -138,7 +138,7 @@ export class PostController implements PostControllerInterface {
             await this.deletePostUseCase.execute(id);
             res.status(200).send({});
         } catch (error) {
-            throw error;
+            next(error);
         }
     }
 

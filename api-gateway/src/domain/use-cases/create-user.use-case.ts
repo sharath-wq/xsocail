@@ -1,6 +1,6 @@
 import { UserModel } from '../entities/user';
-import { UserRepository } from '../interfaces/repository/user.repository';
-import { CreateUserUseCase } from '../interfaces/use-cases/create-user.use-case';
+import { UserRepository } from '../interface/repository/user.repository';
+import { CreateUserUseCase } from '../interface/use-cases/create-user.use-case';
 
 export class CreateUser implements CreateUserUseCase {
     UserRepository: UserRepository;

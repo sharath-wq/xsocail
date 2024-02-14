@@ -15,6 +15,10 @@ const UserSchema = new mongoose.Schema(
             type: Boolean,
             required: true,
         },
+        imageUrl: {
+            type: String,
+            required: true,
+        },
     },
     {
         toJSON: {
