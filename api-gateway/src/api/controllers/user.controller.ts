@@ -5,8 +5,50 @@ import { USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import jwt from 'jsonwebtoken';
+import { UpdateUserUseCase, CreateUserUseCase, GetUserUseCase } from '../../domain/interface/use-cases';
+import { UserModel } from '../../domain/entities/user';
 
 export class UserController implements UserControllerInterface {
+    createUserUseCase: CreateUserUseCase;
+    getUserUseCase: GetUserUseCase;
+    updateUserUseCase: UpdateUserUseCase;
+
+    constructor(
+        createUserUseCase: CreateUserUseCase,
+        getUserUseCase: GetUserUseCase,
+        updateUserUseCase: UpdateUserUseCase
+    ) {
+        this.createUserUseCase = createUserUseCase;
+        this.updateUserUseCase = updateUserUseCase;
+        this.getUserUseCase = getUserUseCase;
+    }
+
+    async createUser(data: UserModel): Promise<UserModel | null> {
+        try {
+            const user = await this.createUserUseCase.execute(data);
+            if (user) {
+                return user;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async updateUser(userId: string, data: UserModel): Promise<UserModel | null> {
+        try {
+            const user = await this.updateUserUseCase.execute(userId, data);
+            if (user) {
+                return user;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async login(req: Request, res: Response, next: NextFunction): Promise<void> {
         const path = req.originalUrl.replace('/api/users', '');
 

@@ -1,10 +1,15 @@
 import express from 'express';
 import { UserController } from '../controllers/user.controller';
+import { CreateUserUseCase, UpdateUserUseCase, GetUserUseCase } from '../../domain/interface/use-cases';
 
-export default function UserRouter() {
+export default function UserRouter(
+    createUserUseCase: CreateUserUseCase,
+    getUserUseCase: GetUserUseCase,
+    updateUserUseCase: UpdateUserUseCase
+) {
     const router = express.Router();
 
-    const userController = new UserController();
+    const userController = new UserController(createUserUseCase, getUserUseCase, updateUserUseCase);
 
     router.post('/login', async (req, res, next) => {
         userController.login(req, res, next);

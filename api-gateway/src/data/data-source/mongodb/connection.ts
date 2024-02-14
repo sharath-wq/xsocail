@@ -1,4 +1,4 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 import { MongoDBUserDataSource } from './mongo-db-user-data-source';
 
 export const connect = async (MONGO_URI: string) => {
