@@ -45,13 +45,17 @@ export class PostController implements PostControllerInterface {
     }
 
     async createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const userId = req.currentUser?.id;
         const files = req.files as Express.Multer.File[];
 
         try {
+            if (!req.currentUser) {
+                throw new NotAuthorizedError();
+            }
+
             const nwePost: PostRequestModel = {
                 caption: req.body.caption,
                 tags: req.body.tags,
+                author: req.currentUser.userId,
                 imageUrls: [],
             };
 
@@ -91,7 +95,7 @@ export class PostController implements PostControllerInterface {
 
             await Promise.all(uploadPromises);
 
-            const post = await this.createPostUseCase.execute(nwePost, userId!);
+            const post = await this.createPostUseCase.execute(nwePost, req.currentUser.userId);
             res.status(201).send(post);
         } catch (error: any) {
             console.error('Error creating post:', error);
@@ -100,7 +104,7 @@ export class PostController implements PostControllerInterface {
     }
 
     async updatePost(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const userId = req.currentUser?.id;
+        const userId = req.currentUser?.userId;
         const id = req.params.id;
 
         try {
@@ -110,7 +114,7 @@ export class PostController implements PostControllerInterface {
                 throw new NotFoundError();
             }
 
-            if (existingPost.authorId !== userId) {
+            if (existingPost.author !== userId) {
                 throw new NotAuthorizedError();
             }
 
@@ -122,7 +126,7 @@ export class PostController implements PostControllerInterface {
     }
 
     async deletePost(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const userId = req.currentUser?.id;
+        const userId = req.currentUser?.userId;
         const id = req.params.id;
         try {
             const post = await this.getOnePostUseCase.execute(id);
@@ -131,7 +135,7 @@ export class PostController implements PostControllerInterface {
                 throw new NotFoundError();
             }
 
-            if (post.authorId !== userId) {
+            if (post.author !== userId) {
                 throw new NotAuthorizedError();
             }
 
@@ -145,6 +149,7 @@ export class PostController implements PostControllerInterface {
     async getAllPosts(req: Request, res: Response): Promise<void> {
         try {
             const posts = await this.getAllPostsUseCase.execute();
+
             res.send(posts);
         } catch (error) {
             throw error;

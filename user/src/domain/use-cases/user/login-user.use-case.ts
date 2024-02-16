@@ -29,6 +29,7 @@ export class Login implements LoginUseCase {
             userId: existingUser.id,
             isAdmin: existingUser.isAdmin,
             username: existingUser.username,
+            imageUrl: existingUser.imageUrl,
         };
     }
 }

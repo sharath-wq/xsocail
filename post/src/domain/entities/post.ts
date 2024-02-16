@@ -2,6 +2,7 @@ export interface PostRequestModel {
     caption: string;
     tags: string[];
     imageUrls: string[];
+    author: string;
 }
 
 export interface PostResponseModel {
@@ -12,7 +13,7 @@ export interface PostResponseModel {
 
 export interface PostModel {
     id: string;
-    authorId: string;
+    author: string;
     caption: string;
     tags: string[];
     imageUrls: string[];

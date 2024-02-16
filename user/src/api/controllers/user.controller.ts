@@ -12,9 +12,11 @@ import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
 
 import jwt from 'jsonwebtoken';
-import { UserCreatedPublisher } from '../events/pub/user-updated-publisher';
+import { UserUpdatedPubliser } from '../events/pub/user-updated-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
-import { UserUpdatedPubliser } from '../events/pub/user-created-publisher';
+import { UserCreatedPublisher } from '../events/pub/user-created-publisher';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -71,6 +73,7 @@ export class UserController implements UserControllerInterface {
                     imageUrl: user.imageUrl,
                     isAdmin: user.isAdmin,
                     username: user.username,
+                    email: user.email,
                 });
             }
 
@@ -104,6 +107,7 @@ export class UserController implements UserControllerInterface {
                     userId: updatedUser.id,
                     imageUrl: updatedUser.imageUrl,
                     isAdmin: updatedUser.isAdmin,
+                    email: updatedUser.email,
                     username: updatedUser.username,
                 });
             }

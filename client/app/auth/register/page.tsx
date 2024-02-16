@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
+import GoogleBtn from '@/components/googleButton/GoogleBtn';
 
 const Register: React.FC = () => {
     // 1. Define your form.
@@ -140,10 +141,7 @@ const Register: React.FC = () => {
                 </div>
 
                 <div className='flex items-center justify-center flex-col'>
-                    <Button className='mr-2 flex gap-2'>
-                        {' '}
-                        <FcGoogle /> Signup with Google
-                    </Button>
+                    <GoogleBtn text={'Signup with Google'} icon={<FcGoogle />} />
                 </div>
             </div>
 

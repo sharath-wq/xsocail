@@ -51,4 +51,5 @@ export interface LoginResponseModel {
     userId: string;
     username: string;
     isAdmin: boolean;
+    imageUrl: string;
 }

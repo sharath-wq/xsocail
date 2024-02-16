@@ -55,4 +55,33 @@ export class MongoDBUserDataSource implements UserDataSource {
             console.log(error);
         }
     }
+
+    async getByUsername(username: string): Promise<UserModel | null> {
+        try {
+            const result = await User.findOne({ username });
+
+            if (!result) {
+                return null;
+            }
+
+            return result;
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+
+    async getUserByEmail(email: string): Promise<UserModel | null> {
+        try {
+            const result = await User.findOne({ email: email });
+            if (!result) {
+                return null;
+            }
+
+            return result;
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
 }

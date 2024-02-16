@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const PostSchema = new mongoose.Schema(
     {
-        authorId: {
+        author: {
             type: String,
             required: true,
         },

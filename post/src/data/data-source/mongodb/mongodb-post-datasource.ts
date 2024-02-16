@@ -10,7 +10,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
             return results.map((item) => ({
                 id: item.id,
-                authorId: item.authorId,
+                author: item.author,
                 caption: item.caption,
                 tags: item.tags,
                 imageUrls: item.imageUrls,
@@ -31,7 +31,7 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    authorId: result.authorId,
+                    author: result.author,
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
@@ -57,7 +57,7 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    authorId: result.authorId,
+                    author: result.author,
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
@@ -80,7 +80,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
             return result.map((item) => ({
                 id: item.id,
-                authorId: item.authorId,
+                author: item.author,
                 caption: item.caption,
                 tags: item.tags,
                 imageUrls: item.imageUrls,
@@ -110,7 +110,7 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    authorId: result.authorId,
+                    author: result.author,
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
@@ -134,7 +134,7 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    authorId: result.authorId,
+                    author: result.author,
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,

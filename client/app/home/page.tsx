@@ -22,8 +22,6 @@ const Home = async () => {
         })();
     }, []);
 
-    console.log(posts);
-
     return (
         <div className='w-full flex flex-col gap-10 sm:flex-row'>
             <div className='w-full sm:w-1/2 flex flex-col gap-10'>
