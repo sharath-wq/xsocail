@@ -171,21 +171,20 @@ export class UserController implements UserControllerInterface {
                     password: generateRandomPassword(),
                 });
 
-                if (newUser) {
-                    const userJwt = jwt.sign(
-                        {
-                            userId: newUser.data.userId,
-                            username: newUser.data.username,
-                            isAdmin: newUser.data.isAdmin,
-                            imageUrl: newUser.data.imageUrl,
-                        },
-                        process.env.JWT_KEY!
-                    );
+                const userJwt = jwt.sign(
+                    {
+                        userId: newUser.data.userId,
+                        username: newUser.data.username,
+                        isAdmin: newUser.data.isAdmin,
+                        imageUrl: newUser.data.imageUrl,
+                    },
+                    process.env.JWT_KEY!
+                );
 
-                    req.session = {
-                        jwt: userJwt,
-                    };
-                }
+                req.session = {
+                    jwt: userJwt,
+                };
+                res.send({});
             } else {
                 const userJwt = jwt.sign(
                     {
@@ -200,9 +199,8 @@ export class UserController implements UserControllerInterface {
                 req.session = {
                     jwt: userJwt,
                 };
+                res.send({});
             }
-
-            res.send({});
         } catch (error: any) {
             res.status(error?.response?.status).send(error?.response?.data);
         }

@@ -10,7 +10,11 @@ export class MongoDBPostDataSource implements PostDataSource {
 
             return results.map((item) => ({
                 id: item.id,
-                author: item.author,
+                author: {
+                    userId: item.author!.userId!,
+                    username: item.author!.username!,
+                    imageUrl: item.author!.imageUrl!,
+                },
                 caption: item.caption,
                 tags: item.tags,
                 imageUrls: item.imageUrls,
@@ -31,7 +35,11 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.author,
+                    author: {
+                        userId: result.author!.userId!,
+                        username: result.author!.username!,
+                        imageUrl: result.author!.imageUrl!,
+                    },
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
@@ -57,7 +65,11 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.author,
+                    author: {
+                        userId: result.author!.userId!,
+                        username: result.author!.username!,
+                        imageUrl: result.author!.imageUrl!,
+                    },
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
@@ -80,7 +92,11 @@ export class MongoDBPostDataSource implements PostDataSource {
 
             return result.map((item) => ({
                 id: item.id,
-                author: item.author,
+                author: {
+                    userId: item.author!.userId!,
+                    username: item.author!.username!,
+                    imageUrl: item.author!.imageUrl!,
+                },
                 caption: item.caption,
                 tags: item.tags,
                 imageUrls: item.imageUrls,
@@ -110,7 +126,11 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.author,
+                    author: {
+                        userId: result.author!.userId!,
+                        username: result.author!.username!,
+                        imageUrl: result.author!.imageUrl!,
+                    },
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
@@ -134,7 +154,11 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.author,
+                    author: {
+                        userId: result.author!.userId!,
+                        username: result.author!.username!,
+                        imageUrl: result.author!.imageUrl!,
+                    },
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,

@@ -1,6 +1,10 @@
 export interface PostData {
     id: number;
-    authorId: number;
+    author: {
+        userId: string;
+        username: string;
+        imageUrl: string;
+    };
     caption: string;
     tags: string[];
     imageUrls: string[];

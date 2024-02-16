@@ -57,12 +57,6 @@ const start = async () => {
 
     app.use('/api/users/', UserMiddleware);
 
-    app.get('/auth/callback/google', (req, res, next) => {
-        console.log('working');
-        res.send('working');
-    });
-
-    // Post Service
     app.use(
         '/api/posts',
         requireAuth,

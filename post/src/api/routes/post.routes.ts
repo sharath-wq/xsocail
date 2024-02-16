@@ -62,8 +62,6 @@ export default function PostRouter(
         ],
         validateRequest,
         async (req: Request, res: Response, next: NextFunction) => {
-            console.log(req.body);
-
             postController.updatePost(req, res, next);
         }
     );

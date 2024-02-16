@@ -55,7 +55,11 @@ export class PostController implements PostControllerInterface {
             const nwePost: PostRequestModel = {
                 caption: req.body.caption,
                 tags: req.body.tags,
-                author: req.currentUser.userId,
+                author: {
+                    userId: req.currentUser.userId,
+                    username: req.currentUser.username,
+                    imageUrl: req.currentUser.imageUrl,
+                },
                 imageUrls: [],
             };
 
@@ -114,7 +118,7 @@ export class PostController implements PostControllerInterface {
                 throw new NotFoundError();
             }
 
-            if (existingPost.author !== userId) {
+            if (existingPost.author.userId !== userId) {
                 throw new NotAuthorizedError();
             }
 
@@ -135,7 +139,7 @@ export class PostController implements PostControllerInterface {
                 throw new NotFoundError();
             }
 
-            if (post.author !== userId) {
+            if (post.author.userId !== userId) {
                 throw new NotAuthorizedError();
             }
 

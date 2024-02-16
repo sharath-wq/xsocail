@@ -3,8 +3,18 @@ import mongoose from 'mongoose';
 const PostSchema = new mongoose.Schema(
     {
         author: {
-            type: String,
-            required: true,
+            userId: {
+                type: String,
+                required: true,
+            },
+            username: {
+                type: String,
+                required: true,
+            },
+            imageUrl: {
+                type: String,
+                required: true,
+            },
         },
         caption: {
             type: String,

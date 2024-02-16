@@ -12,7 +12,7 @@ export class UpdatePost implements UpdatePostUseCase {
         // check if the user id and the auther id is same
         const existingPost = await this.postRepository.getPostById(id);
 
-        if (existingPost && existingPost.author === userId) {
+        if (existingPost && existingPost.author.userId === userId) {
             const result = await this.postRepository.updatePost(id, data);
             return result;
         }
