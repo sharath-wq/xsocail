@@ -23,3 +23,7 @@ export const PostValidation = z.object({
     files: z.custom<File[]>(),
     tags: z.string(),
 });
+
+export const ForgotPasswordValiation = z.object({
+    email: z.string().email(),
+});

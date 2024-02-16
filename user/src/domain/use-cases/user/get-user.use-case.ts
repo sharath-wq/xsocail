@@ -1,5 +1,5 @@
 import { UserResponseModel } from '../../entities/user';
-import { GetUserUseCase } from '../../interfaces/use-cases';
+import { GetUserUseCase } from '../../interfaces/use-cases/user';
 import { UserRepository } from '../../interfaces/repository/user.repository';
 
 export class GetUser implements GetUserUseCase {

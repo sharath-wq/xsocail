@@ -24,6 +24,8 @@ build:
               manual:
                   - src: 'src/**/*.ts'
                     dest: .
+                  - src: 'src/**/*.html'
+                    dest: .
         - image: sharathchandranp/xsocial-posts
           context: post
           docker:

@@ -1,6 +1,6 @@
 import { BadRequestError } from '@scxsocialcommon/errors';
 import { UserRepository } from '../../interfaces/repository/user.repository';
-import { LoginUseCase } from '../../interfaces/use-cases/login.use-case';
+import { LoginUseCase } from '../../interfaces/use-cases/user/login.use-case';
 import { Password } from '../../../utils/password';
 import jwt from 'jsonwebtoken';
 import { LoginResponseModel } from '../../entities/user';

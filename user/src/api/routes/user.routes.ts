@@ -8,9 +8,11 @@ import {
     UpdateUserUseCase,
     LoginUseCase,
     LogoutUseCase,
-} from '../../domain/interfaces/use-cases/index';
+} from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
-import { validateRequest, requireAuth, currentUser } from '@scxsocialcommon/errors';
+import { validateRequest } from '@scxsocialcommon/errors';
+import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
+import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
 
 export default function UserRouter(
     createUserUseCase: CretaeUserUseCase,
@@ -19,7 +21,9 @@ export default function UserRouter(
     getUserUseCase: GetUserUseCase,
     updateUserUseCase: UpdateUserUseCase,
     loginUseCase: LoginUseCase,
-    logoutUseCase: LogoutUseCase
+    logoutUseCase: LogoutUseCase,
+    sendRestTokenUseCase: SendResetTokenUseCase,
+    resetPasswordUsecase: ResetPasswordUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -29,7 +33,9 @@ export default function UserRouter(
         getUserUseCase,
         updateUserUseCase,
         loginUseCase,
-        logoutUseCase
+        logoutUseCase,
+        sendRestTokenUseCase,
+        resetPasswordUsecase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -75,6 +81,15 @@ export default function UserRouter(
 
     router.post('/logout', async (req: Request, res: Response, next: NextFunction) =>
         userController.Logout(req, res, next)
+    );
+
+    router.post('/reset-password', async (req: Request, res: Response, next: NextFunction) =>
+        userController.sendResetToken(req, res, next)
+    );
+
+    router.post(
+        '/reset-password/:userId/:token',
+        async (req: Request, res: Response, next: NextFunction) => userController.resetPassword
     );
 
     return router;

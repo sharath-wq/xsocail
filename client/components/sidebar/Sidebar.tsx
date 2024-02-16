@@ -55,7 +55,7 @@ const Sidebar = () => {
                         </Avatar>
                     </div>
 
-                    <nav>
+                    <nav className='ml-5'>
                         <ul className='space-y-4 flex-grow'>
                             {links.map((link) => (
                                 <li

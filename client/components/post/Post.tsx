@@ -63,13 +63,10 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                                 <div className='p-1'>
                                     <Card>
                                         <CardContent className='flex aspect-square items-center justify-center p-6'>
-                                            <Image
+                                            <img
                                                 src={imageUrls[index]}
-                                                alt={'image'}
-                                                width={800}
-                                                height={600}
-                                                priority={false}
-                                                placeholder='empty'
+                                                alt={`image-${index}`}
+                                                style={{ objectFit: 'contain', width: '100%', height: '100%' }}
                                             />
                                         </CardContent>
                                     </Card>

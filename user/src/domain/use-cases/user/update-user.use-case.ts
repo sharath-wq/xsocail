@@ -1,4 +1,4 @@
-import { UpdateUserUseCase } from '../../interfaces/use-cases';
+import { UpdateUserUseCase } from '../../interfaces/use-cases/user';
 import { UserRepository } from '../../interfaces/repository/user.repository';
 import { UserRequestModel, UserResponseModel } from '../../entities/user';
 import { BadRequestError } from '@scxsocialcommon/errors';

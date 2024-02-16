@@ -1,4 +1,4 @@
-import { DeleteUserUseCase } from '../../interfaces/use-cases';
+import { DeleteUserUseCase } from '../../interfaces/use-cases/user';
 import { UserRepository } from '../../interfaces/repository/user.repository';
 
 export class DeleteUser implements DeleteUserUseCase {

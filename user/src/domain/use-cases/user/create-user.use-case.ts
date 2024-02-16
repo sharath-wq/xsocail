@@ -1,5 +1,5 @@
 import { UserRequestModel, UserResponseModel } from '../../entities/user';
-import { CretaeUserUseCase } from '../../interfaces/use-cases';
+import { CretaeUserUseCase } from '../../interfaces/use-cases/user';
 import { UserRepository } from '../../interfaces/repository/user.repository';
 import { BadRequestError } from '@scxsocialcommon/errors';
 
