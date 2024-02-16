@@ -1,26 +1,39 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserControllerInterface } from '../interface/controllers/user.controller';
 import axios from 'axios';
-import { POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
+import { USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import jwt from 'jsonwebtoken';
-import { UpdateUserUseCase, CreateUserUseCase, GetUserUseCase } from '../../domain/interface/use-cases';
-import { UserModel } from '../../domain/entities/user';
+import {
+    UpdateUserUseCase,
+    CreateUserUseCase,
+    GetUserUseCase,
+    GetUserByEmailUseCase,
+} from '../../domain/interface/use-cases';
+import { UserModel, UserRequestModel } from '../../domain/entities/user';
+import { GetByUsernameUseCase } from '../../domain/interface/use-cases/get-by-username.use-case';
+import { generateRandomPassword } from '../../lib/generate-random-password';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CreateUserUseCase;
     getUserUseCase: GetUserUseCase;
     updateUserUseCase: UpdateUserUseCase;
+    getByUsernameUseCase: GetByUsernameUseCase;
+    getUserByEmailUseCase: GetUserByEmailUseCase;
 
     constructor(
         createUserUseCase: CreateUserUseCase,
         getUserUseCase: GetUserUseCase,
-        updateUserUseCase: UpdateUserUseCase
+        updateUserUseCase: UpdateUserUseCase,
+        getByUsernameUseCase: GetByUsernameUseCase,
+        getUserByEmailUseCase: GetUserByEmailUseCase
     ) {
         this.createUserUseCase = createUserUseCase;
         this.updateUserUseCase = updateUserUseCase;
         this.getUserUseCase = getUserUseCase;
+        this.getByUsernameUseCase = getByUsernameUseCase;
+        this.getUserByEmailUseCase = getUserByEmailUseCase;
     }
 
     async createUser(data: UserModel): Promise<UserModel | null> {
@@ -143,6 +156,55 @@ export class UserController implements UserControllerInterface {
             res.send({ currentUser: null });
         } catch (error) {
             next(error);
+        }
+    }
+
+    async googleAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            console.log(req.body.email);
+
+            const existingUser = await this.getUserByEmailUseCase.execute(req.body.email);
+
+            if (!existingUser) {
+                const newUser = await axios.post(USER_SERVICE_ENDPOINT, {
+                    ...req.body,
+                    password: generateRandomPassword(),
+                });
+
+                if (newUser) {
+                    const userJwt = jwt.sign(
+                        {
+                            userId: newUser.data.userId,
+                            username: newUser.data.username,
+                            isAdmin: newUser.data.isAdmin,
+                            imageUrl: newUser.data.imageUrl,
+                        },
+                        process.env.JWT_KEY!
+                    );
+
+                    req.session = {
+                        jwt: userJwt,
+                    };
+                }
+            } else {
+                const userJwt = jwt.sign(
+                    {
+                        userId: existingUser.userId,
+                        username: existingUser.username,
+                        isAdmin: existingUser.isAdmin,
+                        imageUrl: existingUser.imageUrl,
+                    },
+                    process.env.JWT_KEY!
+                );
+
+                req.session = {
+                    jwt: userJwt,
+                };
+            }
+
+            res.send({});
+        } catch (error: any) {
+            res.status(error?.response?.status).send(error?.response?.data);
         }
     }
 }

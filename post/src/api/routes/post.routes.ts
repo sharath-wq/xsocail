@@ -55,12 +55,15 @@ export default function PostRouter(
 
     router.patch(
         '/:id',
+        upload.array('files[]'),
         [
             body('caption').notEmpty().withMessage('Caption is required'),
             body('tags').notEmpty().withMessage('Tags is requried'),
         ],
         validateRequest,
         async (req: Request, res: Response, next: NextFunction) => {
+            console.log(req.body);
+
             postController.updatePost(req, res, next);
         }
     );

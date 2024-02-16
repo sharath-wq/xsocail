@@ -1,5 +1,5 @@
-import { Publisher, Subjects, UserCreatedEvent } from '@scxsocialcommon/event';
+import { Publisher, Subjects, UserCreatedEvent, UserUpdatedEvent } from '@scxsocialcommon/event';
 
-export class UserCreatedPublisher extends Publisher<UserCreatedEvent> {
-    subject: Subjects.UserCreated = Subjects.UserCreated;
+export class UserUpdatedPubliser extends Publisher<UserUpdatedEvent> {
+    subject: Subjects.UserUpdated = Subjects.UserUpdated;
 }

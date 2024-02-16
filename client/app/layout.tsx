@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { UserProvider } from '@/context/userContext';
 
+import { AuthContextProvider } from '@/context/authContext';
+
 export const fontSans = FontSans({
     subsets: ['latin'],
     variable: '--font-sans',
@@ -23,10 +25,12 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
             <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
                 {/* @ts-ignore */}
                 <UserProvider>
-                    <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-                        {children}
-                        <Toaster />
-                    </ThemeProvider>
+                    <AuthContextProvider>
+                        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+                            {children}
+                            <Toaster />
+                        </ThemeProvider>
+                    </AuthContextProvider>
                 </UserProvider>
             </body>
         </html>

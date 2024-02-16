@@ -8,6 +8,10 @@ export class UserRepositoryImpl implements UserRepository {
     constructor(UserDataSource: UserDataSource) {
         this.UserDataSource = UserDataSource;
     }
+    async getUserByEmail(email: string): Promise<UserModel | null> {
+        const result = await this.UserDataSource.getUserByEmail(email);
+        return result;
+    }
     async createUser(user: UserModel): Promise<UserModel | null> {
         const result = await this.UserDataSource.create(user);
         return result;
@@ -23,5 +27,10 @@ export class UserRepositoryImpl implements UserRepository {
     }
     async getUser(userId: string): Promise<UserModel | null> {
         return await this.UserDataSource.getOne(userId);
+    }
+
+    async getByUsername(username: string): Promise<UserModel | null> {
+        const result = await this.UserDataSource.getByUsername(username);
+        return result;
     }
 }

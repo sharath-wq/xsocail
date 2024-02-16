@@ -13,6 +13,8 @@ import PostRouter from './api/routes/post.router';
 
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { POST_SERVICE_ENDPOINT } from './constants/endpoints';
+import { GetByUsername } from './domain/use-cases/get-by-user-name.use-case';
+import { GetUserByEmail } from './domain/use-cases/get-user-by-email.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -44,7 +46,9 @@ const start = async () => {
     const UserMiddleware = UserRouter(
         new CreateUser(new UserRepositoryImpl(datasource)),
         new GetUser(new UserRepositoryImpl(datasource)),
-        new UpdateUser(new UserRepositoryImpl(datasource))
+        new UpdateUser(new UserRepositoryImpl(datasource)),
+        new GetByUsername(new UserRepositoryImpl(datasource)),
+        new GetUserByEmail(new UserRepositoryImpl(datasource))
     );
 
     const PostMiddleware = PostRouter();
@@ -52,6 +56,11 @@ const start = async () => {
     app.use(currentUser);
 
     app.use('/api/users/', UserMiddleware);
+
+    app.get('/auth/callback/google', (req, res, next) => {
+        console.log('working');
+        res.send('working');
+    });
 
     // Post Service
     app.use(
