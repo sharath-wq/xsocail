@@ -21,7 +21,6 @@ export default function UserRouter(
     getUserUseCase: GetUserUseCase,
     updateUserUseCase: UpdateUserUseCase,
     loginUseCase: LoginUseCase,
-    logoutUseCase: LogoutUseCase,
     sendRestTokenUseCase: SendResetTokenUseCase,
     resetPasswordUsecase: ResetPasswordUseCase
 ) {
@@ -33,7 +32,6 @@ export default function UserRouter(
         getUserUseCase,
         updateUserUseCase,
         loginUseCase,
-        logoutUseCase,
         sendRestTokenUseCase,
         resetPasswordUsecase
     );
@@ -77,10 +75,6 @@ export default function UserRouter(
         ],
         validateRequest,
         async (req: Request, res: Response, next: NextFunction) => userController.Login(req, res, next)
-    );
-
-    router.post('/logout', async (req: Request, res: Response, next: NextFunction) =>
-        userController.Logout(req, res, next)
     );
 
     router.post('/reset-password', async (req: Request, res: Response, next: NextFunction) =>

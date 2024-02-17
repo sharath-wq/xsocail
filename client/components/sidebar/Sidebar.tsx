@@ -19,6 +19,8 @@ const Sidebar = () => {
         setMobileMenuOpen(!isMobileMenuOpen);
     };
 
+    const { getCurrentUser } = useUser();
+
     const { doRequest } = useRequest({
         url: '/api/users/logout',
         method: 'post',
@@ -27,6 +29,7 @@ const Sidebar = () => {
             toast({
                 description: 'Logout successful',
             });
+            getCurrentUser();
             router.push('/auth/login');
         },
     });

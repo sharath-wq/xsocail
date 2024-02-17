@@ -42,7 +42,7 @@ const useRequest = ({ url, method, body, onSuccess, contentType }: UseRequestPro
             const axiosError = error as AxiosError;
 
             // @ts-ignore
-            const details = axiosError?.response?.data?.errors[0].message || [];
+            const details = axiosError?.response?.data?.errors[0]?.message || [];
             // const errorMessage = details.length > 0 ? details[0].message : 'Unknown error';
 
             // Build the JSX element for displaying the error

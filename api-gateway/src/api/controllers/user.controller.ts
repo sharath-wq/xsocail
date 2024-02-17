@@ -92,17 +92,10 @@ export class UserController implements UserControllerInterface {
         }
     }
 
-    async logout(
-        req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
-        res: Response<any, Record<string, any>>,
-        next: NextFunction
-    ): Promise<void> {
-        const path = req.originalUrl.replace('/api/users', '');
-
+    async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const response = await axios.post(`${USER_SERVICE_ENDPOINT}${path}`);
             req.session = null;
-            res.status(response.status).send(response.data);
+            res.send({});
         } catch (error: any) {
             res.status(error?.response?.status).send(error.response.data);
         }

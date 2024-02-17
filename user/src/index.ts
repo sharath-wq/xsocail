@@ -41,7 +41,6 @@ const start = async () => {
         new GetUser(new UserRepositoryImpl(datasource)),
         new UpdateUser(new UserRepositoryImpl(datasource)),
         new Login(new UserRepositoryImpl(datasource)),
-        new Logout(),
         new SendResetToken(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource)),
         new ResetPassword(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource))
     );

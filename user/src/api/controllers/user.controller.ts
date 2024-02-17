@@ -25,7 +25,6 @@ export class UserController implements UserControllerInterface {
     getUserUseCase: GetUserUseCase;
     updateUserUseCase: UpdateUserUseCase;
     loginUseCase: LoginUseCase;
-    logoutUseCase: LogoutUseCase;
     sendRestTokenUseCase: SendResetTokenUseCase;
     resetPasswordUsecase: ResetPasswordUseCase;
 
@@ -36,7 +35,6 @@ export class UserController implements UserControllerInterface {
         getUserUseCase: GetUserUseCase,
         updateUserUseCase: UpdateUserUseCase,
         loginUseCase: LoginUseCase,
-        logoutUseCase: LogoutUseCase,
         sendRestTokenUseCase: SendResetTokenUseCase,
         resetPasswordUsecase: ResetPasswordUseCase
     ) {
@@ -46,7 +44,6 @@ export class UserController implements UserControllerInterface {
         this.getUserUseCase = getUserUseCase;
         this.updateUserUseCase = updateUserUseCase;
         this.loginUseCase = loginUseCase;
-        this.logoutUseCase = logoutUseCase;
         this.sendRestTokenUseCase = sendRestTokenUseCase;
         this.resetPasswordUsecase = resetPasswordUsecase;
     }
@@ -56,14 +53,6 @@ export class UserController implements UserControllerInterface {
             const user = await this.loginUseCase.execute(email, password);
 
             res.status(200).send({ user });
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async Logout(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            res.send({});
         } catch (error) {
             next(error);
         }
