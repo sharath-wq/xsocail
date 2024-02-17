@@ -9,6 +9,13 @@ export class TokenRepositoryImpl implements TokenRepository {
     constructor(tokenDataSource: TokenDataSource) {
         this.tokenDataSource = tokenDataSource;
     }
+    async deleteTokenByUserIdAndToken(userId: string, token: string): Promise<void> {
+        await this.tokenDataSource.deleteTokenByUserIdAndToken(userId, token);
+    }
+    async getTokenByUserIdAndToken(userId: string, token: string): Promise<TokenModel | null> {
+        const result = await this.tokenDataSource.getTokenByUserIdAndToken(userId, token);
+        return result;
+    }
     async getTokenByUserId(userId: string): Promise<TokenModel | null> {
         const result = await this.tokenDataSource.getTokenByUserId(userId);
         return result;
@@ -24,8 +31,5 @@ export class TokenRepositoryImpl implements TokenRepository {
     async updateToken(id: string, token: TokenModel): Promise<TokenModel | null> {
         const result = await this.tokenDataSource.update(id, token);
         return result;
-    }
-    async deleteToken(id: string): Promise<void> {
-        await this.tokenDataSource.delete(id);
     }
 }

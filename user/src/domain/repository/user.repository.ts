@@ -1,4 +1,4 @@
-import { UserModel, UserRequestModel, UserResponseModel } from '../entities/user';
+import { UpdateUserRequstModel, UserModel, UserRequestModel, UserResponseModel } from '../entities/user';
 import { UserRepository } from '../interfaces/repository/user.repository';
 import { UserDataSource } from '../../data/interface/data-source/user-data-source';
 
@@ -7,6 +7,10 @@ export class UserRepositoryImpl implements UserRepository {
 
     constructor(UserDataSource: UserDataSource) {
         this.UserDataSource = UserDataSource;
+    }
+
+    async updatePassword(userId: string, password: string): Promise<void> {
+        const result = await this.UserDataSource.updatePassword(userId, password);
     }
 
     async createUser(user: UserRequestModel): Promise<UserResponseModel | null> {
@@ -18,7 +22,7 @@ export class UserRepositoryImpl implements UserRepository {
         await this.UserDataSource.deleteOne(id);
     }
 
-    async updateUser(id: string, data: UserRequestModel): Promise<UserResponseModel | null> {
+    async updateUser(id: string, data: UpdateUserRequstModel): Promise<UserResponseModel | null> {
         const result = await this.UserDataSource.updateOne(id, data);
         return result;
     }

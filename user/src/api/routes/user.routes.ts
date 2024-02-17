@@ -87,9 +87,8 @@ export default function UserRouter(
         userController.sendResetToken(req, res, next)
     );
 
-    router.post(
-        '/reset-password/:userId/:token',
-        async (req: Request, res: Response, next: NextFunction) => userController.resetPassword
+    router.post('/reset-password/:userId/:token', async (req: Request, res: Response, next: NextFunction) =>
+        userController.resetPassword(req, res, next)
     );
 
     return router;

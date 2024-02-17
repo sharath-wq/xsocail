@@ -36,8 +36,6 @@ const Register: React.FC = () => {
     function onSubmit(values: z.infer<typeof SignupValidation>) {
         setisSubmiting(true);
         doRequest(values);
-
-        console.log(values);
     }
 
     const [isSubmiting, setisSubmiting] = useState(false);

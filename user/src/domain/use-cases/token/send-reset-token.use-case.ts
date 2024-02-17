@@ -1,12 +1,11 @@
-import { BadRequestError } from '@scxsocialcommon/errors';
+import { BadRequestError, NotFoundError } from '@scxsocialcommon/errors';
 import { TokenRepository } from '../../interfaces/repository/token.repository';
 import { UserRepository } from '../../interfaces/repository/user.repository';
 import { SendResetTokenUseCase } from '../../interfaces/use-cases/token/send-reset-token.use-caes';
 import crypto from 'crypto';
 import sendEmail from '../../../utils/sendEmail';
 
-// import { readTemplateFile } from '../../../utils/readFile';
-import fs from 'fs';
+import { TokenModel } from '../../entities/token';
 
 export class SendResetToken implements SendResetTokenUseCase {
     tokenRepository: TokenRepository;
@@ -17,22 +16,21 @@ export class SendResetToken implements SendResetTokenUseCase {
         this.userRepository = userRepository;
     }
 
-    async execute(email: string): Promise<void> {
-        try {
-            const existingUser = await this.userRepository.getUserByEmail(email);
+    async execute(email: string): Promise<TokenModel | null> {
+        const existingUser = await this.userRepository.getUserByEmail(email);
 
-            if (!existingUser) {
-                throw new BadRequestError('User with this email id is does not exist');
-            }
+        if (!existingUser) {
+            throw new NotFoundError();
+        }
 
-            const newToken = await this.tokenRepository.createToken({
-                userId: existingUser.id,
-                token: crypto.randomBytes(32).toString('hex'),
-            });
+        const newToken = await this.tokenRepository.createToken({
+            userId: existingUser.id,
+            token: crypto.randomBytes(32).toString('hex'),
+        });
 
-            const link = `http://xsocial.dev/auth/reset-password/${existingUser.id}/${newToken!.token}`;
+        const link = `http://xsocial.dev/auth/reset-password/${existingUser.id}/${newToken!.token}`;
 
-            const emailContent = `<!DOCTYPE html>
+        const emailContent = `<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -84,9 +82,8 @@ export class SendResetToken implements SendResetTokenUseCase {
 </html>
 `;
 
-            await sendEmail(existingUser.email, 'Password Reset', emailContent);
-        } catch (error) {
-            console.log(error);
-        }
+        await sendEmail(existingUser.email, 'Password Reset', emailContent);
+
+        return newToken;
     }
 }

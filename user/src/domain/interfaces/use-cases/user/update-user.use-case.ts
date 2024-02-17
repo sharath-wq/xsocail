@@ -1,5 +1,5 @@
-import { UserRequestModel, UserResponseModel } from '../../../entities/user';
+import { UpdateUserRequstModel, UserRequestModel, UserResponseModel } from '../../../entities/user';
 
 export interface UpdateUserUseCase {
-    execute(id: string, data: UserRequestModel): Promise<UserResponseModel | null>;
+    execute(id: string, data: UpdateUserRequstModel): Promise<UserResponseModel | null>;
 }

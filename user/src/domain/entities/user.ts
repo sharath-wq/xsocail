@@ -8,6 +8,16 @@ export interface UserRequestModel {
     gender?: 'male' | 'female';
 }
 
+export interface UpdateUserRequstModel {
+    username?: string;
+    email?: string;
+    password?: string;
+    fullName?: string;
+    bio?: string;
+    imageUrl?: string;
+    gender?: 'male' | 'female';
+}
+
 export interface UserResponseModel {
     id: string;
     username: string;

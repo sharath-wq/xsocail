@@ -16,6 +16,7 @@ import { natsWrapper } from '../../../nats-wrapper';
 import { UserCreatedPublisher } from '../events/pub/user-created-publisher';
 import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
 import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
+import { BadRequestError } from '@scxsocialcommon/errors';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -143,16 +144,21 @@ export class UserController implements UserControllerInterface {
     async sendResetToken(req: Request, res: Response, next: NextFunction): Promise<void> {
         const email = req.body.email;
         try {
-            await this.sendRestTokenUseCase.execute(email);
-            res.send({});
+            const token = await this.sendRestTokenUseCase.execute(email);
+
+            res.status(200).send({});
         } catch (error) {
             next(error);
         }
     }
 
     async resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { password } = req.body;
+        const { userId, token } = req.params;
         try {
-            res.send({});
+            await this.resetPasswordUsecase.execute(password, userId, token);
+
+            res.status(200).send({});
         } catch (error) {
             next(error);
         }

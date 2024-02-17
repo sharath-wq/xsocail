@@ -1,8 +1,20 @@
-import { UserModel, UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
+import { UpdateUserRequstModel, UserModel, UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
 import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
 export class MongoDBUserDataSource implements UserDataSource {
+    async updatePassword(id: string, password: string): Promise<void> {
+        try {
+            const existingUser = await User.findById(id);
+
+            if (existingUser) {
+                existingUser.password = password;
+                await existingUser.save();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     async getAll(): Promise<UserResponseModel[]> {
         try {
             const results = await User.find();
@@ -50,7 +62,7 @@ export class MongoDBUserDataSource implements UserDataSource {
         await User.findByIdAndDelete(id);
     }
 
-    async updateOne(id: string, user: UserRequestModel): Promise<UserResponseModel | null> {
+    async updateOne(id: string, user: UpdateUserRequstModel): Promise<UserResponseModel | null> {
         try {
             const existingUser = await User.findByIdAndUpdate(id, user);
 

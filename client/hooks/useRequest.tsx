@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, AxiosError, Method } from 'axios';
 import { useState } from 'react';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'; // Import your alert library
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 
 interface UseRequestProps {
@@ -44,8 +44,6 @@ const useRequest = ({ url, method, body, onSuccess, contentType }: UseRequestPro
             // @ts-ignore
             const details = axiosError?.response?.data?.errors[0].message || [];
             // const errorMessage = details.length > 0 ? details[0].message : 'Unknown error';
-
-            console.log(details);
 
             // Build the JSX element for displaying the error
             const errorComponent = (
