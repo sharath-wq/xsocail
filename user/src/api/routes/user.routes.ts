@@ -54,13 +54,11 @@ export default function UserRouter(
 
     router.delete('/:id', async (req, res, next) => userController.deleteUser(req, res, next));
 
-    // change the auth check to api gateway
     router.patch(
         '/:id',
         [
             body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
             body('email').isEmail().withMessage('Invalid email address'),
-            body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
             body('fullName').isLength({ min: 1 }).withMessage('Full name is required'),
         ],
         validateRequest,
