@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
 import { Password } from '../../../../utils/password';
 
 const UserSchema = new mongoose.Schema(
@@ -24,6 +23,7 @@ const UserSchema = new mongoose.Schema(
         },
         bio: {
             type: String,
+            default: '',
         },
         imageUrl: {
             type: String,
@@ -32,7 +32,8 @@ const UserSchema = new mongoose.Schema(
         },
         gender: {
             type: String,
-            enum: ['male', 'female'],
+            enum: ['male', 'female', 'N/A'],
+            default: 'N/A',
         },
         posts: [
             {
@@ -57,16 +58,6 @@ const UserSchema = new mongoose.Schema(
         createdAt: {
             type: Date,
             default: Date.now(),
-        },
-        settings: {
-            privacy: {
-                type: String,
-                enum: ['public', 'private'],
-            },
-            theme: {
-                type: String,
-                enum: ['dark', 'light'],
-            },
         },
         isAdmin: {
             type: Boolean,

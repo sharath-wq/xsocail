@@ -10,6 +10,8 @@ import { TokenRepositoryImpl } from './domain/repository/token.repository';
 import { MongoDBTokenDataSource } from './data/data-source/mongodb/mongodb-token-datasource';
 import { SendResetToken } from './domain/use-cases/token/send-reset-token.use-case';
 import { ResetPassword } from './domain/use-cases/token/reset-password.use-case';
+import { PostCreatedListener } from './api/events/sub/user-created-listener';
+import { AddPost } from './domain/use-cases/user/add-post.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -64,6 +66,8 @@ const start = async () => {
         });
         process.on('SIGINT', () => natsWrapper.client.close());
         process.on('SIGTERM', () => natsWrapper.client.close());
+
+        new PostCreatedListener(natsWrapper.client, new AddPost(new UserRepositoryImpl(datasource))).listen();
     } catch (error) {
         console.log(error);
     }

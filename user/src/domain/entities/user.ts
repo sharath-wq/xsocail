@@ -6,6 +6,7 @@ export interface UserRequestModel {
     bio?: string;
     imageUrl?: string;
     gender?: 'male' | 'female';
+    post: string;
 }
 
 export interface UpdateUserRequstModel {
@@ -16,6 +17,7 @@ export interface UpdateUserRequstModel {
     bio?: string;
     imageUrl?: string;
     gender?: 'male' | 'female';
+    post: string;
 }
 
 export interface UserResponseModel {
@@ -23,17 +25,13 @@ export interface UserResponseModel {
     username: string;
     email: string;
     fullName: string;
-    bio?: string;
+    bio: string;
     imageUrl: string;
-    gender?: 'male' | 'female';
-    trackers?: string[];
-    tracking?: string[];
-    savedPosts?: string[];
+    followers: string[];
+    following: string[];
+    savedPosts: string[];
+    posts: string[];
     createdAt: Date;
-    settings?: {
-        privacy: 'public' | 'private';
-        theme: 'dark' | 'light';
-    };
     isAdmin: boolean;
 }
 
@@ -43,17 +41,13 @@ export interface UserModel {
     email: string;
     password: string;
     fullName: string;
-    bio?: string;
+    bio: string;
     imageUrl: string;
-    gender?: 'male' | 'female';
-    trackers?: string[];
-    tracking?: string[];
-    savedPosts?: string[];
+    followers: string[];
+    folowing: string[];
+    savedPosts: string[];
+    posts: string[];
     createdAt: Date;
-    settings?: {
-        privacy: 'public' | 'private';
-        theme: 'dark' | 'light';
-    };
     isAdmin: boolean;
 }
 

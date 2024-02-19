@@ -1,8 +1,22 @@
+import { NotFoundError } from '@scxsocialcommon/errors';
 import { UpdateUserRequstModel, UserModel, UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
 import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
 export class MongoDBUserDataSource implements UserDataSource {
+    async addPost(userId: string, postId: string): Promise<void> {
+        try {
+            const existingUser = await User.findById(userId);
+
+            if (existingUser) {
+                existingUser.posts.push(postId);
+                existingUser.save();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async updatePassword(id: string, password: string): Promise<void> {
         try {
             const existingUser = await User.findById(id);
@@ -21,12 +35,17 @@ export class MongoDBUserDataSource implements UserDataSource {
 
             return results.map((item) => ({
                 id: item.id,
+                bio: item.bio,
+                followers: item.followers,
+                following: item.following,
+                savedPosts: item.savedPosts,
                 username: item.username,
                 email: item.email,
                 fullName: item.fullName,
                 createdAt: item.createdAt,
                 isAdmin: item.isAdmin,
                 imageUrl: item.imageUrl,
+                posts: item.posts,
             }));
         } catch (error: any) {
             console.log('Error Finding User');
@@ -40,12 +59,17 @@ export class MongoDBUserDataSource implements UserDataSource {
             if (result) {
                 return {
                     id: result.id,
+                    bio: result.bio,
+                    followers: result.followers,
+                    following: result.following,
+                    savedPosts: result.savedPosts,
                     username: result.username,
                     email: result.email,
                     fullName: result.fullName,
                     createdAt: result.createdAt,
                     isAdmin: result.isAdmin,
                     imageUrl: result.imageUrl,
+                    posts: result.posts,
                 };
             } else {
                 return null;
@@ -69,12 +93,17 @@ export class MongoDBUserDataSource implements UserDataSource {
             if (existingUser) {
                 return {
                     id: existingUser.id,
+                    bio: existingUser.bio,
+                    followers: existingUser.followers,
+                    following: existingUser.following,
+                    savedPosts: existingUser.savedPosts,
                     username: existingUser.username,
                     email: existingUser.email,
                     fullName: existingUser.fullName,
                     createdAt: existingUser.createdAt,
                     isAdmin: existingUser.isAdmin,
                     imageUrl: existingUser.imageUrl,
+                    posts: existingUser.posts,
                 };
             } else {
                 return null;
@@ -91,12 +120,17 @@ export class MongoDBUserDataSource implements UserDataSource {
             if (result) {
                 return {
                     id: result.id,
+                    bio: result.bio,
+                    followers: result.followers,
+                    following: result.following,
+                    savedPosts: result.savedPosts,
                     username: result.username,
                     email: result.email,
                     fullName: result.fullName,
                     createdAt: result.createdAt,
                     isAdmin: result.isAdmin,
                     imageUrl: result.imageUrl,
+                    posts: result.posts,
                 };
             } else {
                 return null;
@@ -114,13 +148,18 @@ export class MongoDBUserDataSource implements UserDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    createdAt: result.createdAt,
+                    bio: result.bio,
+                    followers: result.followers,
+                    folowing: result.following,
+                    savedPosts: result.savedPosts,
+                    username: result.username,
                     email: result.email,
                     fullName: result.fullName,
+                    createdAt: result.createdAt,
                     isAdmin: result.isAdmin,
-                    password: result.password,
-                    username: result.username,
                     imageUrl: result.imageUrl,
+                    password: result.password,
+                    posts: result.posts,
                 };
             } else {
                 return null;
@@ -137,12 +176,17 @@ export class MongoDBUserDataSource implements UserDataSource {
             if (result) {
                 return {
                     id: result.id,
+                    bio: result.bio,
+                    followers: result.followers,
+                    following: result.following,
+                    savedPosts: result.savedPosts,
                     username: result.username,
                     email: result.email,
                     fullName: result.fullName,
                     createdAt: result.createdAt,
                     isAdmin: result.isAdmin,
                     imageUrl: result.imageUrl,
+                    posts: result.posts,
                 };
             } else {
                 return null;

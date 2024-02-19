@@ -20,6 +20,9 @@ import { CloudinaryFile } from '../../config/cloudinary.config';
 import sharp from 'sharp';
 import { PostRequestModel } from '../../domain/entities/post';
 
+import { PostCreatedPublisher } from '../events/pub/post-created-publisher';
+import { natsWrapper } from '../../../nats-wrapper';
+
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
     deletePostUseCase: DeletePostUseCase;
@@ -99,6 +102,14 @@ export class PostController implements PostControllerInterface {
             await Promise.all(uploadPromises);
 
             const post = await this.createPostUseCase.execute(nwePost, req.currentUser.userId);
+
+            if (post) {
+                await new PostCreatedPublisher(natsWrapper.client).publish({
+                    auhtorId: post.author.userId,
+                    postId: post.id,
+                });
+            }
+
             res.status(201).send(post);
         } catch (error: any) {
             console.error('Error creating post:', error);
