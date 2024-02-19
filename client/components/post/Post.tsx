@@ -15,18 +15,18 @@ import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 import { PostData } from '@/types/post';
 
-const Post = ({ authorId, caption, comments, createdAt, id, imageUrls, likes, tags }: PostData) => {
+const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags }: PostData) => {
     return (
         <Card>
             <CardHeader>
                 <div className='flex justify-between'>
                     <div className='flex gap-4'>
                         <Avatar>
-                            <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
+                            <AvatarImage src={author.imageUrl} alt={author.username} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div>
-                            <CardTitle>User</CardTitle>
+                            <CardTitle>{author.username}</CardTitle>
                             <CardDescription>Just Now</CardDescription>
                         </div>
                     </div>
@@ -63,13 +63,10 @@ const Post = ({ authorId, caption, comments, createdAt, id, imageUrls, likes, ta
                                 <div className='p-1'>
                                     <Card>
                                         <CardContent className='flex aspect-square items-center justify-center p-6'>
-                                            <Image
+                                            <img
                                                 src={imageUrls[index]}
-                                                alt={'image'}
-                                                width={800}
-                                                height={600}
-                                                priority={false}
-                                                placeholder='empty'
+                                                alt={`image-${index}`}
+                                                style={{ objectFit: 'contain', width: '100%', height: '100%' }}
                                             />
                                         </CardContent>
                                     </Card>

@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useRouter } from 'next/navigation';
 import useRequest from '@/hooks/useRequest';
@@ -18,6 +18,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import GoogleBtn from '@/components/googleButton/GoogleBtn';
+import { useUser } from '@/context/userContext';
 
 const Register: React.FC = () => {
     // 1. Define your form.
@@ -36,8 +37,6 @@ const Register: React.FC = () => {
     function onSubmit(values: z.infer<typeof SignupValidation>) {
         setisSubmiting(true);
         doRequest(values);
-
-        console.log(values);
     }
 
     const [isSubmiting, setisSubmiting] = useState(false);
@@ -56,6 +55,15 @@ const Register: React.FC = () => {
             router.push('/auth/login');
         },
     });
+
+    const { currentUser, getCurrentUser } = useUser();
+
+    useEffect(() => {
+        if (currentUser) {
+            getCurrentUser();
+            router.replace('/home');
+        }
+    }, [currentUser, router]);
 
     return (
         <div className='flex flex-col items-center'>

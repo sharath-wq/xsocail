@@ -4,6 +4,7 @@ import { FileWithPath, useDropzone } from 'react-dropzone';
 import { Button } from '../ui/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import { Card, CardContent } from '../ui/card';
+import Image from 'next/image';
 
 type FileUploderProps = {
     fieldChange: (files: File[]) => void;

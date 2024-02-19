@@ -7,5 +7,4 @@ export interface UserControllerInterface {
     getAllUser(req: Request, res: Response, next: NextFunction): Promise<void>;
     getUser(req: Request, res: Response, next: NextFunction): Promise<void>;
     Login(req: Request, res: Response, next: NextFunction): Promise<void>;
-    Logout(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

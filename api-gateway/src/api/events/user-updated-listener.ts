@@ -1,7 +1,6 @@
-import { Listener, Subjects, UserUpdatedEvent } from '@scxsocialcommon/event';
+import { Listener, Subjects, UserCreatedEvent, UserUpdatedEvent } from '@scxsocialcommon/event';
 import { Message, Stan } from 'node-nats-streaming';
 import { queueGroupName } from './queue-group-name';
-
 import { UpdateUserUseCase } from '../../domain/interface/use-cases';
 
 export class UserUpdatedListener extends Listener<UserUpdatedEvent> {
@@ -16,7 +15,7 @@ export class UserUpdatedListener extends Listener<UserUpdatedEvent> {
 
     async onMessage(data: UserUpdatedEvent['data'], msg: Message) {
         if (!this.updateUserUseCase) {
-            console.error('UpdateUserUseCase not initialized.');
+            console.error('CreateUserUseCase not initialized.');
             msg.ack();
             return;
         }
@@ -28,7 +27,7 @@ export class UserUpdatedListener extends Listener<UserUpdatedEvent> {
                 msg.ack();
             }
         } catch (error: any) {
-            console.error('Error processing UserUpdateddEvent:', error.message);
+            console.error('Error processing UserCreatedEvent:', error.message);
             msg.ack();
         }
     }

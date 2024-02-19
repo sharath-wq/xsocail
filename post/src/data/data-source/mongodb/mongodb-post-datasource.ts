@@ -6,18 +6,28 @@ import { Post } from './schema/post.schema';
 export class MongoDBPostDataSource implements PostDataSource {
     async findByAuthor(authorId: string): Promise<PostModel[] | []> {
         try {
-            const results = await Post.find({ authorId });
+            const results = await Post.find({});
 
-            return results.map((item) => ({
-                id: item.id,
-                author: item.author,
-                caption: item.caption,
-                tags: item.tags,
-                imageUrls: item.imageUrls,
-                likes: item.likes,
-                comments: item.comments,
-                createdAt: item.createdAt,
-            }));
+            const userPosts = results.filter((item: any) => item.author.userId === authorId);
+
+            if (userPosts && userPosts.length) {
+                return userPosts.map((item) => ({
+                    id: item.id,
+                    author: {
+                        userId: item.author!.userId!,
+                        username: item.author!.username!,
+                        imageUrl: item.author!.imageUrl!,
+                    },
+                    caption: item.caption,
+                    tags: item.tags,
+                    imageUrls: item.imageUrls,
+                    likes: item.likes,
+                    comments: item.comments,
+                    createdAt: item.createdAt,
+                }));
+            }
+
+            return [];
         } catch (error) {
             console.error('Error finding Posts by author', error);
             throw error;
@@ -31,7 +41,11 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.author,
+                    author: {
+                        userId: result.author!.userId!,
+                        username: result.author!.username!,
+                        imageUrl: result.author!.imageUrl!,
+                    },
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
@@ -57,7 +71,11 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.author,
+                    author: {
+                        userId: result.author!.userId!,
+                        username: result.author!.username!,
+                        imageUrl: result.author!.imageUrl!,
+                    },
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
@@ -80,7 +98,11 @@ export class MongoDBPostDataSource implements PostDataSource {
 
             return result.map((item) => ({
                 id: item.id,
-                author: item.author,
+                author: {
+                    userId: item.author!.userId!,
+                    username: item.author!.username!,
+                    imageUrl: item.author!.imageUrl!,
+                },
                 caption: item.caption,
                 tags: item.tags,
                 imageUrls: item.imageUrls,
@@ -110,7 +132,11 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.author,
+                    author: {
+                        userId: result.author!.userId!,
+                        username: result.author!.username!,
+                        imageUrl: result.author!.imageUrl!,
+                    },
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
@@ -134,7 +160,11 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (result) {
                 return {
                     id: result.id,
-                    author: result.author,
+                    author: {
+                        userId: result.author!.userId!,
+                        username: result.author!.username!,
+                        imageUrl: result.author!.imageUrl!,
+                    },
                     caption: result.caption,
                     tags: result.tags,
                     imageUrls: result.imageUrls,

@@ -92,17 +92,10 @@ export class UserController implements UserControllerInterface {
         }
     }
 
-    async logout(
-        req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
-        res: Response<any, Record<string, any>>,
-        next: NextFunction
-    ): Promise<void> {
-        const path = req.originalUrl.replace('/api/users', '');
-
+    async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const response = await axios.post(`${USER_SERVICE_ENDPOINT}${path}`);
             req.session = null;
-            res.status(response.status).send(response.data);
+            res.send({});
         } catch (error: any) {
             res.status(error?.response?.status).send(error.response.data);
         }
@@ -151,6 +144,7 @@ export class UserController implements UserControllerInterface {
 
             if (user) {
                 res.send({ currentUser: req.currentUser });
+                return;
             }
 
             res.send({ currentUser: null });
@@ -161,8 +155,6 @@ export class UserController implements UserControllerInterface {
 
     async googleAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log(req.body.email);
-
             const existingUser = await this.getUserByEmailUseCase.execute(req.body.email);
 
             if (!existingUser) {
@@ -171,21 +163,20 @@ export class UserController implements UserControllerInterface {
                     password: generateRandomPassword(),
                 });
 
-                if (newUser) {
-                    const userJwt = jwt.sign(
-                        {
-                            userId: newUser.data.userId,
-                            username: newUser.data.username,
-                            isAdmin: newUser.data.isAdmin,
-                            imageUrl: newUser.data.imageUrl,
-                        },
-                        process.env.JWT_KEY!
-                    );
+                const userJwt = jwt.sign(
+                    {
+                        userId: newUser.data.userId,
+                        username: newUser.data.username,
+                        isAdmin: newUser.data.isAdmin,
+                        imageUrl: newUser.data.imageUrl,
+                    },
+                    process.env.JWT_KEY!
+                );
 
-                    req.session = {
-                        jwt: userJwt,
-                    };
-                }
+                req.session = {
+                    jwt: userJwt,
+                };
+                res.send({});
             } else {
                 const userJwt = jwt.sign(
                     {
@@ -200,9 +191,8 @@ export class UserController implements UserControllerInterface {
                 req.session = {
                     jwt: userJwt,
                 };
+                res.send({});
             }
-
-            res.send({});
         } catch (error: any) {
             res.status(error?.response?.status).send(error?.response?.data);
         }

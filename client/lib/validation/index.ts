@@ -23,3 +23,24 @@ export const PostValidation = z.object({
     files: z.custom<File[]>(),
     tags: z.string(),
 });
+
+export const ForgotPasswordValiation = z.object({
+    email: z.string().email(),
+});
+
+export const EditProfileValiation = z.object({
+    email: z.string().email(),
+    fullName: z.string().min(4, { message: 'Name must be at least 4 characters.' }),
+    username: z.string().min(2, { message: 'Username must be at least 2 characters.' }),
+    bio: z.string().min(2, { message: 'Bio must be at least 2 characters.' }),
+});
+
+export const PasswordResetValidation = z
+    .object({
+        password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ['confirmPassword'],
+    });

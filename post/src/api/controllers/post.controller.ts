@@ -20,6 +20,9 @@ import { CloudinaryFile } from '../../config/cloudinary.config';
 import sharp from 'sharp';
 import { PostRequestModel } from '../../domain/entities/post';
 
+import { PostCreatedPublisher } from '../events/pub/post-created-publisher';
+import { natsWrapper } from '../../../nats-wrapper';
+
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
     deletePostUseCase: DeletePostUseCase;
@@ -55,7 +58,11 @@ export class PostController implements PostControllerInterface {
             const nwePost: PostRequestModel = {
                 caption: req.body.caption,
                 tags: req.body.tags,
-                author: req.currentUser.userId,
+                author: {
+                    userId: req.currentUser.userId,
+                    username: req.currentUser.username,
+                    imageUrl: req.currentUser.imageUrl,
+                },
                 imageUrls: [],
             };
 
@@ -82,7 +89,6 @@ export class PostController implements PostControllerInterface {
                                 console.error('Cloudinary upload error: Result is undefined');
                                 reject(new Error('Cloudinary upload result is undefined'));
                             } else {
-                                console.log(result.secure_url);
                                 nwePost.imageUrls.push(result.secure_url);
                                 resolve();
                             }
@@ -96,6 +102,14 @@ export class PostController implements PostControllerInterface {
             await Promise.all(uploadPromises);
 
             const post = await this.createPostUseCase.execute(nwePost, req.currentUser.userId);
+
+            if (post) {
+                await new PostCreatedPublisher(natsWrapper.client).publish({
+                    auhtorId: post.author.userId,
+                    postId: post.id,
+                });
+            }
+
             res.status(201).send(post);
         } catch (error: any) {
             console.error('Error creating post:', error);
@@ -114,7 +128,7 @@ export class PostController implements PostControllerInterface {
                 throw new NotFoundError();
             }
 
-            if (existingPost.author !== userId) {
+            if (existingPost.author.userId !== userId) {
                 throw new NotAuthorizedError();
             }
 
@@ -135,7 +149,7 @@ export class PostController implements PostControllerInterface {
                 throw new NotFoundError();
             }
 
-            if (post.author !== userId) {
+            if (post.author.userId !== userId) {
                 throw new NotAuthorizedError();
             }
 
@@ -166,12 +180,14 @@ export class PostController implements PostControllerInterface {
         }
     }
 
-    async getUserPosts(req: Request, res: Response): Promise<void> {
+    async getUserPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
         const userId = req.params.userId;
         try {
-            const userPost = await this.getUserPostsUseCase.execute(userId);
+            const userPosts = await this.getUserPostsUseCase.execute(userId);
+
+            res.send(userPosts);
         } catch (error) {
-            throw error;
+            next(error);
         }
     }
 }

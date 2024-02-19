@@ -62,8 +62,6 @@ export default function PostRouter(
         ],
         validateRequest,
         async (req: Request, res: Response, next: NextFunction) => {
-            console.log(req.body);
-
             postController.updatePost(req, res, next);
         }
     );
@@ -72,8 +70,8 @@ export default function PostRouter(
         postController.getOnePost(req, res);
     });
 
-    router.get('/user/:userId', async (req, res) => {
-        postController.getUserPosts(req, res);
+    router.get('/user/:userId', async (req, res, next) => {
+        postController.getUserPosts(req, res, next);
     });
 
     router.delete('/:id', async (req, res, next) => {

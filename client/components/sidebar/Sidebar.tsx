@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { LogOut } from 'lucide-react';
 import useRequest from '@/hooks/useRequest';
 import { useRouter } from 'next/navigation';
-import { toast } from '../ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { useUser } from '@/context/userContext';
 
@@ -19,6 +19,8 @@ const Sidebar = () => {
         setMobileMenuOpen(!isMobileMenuOpen);
     };
 
+    const { getCurrentUser } = useUser();
+
     const { doRequest } = useRequest({
         url: '/api/users/logout',
         method: 'post',
@@ -27,6 +29,7 @@ const Sidebar = () => {
             toast({
                 description: 'Logout successful',
             });
+            getCurrentUser();
             router.push('/auth/login');
         },
     });
@@ -55,7 +58,7 @@ const Sidebar = () => {
                         </Avatar>
                     </div>
 
-                    <nav>
+                    <nav className='ml-5'>
                         <ul className='space-y-4 flex-grow'>
                             {links.map((link) => (
                                 <li

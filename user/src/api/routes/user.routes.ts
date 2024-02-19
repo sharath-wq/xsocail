@@ -8,9 +8,11 @@ import {
     UpdateUserUseCase,
     LoginUseCase,
     LogoutUseCase,
-} from '../../domain/interfaces/use-cases/index';
+} from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
-import { validateRequest, requireAuth, currentUser } from '@scxsocialcommon/errors';
+import { validateRequest } from '@scxsocialcommon/errors';
+import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
+import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
 
 export default function UserRouter(
     createUserUseCase: CretaeUserUseCase,
@@ -19,7 +21,8 @@ export default function UserRouter(
     getUserUseCase: GetUserUseCase,
     updateUserUseCase: UpdateUserUseCase,
     loginUseCase: LoginUseCase,
-    logoutUseCase: LogoutUseCase
+    sendRestTokenUseCase: SendResetTokenUseCase,
+    resetPasswordUsecase: ResetPasswordUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -29,7 +32,8 @@ export default function UserRouter(
         getUserUseCase,
         updateUserUseCase,
         loginUseCase,
-        logoutUseCase
+        sendRestTokenUseCase,
+        resetPasswordUsecase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -50,13 +54,11 @@ export default function UserRouter(
 
     router.delete('/:id', async (req, res, next) => userController.deleteUser(req, res, next));
 
-    // change the auth check to api gateway
     router.patch(
         '/:id',
         [
             body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
             body('email').isEmail().withMessage('Invalid email address'),
-            body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
             body('fullName').isLength({ min: 1 }).withMessage('Full name is required'),
         ],
         validateRequest,
@@ -73,8 +75,12 @@ export default function UserRouter(
         async (req: Request, res: Response, next: NextFunction) => userController.Login(req, res, next)
     );
 
-    router.post('/logout', async (req: Request, res: Response, next: NextFunction) =>
-        userController.Logout(req, res, next)
+    router.post('/reset-password', async (req: Request, res: Response, next: NextFunction) =>
+        userController.sendResetToken(req, res, next)
+    );
+
+    router.post('/reset-password/:userId/:token', async (req: Request, res: Response, next: NextFunction) =>
+        userController.resetPassword(req, res, next)
     );
 
     return router;

@@ -7,16 +7,16 @@ import {
     UpdateUserUseCase,
     LoginUseCase,
     LogoutUseCase,
-} from '../../domain/interfaces/use-cases/index';
+} from '../../domain/interfaces/use-cases/user/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
 
-import jwt from 'jsonwebtoken';
 import { UserUpdatedPubliser } from '../events/pub/user-updated-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 import { UserCreatedPublisher } from '../events/pub/user-created-publisher';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
+import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
+import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
+import { BadRequestError } from '@scxsocialcommon/errors';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -25,7 +25,8 @@ export class UserController implements UserControllerInterface {
     getUserUseCase: GetUserUseCase;
     updateUserUseCase: UpdateUserUseCase;
     loginUseCase: LoginUseCase;
-    logoutUseCase: LogoutUseCase;
+    sendRestTokenUseCase: SendResetTokenUseCase;
+    resetPasswordUsecase: ResetPasswordUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -34,7 +35,8 @@ export class UserController implements UserControllerInterface {
         getUserUseCase: GetUserUseCase,
         updateUserUseCase: UpdateUserUseCase,
         loginUseCase: LoginUseCase,
-        logoutUseCase: LogoutUseCase
+        sendRestTokenUseCase: SendResetTokenUseCase,
+        resetPasswordUsecase: ResetPasswordUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -42,7 +44,8 @@ export class UserController implements UserControllerInterface {
         this.getUserUseCase = getUserUseCase;
         this.updateUserUseCase = updateUserUseCase;
         this.loginUseCase = loginUseCase;
-        this.logoutUseCase = logoutUseCase;
+        this.sendRestTokenUseCase = sendRestTokenUseCase;
+        this.resetPasswordUsecase = resetPasswordUsecase;
     }
     async Login(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -50,14 +53,6 @@ export class UserController implements UserControllerInterface {
             const user = await this.loginUseCase.execute(email, password);
 
             res.status(200).send({ user });
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async Logout(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            res.send({});
         } catch (error) {
             next(error);
         }
@@ -130,6 +125,29 @@ export class UserController implements UserControllerInterface {
             const id = req.params.id;
             const user = await this.getUserUseCase.execute(id);
             res.send(user);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async sendResetToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const email = req.body.email;
+        try {
+            const token = await this.sendRestTokenUseCase.execute(email);
+
+            res.status(200).send({});
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { password } = req.body;
+        const { userId, token } = req.params;
+        try {
+            await this.resetPasswordUsecase.execute(password, userId, token);
+
+            res.status(200).send({});
         } catch (error) {
             next(error);
         }

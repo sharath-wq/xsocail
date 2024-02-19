@@ -7,8 +7,21 @@ import React from 'react';
 import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { PostData } from '@/types/post';
+import { useUser } from '@/context/userContext';
+import { useRouter } from 'next/navigation';
 
 const Home = async () => {
+    const { currentUser } = useUser();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!currentUser) {
+            router.push('/auth/login');
+        } else {
+            router.push('/home');
+        }
+    }, [currentUser, router]);
+
     const [posts, setPosts] = useState<PostData[]>();
 
     useEffect(() => {

@@ -7,21 +7,17 @@ import { POST_SERVICE_ENDPOINT, POST_SERVICE_INSTANCE } from '../../constants/en
 export class PostController implements IPostController {
     async postService(req: Request, res: Response, next: NextFunction): Promise<void> {
         const path = req.originalUrl.replace('/api/posts', '');
-
         try {
-            // Create a FormData object for multipart/form-data
             const formData = new FormData();
 
-            // Append form fields from req.body
             for (const key in req.body) {
                 formData.append(key, req.body[key]);
             }
 
-            // Make the POST request using axios
             const response = await axios.post(`${POST_SERVICE_ENDPOINT}${path}`, formData, {
                 headers: {
                     ...req.headers,
-                    ...formData.getHeaders(), // Set the correct Content-Type header
+                    ...formData.getHeaders(),
                 },
             });
 
