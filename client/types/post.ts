@@ -1,4 +1,4 @@
-export interface PostData {
+export interface PostProps {
     id: number;
     author: {
         userId: string;
@@ -11,6 +11,7 @@ export interface PostData {
     likes: string[];
     comments: string[];
     createdAt: Date;
+    getData: () => void;
 }
 
 export type UserPostData = {

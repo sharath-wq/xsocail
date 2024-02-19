@@ -17,6 +17,19 @@ export class MongoDBUserDataSource implements UserDataSource {
         }
     }
 
+    async deletePost(userId: string, postId: string): Promise<void> {
+        try {
+            const existingUser = await User.findById(userId);
+
+            if (existingUser) {
+                existingUser.posts = existingUser.posts.filter((id) => id !== postId);
+                existingUser.save();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async updatePassword(id: string, password: string): Promise<void> {
         try {
             const existingUser = await User.findById(id);

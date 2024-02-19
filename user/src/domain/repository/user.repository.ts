@@ -8,6 +8,9 @@ export class UserRepositoryImpl implements UserRepository {
     constructor(UserDataSource: UserDataSource) {
         this.UserDataSource = UserDataSource;
     }
+    async deletePost(userId: string, postId: string): Promise<void> {
+        const result = await this.UserDataSource.deletePost(userId, postId);
+    }
     async addPost(userId: string, postId: string): Promise<void> {
         const result = await this.UserDataSource.addPost(userId, postId);
     }

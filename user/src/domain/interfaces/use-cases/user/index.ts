@@ -6,6 +6,8 @@ import { GetUserUseCase } from './get-user.use-case';
 import { LoginUseCase } from './login.use-case';
 import { LogoutUseCase } from './logout-user.use-case';
 import { AddPostUseCase } from './add-post.use-case';
+import { DeletePostUseCase } from './delete-post.use-case';
+
 export {
     CretaeUserUseCase,
     UpdateUserUseCase,
@@ -15,4 +17,5 @@ export {
     LoginUseCase,
     LogoutUseCase,
     AddPostUseCase,
+    DeletePostUseCase,
 };
