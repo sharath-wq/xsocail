@@ -34,7 +34,7 @@ export const links = [
     },
     {
         label: 'Account',
-        link: '/account',
+        link: '/profile',
         icon: <CircleUser />,
     },
 ];

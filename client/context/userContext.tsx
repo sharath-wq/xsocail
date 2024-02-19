@@ -4,7 +4,13 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 
 interface UserContextType {
-    currentUser: any;
+    currentUser: {
+        userId: string;
+        username: string;
+        isAdmin: boolean;
+        imageUrl: string;
+        iat: number;
+    } | null;
     getCurrentUser: () => Promise<void>;
 }
 

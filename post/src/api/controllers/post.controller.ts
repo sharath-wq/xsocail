@@ -86,7 +86,6 @@ export class PostController implements PostControllerInterface {
                                 console.error('Cloudinary upload error: Result is undefined');
                                 reject(new Error('Cloudinary upload result is undefined'));
                             } else {
-                                console.log(result.secure_url);
                                 nwePost.imageUrls.push(result.secure_url);
                                 resolve();
                             }
@@ -170,12 +169,14 @@ export class PostController implements PostControllerInterface {
         }
     }
 
-    async getUserPosts(req: Request, res: Response): Promise<void> {
+    async getUserPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
         const userId = req.params.userId;
         try {
-            const userPost = await this.getUserPostsUseCase.execute(userId);
+            const userPosts = await this.getUserPostsUseCase.execute(userId);
+
+            res.send(userPosts);
         } catch (error) {
-            throw error;
+            next(error);
         }
     }
 }

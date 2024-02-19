@@ -6,5 +6,5 @@ export interface PostControllerInterface {
     deletePost(req: Request, res: Response, next: NextFunction): Promise<void>;
     getAllPosts(req: Request, res: Response): Promise<void>;
     getOnePost(req: Request, res: Response): Promise<void>;
-    getUserPosts(req: Request, res: Response): Promise<void>;
+    getUserPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

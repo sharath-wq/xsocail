@@ -144,6 +144,7 @@ export class UserController implements UserControllerInterface {
 
             if (user) {
                 res.send({ currentUser: req.currentUser });
+                return;
             }
 
             res.send({ currentUser: null });
@@ -154,8 +155,6 @@ export class UserController implements UserControllerInterface {
 
     async googleAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log(req.body.email);
-
             const existingUser = await this.getUserByEmailUseCase.execute(req.body.email);
 
             if (!existingUser) {

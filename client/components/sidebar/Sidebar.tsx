@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { LogOut } from 'lucide-react';
 import useRequest from '@/hooks/useRequest';
 import { useRouter } from 'next/navigation';
-import { toast } from '../ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { useUser } from '@/context/userContext';
 
