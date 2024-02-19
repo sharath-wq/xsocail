@@ -88,7 +88,7 @@ export class MongoDBUserDataSource implements UserDataSource {
 
     async updateOne(id: string, user: UpdateUserRequstModel): Promise<UserResponseModel | null> {
         try {
-            const existingUser = await User.findByIdAndUpdate(id, user);
+            const existingUser = await User.findByIdAndUpdate(id, user, { new: true });
 
             if (existingUser) {
                 return {
