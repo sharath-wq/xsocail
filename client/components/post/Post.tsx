@@ -9,6 +9,16 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import {
     AlertDialog,
     AlertDialogAction,
     AlertDialogCancel,
@@ -20,7 +30,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Bookmark, Heart, MessageCircle, MoreVertical, Send } from 'lucide-react';
+import { Bookmark, CopyIcon, Heart, MessageCircle, MoreVertical, Send } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import { Separator } from '@/components/ui/separator';
 import { PostProps } from '@/types/post';
@@ -29,6 +39,8 @@ import useRequest from '@/hooks/useRequest';
 import { toast } from '../ui/use-toast';
 
 import TimeAgo from 'react-timeago';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
 
 const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, getData }: PostProps) => {
     const { currentUser } = useUser();
@@ -116,7 +128,47 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                                         </DropdownMenuItem>
                                     )}
                                     <DropdownMenuItem>
-                                        <span>Copy Link</span>
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <span onClick={(e) => e.stopPropagation()}>Share</span>
+                                            </DialogTrigger>
+                                            <DialogContent className='sm:max-w-md'>
+                                                <DialogHeader>
+                                                    <DialogTitle>Share link</DialogTitle>
+                                                    <DialogDescription>
+                                                        Anyone who has this link will be able to view this.
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <div
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className='flex items-center space-x-2'
+                                                >
+                                                    <div className='grid flex-1 gap-2'>
+                                                        <Label htmlFor='link' className='sr-only'>
+                                                            Link
+                                                        </Label>
+                                                        <Input
+                                                            id='link'
+                                                            defaultValue={`http://xsocial.dev/post/${id}`}
+                                                            readOnly
+                                                        />
+                                                    </div>
+                                                    <Button type='submit' size='sm' className='px-3'>
+                                                        <span onClick={(e) => e.stopPropagation()} className='sr-only'>
+                                                            Copy
+                                                        </span>
+                                                        <CopyIcon className='h-4 w-4' />
+                                                    </Button>
+                                                </div>
+                                                <DialogFooter className='sm:justify-start'>
+                                                    <DialogClose asChild>
+                                                        <Button type='button' variant='secondary'>
+                                                            Close
+                                                        </Button>
+                                                    </DialogClose>
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
                             </DropdownMenuContent>
