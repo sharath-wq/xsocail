@@ -2,16 +2,27 @@ import { app } from './app';
 import { connect } from './data/data-source/mongodb/connection';
 
 import UserRouter from './api/routes/user.routes';
-import { CreateUser, DeleteUser, GetAllUsers, GetUser, Login, Logout, UpdateUser } from './domain/use-cases/user/index';
+import {
+    AddPost,
+    CreateUser,
+    DeletePost,
+    DeleteUser,
+    GetAllUsers,
+    GetUser,
+    Login,
+    ResetPassword,
+    SendResetToken,
+    UpdateUser,
+    UpdateUserProfile,
+} from './domain/use-cases/user/index';
 import { UserRepositoryImpl } from './domain/repository/user.repository';
 import { NotFoundError, currentUser, errorHandler } from '@scxsocialcommon/errors';
 import { natsWrapper } from '../nats-wrapper';
 import { TokenRepositoryImpl } from './domain/repository/token.repository';
 import { MongoDBTokenDataSource } from './data/data-source/mongodb/mongodb-token-datasource';
-import { SendResetToken } from './domain/use-cases/token/send-reset-token.use-case';
-import { ResetPassword } from './domain/use-cases/token/reset-password.use-case';
-import { PostCreatedListener } from './api/events/sub/user-created-listener';
-import { AddPost } from './domain/use-cases/user/add-post.use-case';
+import { PostCreatedListener } from './api/events/sub/post-created-listener';
+import { PostDeletedListener } from './api/events/sub/post-deleted-listener';
+import { MongoDBUserDataSource } from './data/data-source/mongodb/mongodb-user-datasource';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -44,7 +55,8 @@ const start = async () => {
         new UpdateUser(new UserRepositoryImpl(datasource)),
         new Login(new UserRepositoryImpl(datasource)),
         new SendResetToken(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource)),
-        new ResetPassword(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource))
+        new ResetPassword(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource)),
+        new UpdateUserProfile(new UserRepositoryImpl(datasource))
     );
 
     app.use(currentUser);
@@ -68,6 +80,8 @@ const start = async () => {
         process.on('SIGTERM', () => natsWrapper.client.close());
 
         new PostCreatedListener(natsWrapper.client, new AddPost(new UserRepositoryImpl(datasource))).listen();
+
+        new PostDeletedListener(natsWrapper.client, new DeletePost(new UserRepositoryImpl(datasource))).listen();
     } catch (error) {
         console.log(error);
     }

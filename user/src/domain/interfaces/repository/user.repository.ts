@@ -10,4 +10,6 @@ export interface UserRepository {
     getUserByUsername(username: string): Promise<UserResponseModel | null>;
     updatePassword(userId: string, password: string): Promise<void>;
     addPost(userId: string, postId: string): Promise<void>;
+    deletePost(userId: string, postId: string): Promise<void>;
+    updateUserProfileImage(userId: string, imageUrl: string): Promise<UserResponseModel | null>;
 }

@@ -6,7 +6,7 @@ import React from 'react';
 
 import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
-import { PostData } from '@/types/post';
+import { PostProps } from '@/types/post';
 import { useUser } from '@/context/userContext';
 import { useRouter } from 'next/navigation';
 
@@ -22,23 +22,25 @@ const Home = async () => {
         }
     }, [currentUser, router]);
 
-    const [posts, setPosts] = useState<PostData[]>();
+    const [posts, setPosts] = useState<PostProps[]>();
+
+    const getPosts = async () => {
+        try {
+            const { data } = await axios.get('/api/posts/');
+            setPosts(data);
+        } catch (e) {
+            const error = e as AxiosError;
+        }
+    };
 
     useEffect(() => {
-        (async () => {
-            try {
-                const { data } = await axios.get('/api/posts/');
-                setPosts(data);
-            } catch (e) {
-                const error = e as AxiosError;
-            }
-        })();
+        getPosts();
     }, []);
 
     return (
         <div className='w-full flex flex-col gap-10 sm:flex-row'>
             <div className='w-full sm:w-1/2 flex flex-col gap-10'>
-                {posts && posts.map((post: PostData) => <Post {...post} />)}
+                {posts && posts.map((post: PostProps) => <Post {...post} getData={getPosts} />)}
             </div>
 
             <div className='hidden sm:block p-4'>

@@ -10,4 +10,6 @@ export interface UserDataSource {
     findByUsername(username: string): Promise<UserResponseModel | null>;
     updatePassword(id: string, password: string): Promise<void>;
     addPost(userId: string, postId: string): Promise<void>;
+    deletePost(userId: string, postId: string): Promise<void>;
+    updateProfileImage(userId: string, postId: string): Promise<UserResponseModel | null>;
 }

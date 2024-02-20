@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { UserController } from '../controllers/user.controller';
+import multer, { Multer } from 'multer';
 import {
     CretaeUserUseCase,
     DeleteUserUseCase,
@@ -8,11 +9,15 @@ import {
     UpdateUserUseCase,
     LoginUseCase,
     LogoutUseCase,
+    UpdateUserProfileImageUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
 import { validateRequest } from '@scxsocialcommon/errors';
 import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
 import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
+
+const storage = multer.memoryStorage();
+export const upload: Multer = multer({ storage: storage });
 
 export default function UserRouter(
     createUserUseCase: CretaeUserUseCase,
@@ -22,7 +27,8 @@ export default function UserRouter(
     updateUserUseCase: UpdateUserUseCase,
     loginUseCase: LoginUseCase,
     sendRestTokenUseCase: SendResetTokenUseCase,
-    resetPasswordUsecase: ResetPasswordUseCase
+    resetPasswordUsecase: ResetPasswordUseCase,
+    updateUserProfileImageUseCase: UpdateUserProfileImageUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -33,7 +39,8 @@ export default function UserRouter(
         updateUserUseCase,
         loginUseCase,
         sendRestTokenUseCase,
-        resetPasswordUsecase
+        resetPasswordUsecase,
+        updateUserProfileImageUseCase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -81,6 +88,10 @@ export default function UserRouter(
 
     router.post('/reset-password/:userId/:token', async (req: Request, res: Response, next: NextFunction) =>
         userController.resetPassword(req, res, next)
+    );
+
+    router.post('/image/:userId', upload.single('file'), async (req: Request, res: Response, next: NextFunction) =>
+        userController.updateUserProfileImage(req, res, next)
     );
 
     return router;

@@ -22,6 +22,7 @@ import { PostRequestModel } from '../../domain/entities/post';
 
 import { PostCreatedPublisher } from '../events/pub/post-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
+import { PostDeletedPublisher } from '../events/pub/post-deleted-publisher';
 
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
@@ -154,6 +155,12 @@ export class PostController implements PostControllerInterface {
             }
 
             await this.deletePostUseCase.execute(id);
+
+            await new PostDeletedPublisher(natsWrapper.client).publish({
+                auhtorId: post.author.userId,
+                postId: post.id,
+            });
+
             res.status(200).send({});
         } catch (error) {
             next(error);

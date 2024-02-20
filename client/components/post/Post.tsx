@@ -11,11 +11,31 @@ import {
 import { Button } from '@/components/ui/button';
 import { Bookmark, Heart, MessageCircle, MoreVertical, Send } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
-import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
-import { PostData } from '@/types/post';
+import { PostProps } from '@/types/post';
+import { useUser } from '@/context/userContext';
+import useRequest from '@/hooks/useRequest';
+import { toast } from '../ui/use-toast';
 
-const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags }: PostData) => {
+const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, getData }: PostProps) => {
+    const { currentUser } = useUser();
+
+    const handleDelete = () => {
+        doRequest();
+    };
+
+    const { doRequest, errors } = useRequest({
+        url: `/api/posts/${id}`,
+        method: 'delete',
+        body: {},
+        onSuccess: () => {
+            toast({
+                description: 'Post Deleted',
+            });
+            getData();
+        },
+    });
+
     return (
         <Card>
             <CardHeader>
@@ -46,6 +66,13 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                                     <DropdownMenuItem>
                                         <span className='text-red-500'>Unfollow</span>
                                     </DropdownMenuItem>
+                                    {currentUser?.userId === author.userId && (
+                                        <DropdownMenuItem>
+                                            <span onClick={handleDelete} className='text-red-500'>
+                                                Delete
+                                            </span>
+                                        </DropdownMenuItem>
+                                    )}
                                     <DropdownMenuItem>
                                         <span>Copy Link</span>
                                     </DropdownMenuItem>
