@@ -11,4 +11,5 @@ export interface UserDataSource {
     updatePassword(id: string, password: string): Promise<void>;
     addPost(userId: string, postId: string): Promise<void>;
     deletePost(userId: string, postId: string): Promise<void>;
+    updateProfileImage(userId: string, postId: string): Promise<UserResponseModel | null>;
 }

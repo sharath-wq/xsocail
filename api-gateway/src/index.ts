@@ -11,7 +11,7 @@ import { UserCreatedListener } from './api/events/user-created-listener';
 import PostRouter from './api/routes/post.router';
 
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { POST_SERVICE_ENDPOINT } from './constants/endpoints';
+import { POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from './constants/endpoints';
 import { GetByUsername } from './domain/use-cases/get-by-user-name.use-case';
 import { GetUserByEmail } from './domain/use-cases/get-user-by-email.use-case';
 import { UserUpdatedListener } from './api/events/user-updated-listener';
@@ -51,9 +51,16 @@ const start = async () => {
         new GetUserByEmail(new UserRepositoryImpl(datasource))
     );
 
-    const PostMiddleware = PostRouter();
-
     app.use(currentUser);
+
+    app.use(
+        '/api/users/image',
+        createProxyMiddleware({
+            target: USER_SERVICE_ENDPOINT,
+            changeOrigin: true,
+            pathRewrite: { '^/api/users/': '/' },
+        })
+    );
 
     app.use('/api/users/', UserMiddleware);
 

@@ -6,7 +6,7 @@ import {
     GetUserUseCase,
     UpdateUserUseCase,
     LoginUseCase,
-    LogoutUseCase,
+    UpdateUserProfileImageUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
@@ -18,6 +18,10 @@ import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/s
 import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
 import { BadRequestError } from '@scxsocialcommon/errors';
 
+import sharp from 'sharp';
+import { CloudinaryFile, cloudinary } from '../../config/cloudinary.config';
+import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
+
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
     deleteUserUseCase: DeleteUserUseCase;
@@ -27,6 +31,7 @@ export class UserController implements UserControllerInterface {
     loginUseCase: LoginUseCase;
     sendRestTokenUseCase: SendResetTokenUseCase;
     resetPasswordUsecase: ResetPasswordUseCase;
+    updateUserProfileImageUseCase: UpdateUserProfileImageUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -36,7 +41,8 @@ export class UserController implements UserControllerInterface {
         updateUserUseCase: UpdateUserUseCase,
         loginUseCase: LoginUseCase,
         sendRestTokenUseCase: SendResetTokenUseCase,
-        resetPasswordUsecase: ResetPasswordUseCase
+        resetPasswordUsecase: ResetPasswordUseCase,
+        updateUserProfileImageUseCase: UpdateUserProfileImageUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -46,7 +52,62 @@ export class UserController implements UserControllerInterface {
         this.loginUseCase = loginUseCase;
         this.sendRestTokenUseCase = sendRestTokenUseCase;
         this.resetPasswordUsecase = resetPasswordUsecase;
+        this.updateUserProfileImageUseCase = updateUserProfileImageUseCase;
     }
+
+    async updateUserProfileImage(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const file = req.file;
+        try {
+            let imageUrl;
+
+            const fileToUpload: CloudinaryFile = req.file as CloudinaryFile;
+            if (!fileToUpload) {
+                throw new BadRequestError('file not provided');
+            }
+
+            const resizedBuffer: Buffer = await sharp(file?.buffer).resize({ width: 600, height: 600 }).toBuffer();
+            const uploadPromise = new Promise<void>((resolve, reject) => {
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    {
+                        resource_type: 'auto',
+                        folder: 'profile',
+                    } as any,
+                    (err: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
+                        if (err) {
+                            console.error('Cloudinary upload error:', err);
+                            reject(err);
+                        } else if (!result) {
+                            console.error('Cloudinary upload error: Result is undefined');
+                            reject(new Error('Cloudinary upload result is undefined'));
+                        } else {
+                            imageUrl = result.secure_url;
+                            resolve();
+                        }
+                    }
+                );
+                uploadStream.end(resizedBuffer);
+            });
+
+            await Promise.resolve(uploadPromise);
+
+            const updatedUser = await this.updateUserProfileImageUseCase.execute(req.params.userId, imageUrl!);
+
+            if (updatedUser) {
+                await new UserUpdatedPubliser(natsWrapper.client).publish({
+                    userId: updatedUser.id,
+                    imageUrl: updatedUser.imageUrl,
+                    isAdmin: updatedUser.isAdmin,
+                    email: updatedUser.email,
+                    username: updatedUser.username,
+                });
+            }
+
+            res.send(updatedUser);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async Login(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { email, password } = req.body;

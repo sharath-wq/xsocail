@@ -10,6 +10,7 @@ import { AddPost } from './add-post.use-case';
 import { ResetPassword } from '../token/reset-password.use-case';
 import { UpdatePassword } from './update-password.use-case';
 import { SendResetToken } from '../token/send-reset-token.use-case';
+import { UpdateUserProfile } from './update-user-profile-image.use-case';
 
 export {
     CreateUser,
@@ -24,4 +25,5 @@ export {
     ResetPassword,
     UpdatePassword,
     SendResetToken,
+    UpdateUserProfile,
 };

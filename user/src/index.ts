@@ -13,6 +13,7 @@ import {
     ResetPassword,
     SendResetToken,
     UpdateUser,
+    UpdateUserProfile,
 } from './domain/use-cases/user/index';
 import { UserRepositoryImpl } from './domain/repository/user.repository';
 import { NotFoundError, currentUser, errorHandler } from '@scxsocialcommon/errors';
@@ -21,6 +22,7 @@ import { TokenRepositoryImpl } from './domain/repository/token.repository';
 import { MongoDBTokenDataSource } from './data/data-source/mongodb/mongodb-token-datasource';
 import { PostCreatedListener } from './api/events/sub/post-created-listener';
 import { PostDeletedListener } from './api/events/sub/post-deleted-listener';
+import { MongoDBUserDataSource } from './data/data-source/mongodb/mongodb-user-datasource';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -53,7 +55,8 @@ const start = async () => {
         new UpdateUser(new UserRepositoryImpl(datasource)),
         new Login(new UserRepositoryImpl(datasource)),
         new SendResetToken(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource)),
-        new ResetPassword(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource))
+        new ResetPassword(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource)),
+        new UpdateUserProfile(new UserRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

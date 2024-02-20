@@ -4,6 +4,33 @@ import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
 export class MongoDBUserDataSource implements UserDataSource {
+    async updateProfileImage(userId: string, imageUrl: string): Promise<UserResponseModel | null> {
+        try {
+            const updateduser = await User.findByIdAndUpdate(userId, { imageUrl: imageUrl }, { new: true });
+
+            if (updateduser) {
+                return {
+                    id: updateduser.id,
+                    bio: updateduser.bio,
+                    followers: updateduser.followers,
+                    following: updateduser.following,
+                    savedPosts: updateduser.savedPosts,
+                    username: updateduser.username,
+                    email: updateduser.email,
+                    fullName: updateduser.fullName,
+                    createdAt: updateduser.createdAt,
+                    isAdmin: updateduser.isAdmin,
+                    imageUrl: updateduser.imageUrl,
+                    posts: updateduser.posts,
+                };
+            }
+            return null;
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+
     async addPost(userId: string, postId: string): Promise<void> {
         try {
             const existingUser = await User.findById(userId);
