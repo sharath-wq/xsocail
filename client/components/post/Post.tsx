@@ -8,6 +8,17 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Bookmark, Heart, MessageCircle, MoreVertical, Send } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
@@ -17,10 +28,13 @@ import { useUser } from '@/context/userContext';
 import useRequest from '@/hooks/useRequest';
 import { toast } from '../ui/use-toast';
 
+import TimeAgo from 'react-timeago';
+
 const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, getData }: PostProps) => {
     const { currentUser } = useUser();
 
-    const handleDelete = () => {
+    const handleDelete = (e: React.MouseEvent) => {
+        e.stopPropagation();
         doRequest();
     };
 
@@ -36,6 +50,15 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
         },
     });
 
+    const timeDifference: number = Date.now() - new Date(createdAt).getTime();
+
+    let timeAgo: string | React.ReactNode;
+    if (timeDifference < 60000) {
+        timeAgo = 'Just now';
+    } else {
+        timeAgo = <TimeAgo date={createdAt} />;
+    }
+
     return (
         <Card>
             <CardHeader>
@@ -47,7 +70,7 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                         </Avatar>
                         <div>
                             <CardTitle>{author.username}</CardTitle>
-                            <CardDescription>Just Now</CardDescription>
+                            <CardDescription>{timeAgo}</CardDescription>
                         </div>
                     </div>
 
@@ -68,9 +91,28 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                                     </DropdownMenuItem>
                                     {currentUser?.userId === author.userId && (
                                         <DropdownMenuItem>
-                                            <span onClick={handleDelete} className='text-red-500'>
-                                                Delete
-                                            </span>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <span onClick={(e) => e.stopPropagation()} className='text-red-500'>
+                                                        Delete
+                                                    </span>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            This action cannot be undone. This will permanently delete your
+                                                            post.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={handleDelete}>
+                                                            Confirm
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                         </DropdownMenuItem>
                                     )}
                                     <DropdownMenuItem>

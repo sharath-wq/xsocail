@@ -37,6 +37,8 @@ export default function PostRouter(
     );
 
     router.get('/', async (req, res) => {
+        // console.log(req.params);
+        // res.send({});
         postController.getAllPosts(req, res);
     });
 
