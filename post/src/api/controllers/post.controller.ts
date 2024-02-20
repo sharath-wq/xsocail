@@ -177,6 +177,14 @@ export class PostController implements PostControllerInterface {
         }
     }
 
+    // async getFeedPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
+    //     try {
+    //         const feedPosts = await this.getFeedPotsUseCase.execute();
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // }
+
     async getOnePost(req: Request, res: Response): Promise<void> {
         const id = req.params.id;
         try {

@@ -17,6 +17,8 @@ import { useUser } from '@/context/userContext';
 import useRequest from '@/hooks/useRequest';
 import { toast } from '../ui/use-toast';
 
+import TimeAgo from 'react-timeago';
+
 const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, getData }: PostProps) => {
     const { currentUser } = useUser();
 
@@ -36,6 +38,15 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
         },
     });
 
+    const timeDifference: number = Date.now() - new Date(createdAt).getTime();
+
+    let timeAgo: string | React.ReactNode;
+    if (timeDifference < 60000) {
+        timeAgo = 'Just now';
+    } else {
+        timeAgo = <TimeAgo date={createdAt} />;
+    }
+
     return (
         <Card>
             <CardHeader>
@@ -47,7 +58,7 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                         </Avatar>
                         <div>
                             <CardTitle>{author.username}</CardTitle>
-                            <CardDescription>Just Now</CardDescription>
+                            <CardDescription>{timeAgo}</CardDescription>
                         </div>
                     </div>
 
