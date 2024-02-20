@@ -4,6 +4,8 @@ import { DeletePostUseCase } from './delete-post.use.case';
 import { GetAllPostsUseCase } from './get-all-posts.use-case';
 import { GetOnePostUseCase } from './get-one-post.use-case';
 import { GetUserPostsUseCase } from './get-user-post.use-case';
+import { LikePostUseCase } from './like-post.use-case';
+import { DisLikePostUseCase } from './dislike-post.use-case';
 
 export {
     CreatePostUseCase,
@@ -12,4 +14,6 @@ export {
     GetAllPostsUseCase,
     GetOnePostUseCase,
     GetUserPostsUseCase,
+    LikePostUseCase,
+    DisLikePostUseCase,
 };

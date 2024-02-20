@@ -7,9 +7,11 @@ import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
 import {
     CreatePostUseCase,
     DeletePostUseCase,
+    DisLikePostUseCase,
     GetAllPostsUseCase,
     GetOnePostUseCase,
     GetUserPostsUseCase,
+    LikePostUseCase,
     UpdatePostUseCase,
 } from '../../domain/interfaces/use-cases/';
 
@@ -31,6 +33,8 @@ export class PostController implements PostControllerInterface {
     getOnePostUseCase: GetOnePostUseCase;
     getUserPostsUseCase: GetUserPostsUseCase;
     updatePostUseCase: UpdatePostUseCase;
+    likePostUseCase: LikePostUseCase;
+    disLikePostUseCase: DisLikePostUseCase;
 
     constructor(
         createPostUseCase: CreatePostUseCase,
@@ -38,7 +42,9 @@ export class PostController implements PostControllerInterface {
         getAllPostsUseCase: GetAllPostsUseCase,
         getOnePostUseCase: GetOnePostUseCase,
         getUserPostsUseCase: GetUserPostsUseCase,
-        updatePostUseCase: UpdatePostUseCase
+        updatePostUseCase: UpdatePostUseCase,
+        likePostUseCase: LikePostUseCase,
+        disLikePostUseCase: DisLikePostUseCase
     ) {
         this.createPostUseCase = createPostUseCase;
         this.deletePostUseCase = deletePostUseCase;
@@ -46,6 +52,34 @@ export class PostController implements PostControllerInterface {
         this.getOnePostUseCase = getOnePostUseCase;
         this.getUserPostsUseCase = getUserPostsUseCase;
         this.updatePostUseCase = updatePostUseCase;
+        this.likePostUseCase = likePostUseCase;
+        this.disLikePostUseCase = disLikePostUseCase;
+    }
+
+    async likePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const userId = req.currentUser!.userId;
+        const postId = req.params.postId;
+        try {
+            await this.likePostUseCase.execute(userId, postId);
+
+            // Emit and event to the notification service
+
+            res.send({});
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async disLikePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const userId = req.currentUser!.userId;
+        const postId = req.params.postId;
+        try {
+            await this.disLikePostUseCase.execute(userId, postId);
+
+            res.send({});
+        } catch (error) {
+            next(error);
+        }
     }
 
     async createPost(req: Request, res: Response, next: NextFunction): Promise<void> {

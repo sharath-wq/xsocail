@@ -7,4 +7,6 @@ export interface PostControllerInterface {
     getAllPosts(req: Request, res: Response): Promise<void>;
     getOnePost(req: Request, res: Response): Promise<void>;
     getUserPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
+    likePost(req: Request, res: Response, next: NextFunction): Promise<void>;
+    disLikePost(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

@@ -9,6 +9,14 @@ export class PostRepositoryImpl implements PostRepository {
         this.postDataSource = postDataSource;
     }
 
+    async likePost(userId: string, postId: string): Promise<void> {
+        const result = await this.postDataSource.likeAPost(userId, postId);
+    }
+
+    async dislikePost(userIndex: number, postId: string): Promise<void> {
+        const result = await this.postDataSource.disLikeAPost(userIndex, postId);
+    }
+
     async createPost(post: PostRequestModel, authorId: string): Promise<PostModel | null> {
         const result = await this.postDataSource.create(post, authorId);
         return result;

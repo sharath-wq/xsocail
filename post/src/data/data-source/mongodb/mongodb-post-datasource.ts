@@ -4,12 +4,34 @@ import { PostDataSource } from '../../interface/data-source/post-data-source';
 import { Post } from './schema/post.schema';
 
 export class MongoDBPostDataSource implements PostDataSource {
+    async likeAPost(userId: string, postId: string): Promise<void> {
+        try {
+            const post = await Post.findById(postId);
+            if (post) {
+                post.likes.push(userId);
+                await post.save();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async disLikeAPost(userIndex: number, postId: string): Promise<void> {
+        try {
+            const post = await Post.findById(postId);
+            if (post) {
+                post.likes.splice(userIndex, 1);
+                await post.save();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async findByAuthor(authorId: string): Promise<PostModel[] | []> {
         try {
             const results = await Post.find({});
-
             const userPosts = results.filter((item: any) => item.author.userId === authorId);
-
             if (userPosts && userPosts.length) {
                 return userPosts.map((item) => ({
                     id: item.id,
