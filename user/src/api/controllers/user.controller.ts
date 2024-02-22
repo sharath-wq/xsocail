@@ -7,6 +7,8 @@ import {
     UpdateUserUseCase,
     LoginUseCase,
     UpdateUserProfileImageUseCase,
+    SendVerificationOtpUseCase,
+    VerifyUserEmailUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
@@ -21,6 +23,8 @@ import { BadRequestError } from '@scxsocialcommon/errors';
 import sharp from 'sharp';
 import { CloudinaryFile, cloudinary } from '../../config/cloudinary.config';
 import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -32,6 +36,8 @@ export class UserController implements UserControllerInterface {
     sendRestTokenUseCase: SendResetTokenUseCase;
     resetPasswordUsecase: ResetPasswordUseCase;
     updateUserProfileImageUseCase: UpdateUserProfileImageUseCase;
+    sendVerificationOtpUseCase: SendVerificationOtpUseCase;
+    verifyUserEmailUseCase: VerifyUserEmailUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -42,7 +48,9 @@ export class UserController implements UserControllerInterface {
         loginUseCase: LoginUseCase,
         sendRestTokenUseCase: SendResetTokenUseCase,
         resetPasswordUsecase: ResetPasswordUseCase,
-        updateUserProfileImageUseCase: UpdateUserProfileImageUseCase
+        updateUserProfileImageUseCase: UpdateUserProfileImageUseCase,
+        sendVerificationOtpUseCase: SendVerificationOtpUseCase,
+        verifyUserEmailUseCase: VerifyUserEmailUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -53,6 +61,26 @@ export class UserController implements UserControllerInterface {
         this.sendRestTokenUseCase = sendRestTokenUseCase;
         this.resetPasswordUsecase = resetPasswordUsecase;
         this.updateUserProfileImageUseCase = updateUserProfileImageUseCase;
+        this.sendVerificationOtpUseCase = sendVerificationOtpUseCase;
+        this.verifyUserEmailUseCase = verifyUserEmailUseCase;
+    }
+    async resendOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { email } = req.body;
+        try {
+            await this.sendVerificationOtpUseCase.execute(email);
+            res.send({});
+        } catch (error) {
+            next(error);
+        }
+    }
+    async verifyUserEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { email, otp } = req.body;
+        try {
+            await this.verifyUserEmailUseCase.execute(email, otp);
+            res.send({});
+        } catch (error) {
+            next(error);
+        }
     }
 
     async updateUserProfileImage(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -99,6 +127,7 @@ export class UserController implements UserControllerInterface {
                     isAdmin: updatedUser.isAdmin,
                     email: updatedUser.email,
                     username: updatedUser.username,
+                    verified: updatedUser.verified,
                 });
             }
 
@@ -124,16 +153,19 @@ export class UserController implements UserControllerInterface {
             const user = await this.createUserUseCase.execute(req.body as UserRequestModel);
 
             if (user) {
+                await this.sendVerificationOtpUseCase.execute(user.email);
+
                 await new UserCreatedPublisher(natsWrapper.client).publish({
                     userId: user.id,
                     imageUrl: user.imageUrl,
                     isAdmin: user.isAdmin,
                     username: user.username,
                     email: user.email,
+                    verified: user.verified,
                 });
             }
 
-            res.status(201).send(user);
+            await res.status(201).send(user);
         } catch (error) {
             next(error);
         }
@@ -165,6 +197,7 @@ export class UserController implements UserControllerInterface {
                     isAdmin: updatedUser.isAdmin,
                     email: updatedUser.email,
                     username: updatedUser.username,
+                    verified: updatedUser.verified,
                 });
             }
 

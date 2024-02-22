@@ -10,6 +10,8 @@ import {
     LoginUseCase,
     LogoutUseCase,
     UpdateUserProfileImageUseCase,
+    SendVerificationOtpUseCase,
+    VerifyUserEmailUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
 import { validateRequest } from '@scxsocialcommon/errors';
@@ -28,7 +30,9 @@ export default function UserRouter(
     loginUseCase: LoginUseCase,
     sendRestTokenUseCase: SendResetTokenUseCase,
     resetPasswordUsecase: ResetPasswordUseCase,
-    updateUserProfileImageUseCase: UpdateUserProfileImageUseCase
+    updateUserProfileImageUseCase: UpdateUserProfileImageUseCase,
+    sendVerificationOtpUseCase: SendVerificationOtpUseCase,
+    verifyUserEmailUseCase: VerifyUserEmailUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -40,7 +44,9 @@ export default function UserRouter(
         loginUseCase,
         sendRestTokenUseCase,
         resetPasswordUsecase,
-        updateUserProfileImageUseCase
+        updateUserProfileImageUseCase,
+        sendVerificationOtpUseCase,
+        verifyUserEmailUseCase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -93,6 +99,14 @@ export default function UserRouter(
     router.post('/image/:userId', upload.single('file'), async (req: Request, res: Response, next: NextFunction) =>
         userController.updateUserProfileImage(req, res, next)
     );
+
+    router.post('/verify', async (req: Request, res: Response, next: NextFunction) => {
+        userController.verifyUserEmail(req, res, next);
+    });
+
+    router.post('/resend', async (req: Request, res: Response, next: NextFunction) => {
+        userController.resendOtp(req, res, next);
+    });
 
     return router;
 }

@@ -2,7 +2,6 @@ import { BadRequestError } from '@scxsocialcommon/errors';
 import { UserRepository } from '../../interfaces/repository/user.repository';
 import { LoginUseCase } from '../../interfaces/use-cases/user/login.use-case';
 import { Password } from '../../../utils/password';
-import jwt from 'jsonwebtoken';
 import { LoginResponseModel } from '../../entities/user';
 
 export class Login implements LoginUseCase {
@@ -17,6 +16,10 @@ export class Login implements LoginUseCase {
 
         if (!existingUser) {
             throw new BadRequestError('Invalid Credentials');
+        }
+
+        if (existingUser.verified !== true) {
+            throw new BadRequestError('User is not verified');
         }
 
         const passwordMatch = await Password.compare(existingUser.password, password);

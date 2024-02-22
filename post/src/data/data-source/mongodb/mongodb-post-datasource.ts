@@ -4,12 +4,57 @@ import { PostDataSource } from '../../interface/data-source/post-data-source';
 import { Post } from './schema/post.schema';
 
 export class MongoDBPostDataSource implements PostDataSource {
+    async getUserFeed(): Promise<[] | PostModel[]> {
+        try {
+            const result = await Post.find({}).sort({ createdAt: -1 });
+
+            return result.map((item) => ({
+                id: item.id,
+                author: {
+                    userId: item.author!.userId!,
+                    username: item.author!.username!,
+                    imageUrl: item.author!.imageUrl!,
+                },
+                caption: item.caption,
+                tags: item.tags,
+                imageUrls: item.imageUrls,
+                likes: item.likes,
+                comments: item.comments,
+                createdAt: item.createdAt,
+            }));
+        } catch (error) {
+            console.error('Error getting Post', error);
+            return [];
+        }
+    }
+    async likeAPost(userId: string, postId: string): Promise<void> {
+        try {
+            const post = await Post.findById(postId);
+            if (post) {
+                post.likes.push(userId);
+                await post.save();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async disLikeAPost(userIndex: number, postId: string): Promise<void> {
+        try {
+            const post = await Post.findById(postId);
+            if (post) {
+                post.likes.splice(userIndex, 1);
+                await post.save();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async findByAuthor(authorId: string): Promise<PostModel[] | []> {
         try {
             const results = await Post.find({});
-
             const userPosts = results.filter((item: any) => item.author.userId === authorId);
-
             if (userPosts && userPosts.length) {
                 return userPosts.map((item) => ({
                     id: item.id,

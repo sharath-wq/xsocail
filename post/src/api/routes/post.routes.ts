@@ -13,10 +13,13 @@ import {
     GetOnePostUseCase,
     UpdatePostUseCase,
     GetUserPostsUseCase,
+    LikePostUseCase,
+    DisLikePostUseCase,
+    GetUserFeedPostsUseCase,
 } from '../../domain/interfaces/use-cases';
 import { NextFunction } from 'express-serve-static-core';
 import { body } from 'express-validator';
-import { validateRequest } from '@scxsocialcommon/errors';
+import { requireAuth, validateRequest } from '@scxsocialcommon/errors';
 
 export default function PostRouter(
     createPostUseCase: CreatePostUseCase,
@@ -24,7 +27,10 @@ export default function PostRouter(
     getAllPostsUseCase: GetAllPostsUseCase,
     getOnePostUseCase: GetOnePostUseCase,
     updatePostUseCase: UpdatePostUseCase,
-    getUserPostsUseCase: GetUserPostsUseCase
+    getUserPostsUseCase: GetUserPostsUseCase,
+    likePostUseCase: LikePostUseCase,
+    disLikePostUseCase: DisLikePostUseCase,
+    getUserFeedPostsUseCase: GetUserFeedPostsUseCase
 ) {
     const router = express.Router();
     const postController = new PostController(
@@ -33,35 +39,35 @@ export default function PostRouter(
         getAllPostsUseCase,
         getOnePostUseCase,
         getUserPostsUseCase,
-        updatePostUseCase
+        updatePostUseCase,
+        likePostUseCase,
+        disLikePostUseCase,
+        getUserFeedPostsUseCase
     );
 
+    router.patch('/like/:postId', async (req, res, next) => {
+        postController.likePost(req, res, next);
+    });
+
+    router.patch('/dislike/:postId', async (req, res, next) => {
+        postController.disLikePost(req, res, next);
+    });
+
+    router.get('/feed', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
+        postController.getUserFeed(req, res, next);
+    });
+
     router.get('/', async (req, res) => {
-        // console.log(req.params);
-        // res.send({});
         postController.getAllPosts(req, res);
     });
 
-    router.post(
-        '/',
-        upload.array('files[]'),
-        [
-            body('caption').notEmpty().withMessage('Caption is required'),
-            body('tags').notEmpty().withMessage('Tags is requried'),
-        ],
-        validateRequest,
-        async (req: Request, res: Response, next: NextFunction) => {
-            postController.createPost(req, res, next);
-        }
-    );
+    router.post('/', upload.array('files[]'), validateRequest, async (req: Request, res: Response, next: NextFunction) => {
+        postController.createPost(req, res, next);
+    });
 
     router.patch(
         '/:id',
         upload.array('files[]'),
-        [
-            body('caption').notEmpty().withMessage('Caption is required'),
-            body('tags').notEmpty().withMessage('Tags is requried'),
-        ],
         validateRequest,
         async (req: Request, res: Response, next: NextFunction) => {
             postController.updatePost(req, res, next);

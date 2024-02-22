@@ -10,6 +10,8 @@ import { GetOnePost } from './domain/use-cases/post/get-one-post.use-case';
 import { UpdatePost } from './domain/use-cases/post/update-post.use-case';
 import { GetUserPosts } from './domain/use-cases/post/get-user-post.use-case';
 import { natsWrapper } from '../nats-wrapper';
+import { DisLikePost, LikePost } from './domain/use-cases/post';
+import { GetUserFeedPosts } from './domain/use-cases/post/get-user-feed-post.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -44,7 +46,10 @@ const start = async () => {
         new GetAllPosts(new PostRepositoryImpl(datasource)),
         new GetOnePost(new PostRepositoryImpl(datasource)),
         new UpdatePost(new PostRepositoryImpl(datasource)),
-        new GetUserPosts(new PostRepositoryImpl(datasource))
+        new GetUserPosts(new PostRepositoryImpl(datasource)),
+        new LikePost(new PostRepositoryImpl(datasource)),
+        new DisLikePost(new PostRepositoryImpl(datasource)),
+        new GetUserFeedPosts(new PostRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

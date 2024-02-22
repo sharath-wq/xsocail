@@ -161,6 +161,7 @@ export class UserController implements UserControllerInterface {
                 const newUser = await axios.post(USER_SERVICE_ENDPOINT, {
                     ...req.body,
                     password: generateRandomPassword(),
+                    verified: true,
                 });
 
                 const userJwt = jwt.sign(
