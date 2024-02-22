@@ -65,8 +65,6 @@ export class PostController implements PostControllerInterface {
         try {
             const feedPosts = await this.getUserFeedPostsUseCase.execute();
 
-            console.log(feedPosts);
-
             res.send(feedPosts);
         } catch (error) {
             next(error);
