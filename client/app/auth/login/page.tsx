@@ -52,6 +52,9 @@ const LoginPage: React.FC = () => {
             getCurrentUser();
             router.replace('/home');
         },
+        onError: () => {
+            setisSubmiting(false);
+        },
     });
 
     const { currentUser, getCurrentUser } = useUser();
@@ -114,13 +117,18 @@ const LoginPage: React.FC = () => {
                 </div>
             </div>
 
-            <div className='border p-6 m-2 rounded-md shadow-xl w-full sm:w-[400px] text-center shadcn-bg-white'>
+            <div className='border flex flex-col p-6 m-2 rounded-md shadow-xl w-full sm:w-[400px] text-center shadcn-bg-white'>
                 <span className=''>
                     Don't have an account?{' '}
                     <Link href='/auth/register' className='underline font-medium'>
                         Signup
                     </Link>
                 </span>
+                {errors && (
+                    <Link href='/auth/verify' className='text-gray-500 mt-4'>
+                        Not Verified? verify now.
+                    </Link>
+                )}
             </div>
         </div>
     );

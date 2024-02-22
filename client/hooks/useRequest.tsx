@@ -8,6 +8,7 @@ interface UseRequestProps {
     method: Method;
     body: object;
     onSuccess?: (data: any) => void;
+    onError?: () => void;
     contentType?: string;
 }
 
@@ -16,13 +17,12 @@ interface UseRequestResult {
     errors: JSX.Element | null;
 }
 
-const useRequest = ({ url, method, body, onSuccess, contentType }: UseRequestProps): UseRequestResult => {
+const useRequest = ({ url, method, body, onSuccess, contentType, onError }: UseRequestProps): UseRequestResult => {
     const [errors, setErrors] = useState<JSX.Element | null>(null);
 
     const doRequest = async (props: object = {}, headers: object = {}): Promise<any> => {
         try {
             setErrors(null);
-            // @ts-ignore
             const response: AxiosResponse = await axios[method](
                 url,
                 { ...body, ...props },
@@ -42,15 +42,21 @@ const useRequest = ({ url, method, body, onSuccess, contentType }: UseRequestPro
             const axiosError = error as AxiosError;
 
             // @ts-ignore
-            const details = axiosError?.response?.data?.errors[0]?.message || [];
+            // const details = axiosError?.response?.data?.errors[0]?.message || [];
             // const errorMessage = details.length > 0 ? details[0].message : 'Unknown error';
+
+            const errorMessage = axiosError?.response?.data.errors[0].message || 'Unknown Error';
+
+            if (onError) {
+                onError();
+            }
 
             // Build the JSX element for displaying the error
             const errorComponent = (
                 <Alert variant='destructive'>
                     <AlertCircle className='h-4 w-4' />
                     <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{details}</AlertDescription>
+                    <AlertDescription>{errorMessage}</AlertDescription>
                 </Alert>
             );
 
