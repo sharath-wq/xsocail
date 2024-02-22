@@ -61,26 +61,13 @@ export default function PostRouter(
         postController.getAllPosts(req, res);
     });
 
-    router.post(
-        '/',
-        upload.array('files[]'),
-        [
-            body('caption').notEmpty().withMessage('Caption is required'),
-            body('tags').notEmpty().withMessage('Tags is requried'),
-        ],
-        validateRequest,
-        async (req: Request, res: Response, next: NextFunction) => {
-            postController.createPost(req, res, next);
-        }
-    );
+    router.post('/', upload.array('files[]'), validateRequest, async (req: Request, res: Response, next: NextFunction) => {
+        postController.createPost(req, res, next);
+    });
 
     router.patch(
         '/:id',
         upload.array('files[]'),
-        [
-            body('caption').notEmpty().withMessage('Caption is required'),
-            body('tags').notEmpty().withMessage('Tags is requried'),
-        ],
         validateRequest,
         async (req: Request, res: Response, next: NextFunction) => {
             postController.updatePost(req, res, next);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -44,6 +44,12 @@ import { Input } from '../ui/input';
 
 const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, getData }: PostProps) => {
     const { currentUser } = useUser();
+
+    const [expanded, setExpanded] = useState(false);
+
+    const toggleExpand = () => {
+        setExpanded(!expanded);
+    };
 
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -220,10 +226,25 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                 </div>
                 <Separator className='my-2' />
                 <div className='flex w-full ml-8 flex-col items-start'>
-                    <span className='text-3xl'>{caption}</span>
-                    <span className='text-2xl'>{likes?.length} Likes</span>
-                    <span className='text-sm'>{comments?.length} Comments</span>
-                    <span className='text-sm'>{tags && tags.map((tag: string) => tag)}</span>
+                    {likes && likes.length !== 0 && <div className='text-lg font-semibold'>{likes.length} Likes</div>}
+                    {caption && (
+                        <div className='flex'>
+                            <p
+                                onClick={toggleExpand}
+                                className={`leading-7 ${
+                                    !expanded ? 'line-clamp-2' : ''
+                                } [&:not(:first-child)]:mt-6 transition-all duration-300 animate-expand-collapse`}
+                            >
+                                <span className='text-lg font-semibold'>{author.username}</span> {caption}
+                            </p>
+                        </div>
+                    )}
+                    {comments && comments.length !== 0 && (
+                        <p className='text-xl text-muted-foreground'>View all {comments?.length} comments</p>
+                    )}
+                    {tags && tags.length !== 0 && (
+                        <p className='text-sm text-muted-foreground'>{tags && tags.map((tag: string) => tag)}</p>
+                    )}
                 </div>
             </CardFooter>
         </Card>
