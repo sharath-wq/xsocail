@@ -22,6 +22,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     isAdmin: updateduser.isAdmin,
                     imageUrl: updateduser.imageUrl,
                     posts: updateduser.posts,
+                    verified: updateduser.verified,
                 };
             }
             return null;
@@ -86,6 +87,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                 isAdmin: item.isAdmin,
                 imageUrl: item.imageUrl,
                 posts: item.posts,
+                verified: item.verified,
             }));
         } catch (error: any) {
             console.log('Error Finding User');
@@ -110,6 +112,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     isAdmin: result.isAdmin,
                     imageUrl: result.imageUrl,
                     posts: result.posts,
+                    verified: result.verified,
                 };
             } else {
                 return null;
@@ -144,6 +147,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     isAdmin: existingUser.isAdmin,
                     imageUrl: existingUser.imageUrl,
                     posts: existingUser.posts,
+                    verified: existingUser.verified,
                 };
             } else {
                 return null;
@@ -171,6 +175,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     isAdmin: result.isAdmin,
                     imageUrl: result.imageUrl,
                     posts: result.posts,
+                    verified: result.verified,
                 };
             } else {
                 return null;
@@ -200,6 +205,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     imageUrl: result.imageUrl,
                     password: result.password,
                     posts: result.posts,
+                    verified: result.verified,
                 };
             } else {
                 return null;
@@ -227,6 +233,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     isAdmin: result.isAdmin,
                     imageUrl: result.imageUrl,
                     posts: result.posts,
+                    verified: result.verified,
                 };
             } else {
                 return null;

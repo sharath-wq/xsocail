@@ -52,7 +52,12 @@ const Register: React.FC = () => {
             toast({
                 description: 'Register Successful',
             });
-            router.push('/auth/login');
+            const otpData = {
+                email: form.getValues('email'),
+                expires: Date.now() + 30000,
+            };
+            localStorage.setItem('otpDetails', JSON.stringify(otpData));
+            router.push('/auth/verify');
         },
     });
 

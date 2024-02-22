@@ -8,6 +8,8 @@ import { LogoutUseCase } from './logout-user.use-case';
 import { AddPostUseCase } from './add-post.use-case';
 import { DeletePostUseCase } from './delete-post.use-case';
 import { UpdateUserProfileImageUseCase } from './update-user-profile-image.use-case';
+import { SendVerificationOtpUseCase } from './send-verification-otp.use-case';
+import { VerifyUserEmailUseCase } from './verify-user-email.use-case';
 
 export {
     CretaeUserUseCase,
@@ -20,4 +22,6 @@ export {
     AddPostUseCase,
     DeletePostUseCase,
     UpdateUserProfileImageUseCase,
+    SendVerificationOtpUseCase,
+    VerifyUserEmailUseCase,
 };

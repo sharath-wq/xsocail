@@ -7,6 +7,7 @@ export interface UserRequestModel {
     imageUrl?: string;
     gender?: 'male' | 'female';
     post: string;
+    verified?: boolean;
 }
 
 export interface UpdateUserRequstModel {
@@ -17,7 +18,8 @@ export interface UpdateUserRequstModel {
     bio?: string;
     imageUrl?: string;
     gender?: 'male' | 'female';
-    post: string;
+    post?: string;
+    verified?: boolean;
 }
 
 export interface UserResponseModel {
@@ -33,6 +35,7 @@ export interface UserResponseModel {
     posts: string[];
     createdAt: Date;
     isAdmin: boolean;
+    verified: boolean;
 }
 
 export interface UserModel {
@@ -49,6 +52,7 @@ export interface UserModel {
     posts: string[];
     createdAt: Date;
     isAdmin: boolean;
+    verified: boolean;
 }
 
 export interface LoginResponseModel {

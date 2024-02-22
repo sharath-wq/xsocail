@@ -1,20 +1,18 @@
 import mongoose from 'mongoose';
 
-const TokenSchema = new mongoose.Schema(
+const OtpSchema = new mongoose.Schema(
     {
-        userId: {
+        email: {
             type: String,
             required: true,
         },
-        token: {
+        otp: {
             type: String,
             required: true,
         },
         createdAt: {
             type: Date,
             default: Date.now,
-            expires: 3600,
-            required: true,
         },
     },
     {
@@ -27,6 +25,8 @@ const TokenSchema = new mongoose.Schema(
     }
 );
 
-const Token = mongoose.model('Token', TokenSchema);
+OtpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 30 });
 
-export { Token };
+const Otp = mongoose.model('Otp', OtpSchema);
+
+export { Otp };

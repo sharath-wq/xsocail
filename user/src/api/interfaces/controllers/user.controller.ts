@@ -8,4 +8,6 @@ export interface UserControllerInterface {
     getUser(req: Request, res: Response, next: NextFunction): Promise<void>;
     Login(req: Request, res: Response, next: NextFunction): Promise<void>;
     updateUserProfileImage(req: Request, res: Response, next: NextFunction): Promise<void>;
+    verifyUserEmail(req: Request, res: Response, next: NextFunction): Promise<void>;
+    resendOtp(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

@@ -12,8 +12,10 @@ import {
     Login,
     ResetPassword,
     SendResetToken,
+    SendVerificationOtp,
     UpdateUser,
     UpdateUserProfile,
+    VerifyUserEmail,
 } from './domain/use-cases/user/index';
 import { UserRepositoryImpl } from './domain/repository/user.repository';
 import { NotFoundError, currentUser, errorHandler } from '@scxsocialcommon/errors';
@@ -23,6 +25,8 @@ import { MongoDBTokenDataSource } from './data/data-source/mongodb/mongodb-token
 import { PostCreatedListener } from './api/events/sub/post-created-listener';
 import { PostDeletedListener } from './api/events/sub/post-deleted-listener';
 import { MongoDBUserDataSource } from './data/data-source/mongodb/mongodb-user-datasource';
+import { OtpReposiotryImpl } from './domain/repository/otp.repository';
+import { MongoDBOtpDatasource } from './data/data-source/mongodb/mongodb-otp-datasource';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -56,7 +60,9 @@ const start = async () => {
         new Login(new UserRepositoryImpl(datasource)),
         new SendResetToken(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource)),
         new ResetPassword(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource)),
-        new UpdateUserProfile(new UserRepositoryImpl(datasource))
+        new UpdateUserProfile(new UserRepositoryImpl(datasource)),
+        new SendVerificationOtp(new UserRepositoryImpl(datasource), new OtpReposiotryImpl(new MongoDBOtpDatasource())),
+        new VerifyUserEmail(new UserRepositoryImpl(datasource), new OtpReposiotryImpl(new MongoDBOtpDatasource()))
     );
 
     app.use(currentUser);

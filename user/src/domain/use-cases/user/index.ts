@@ -11,6 +11,8 @@ import { ResetPassword } from '../token/reset-password.use-case';
 import { UpdatePassword } from './update-password.use-case';
 import { SendResetToken } from '../token/send-reset-token.use-case';
 import { UpdateUserProfile } from './update-user-profile-image.use-case';
+import { SendVerificationOtp } from './send-verification-otp.use-case';
+import { VerifyUserEmail } from './verify-user-email.use-case';
 
 export {
     CreateUser,
@@ -26,4 +28,6 @@ export {
     UpdatePassword,
     SendResetToken,
     UpdateUserProfile,
+    SendVerificationOtp,
+    VerifyUserEmail,
 };
