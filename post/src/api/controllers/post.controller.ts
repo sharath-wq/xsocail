@@ -10,6 +10,7 @@ import {
     DisLikePostUseCase,
     GetAllPostsUseCase,
     GetOnePostUseCase,
+    GetUserFeedPostsUseCase,
     GetUserPostsUseCase,
     LikePostUseCase,
     UpdatePostUseCase,
@@ -25,6 +26,8 @@ import { PostRequestModel } from '../../domain/entities/post';
 import { PostCreatedPublisher } from '../events/pub/post-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 import { PostDeletedPublisher } from '../events/pub/post-deleted-publisher';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
@@ -35,6 +38,7 @@ export class PostController implements PostControllerInterface {
     updatePostUseCase: UpdatePostUseCase;
     likePostUseCase: LikePostUseCase;
     disLikePostUseCase: DisLikePostUseCase;
+    getUserFeedPostsUseCase: GetUserFeedPostsUseCase;
 
     constructor(
         createPostUseCase: CreatePostUseCase,
@@ -44,7 +48,8 @@ export class PostController implements PostControllerInterface {
         getUserPostsUseCase: GetUserPostsUseCase,
         updatePostUseCase: UpdatePostUseCase,
         likePostUseCase: LikePostUseCase,
-        disLikePostUseCase: DisLikePostUseCase
+        disLikePostUseCase: DisLikePostUseCase,
+        getUserFeedPostsUseCase: GetUserFeedPostsUseCase
     ) {
         this.createPostUseCase = createPostUseCase;
         this.deletePostUseCase = deletePostUseCase;
@@ -54,6 +59,15 @@ export class PostController implements PostControllerInterface {
         this.updatePostUseCase = updatePostUseCase;
         this.likePostUseCase = likePostUseCase;
         this.disLikePostUseCase = disLikePostUseCase;
+        this.getUserFeedPostsUseCase = getUserFeedPostsUseCase;
+    }
+    async getUserFeed(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const feedPosts = await this.getUserFeedPostsUseCase.execute();
+            res.send(feedPosts);
+        } catch (error) {
+            next(error);
+        }
     }
 
     async likePost(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -210,14 +224,6 @@ export class PostController implements PostControllerInterface {
             throw error;
         }
     }
-
-    // async getFeedPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
-    //     try {
-    //         const feedPosts = await this.getFeedPotsUseCase.execute();
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
 
     async getOnePost(req: Request, res: Response): Promise<void> {
         const id = req.params.id;

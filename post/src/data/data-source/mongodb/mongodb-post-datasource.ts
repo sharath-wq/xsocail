@@ -4,6 +4,29 @@ import { PostDataSource } from '../../interface/data-source/post-data-source';
 import { Post } from './schema/post.schema';
 
 export class MongoDBPostDataSource implements PostDataSource {
+    async getUserFeed(): Promise<[] | PostModel[]> {
+        try {
+            const result = await Post.find({}).sort({ createdAt: -1 });
+
+            return result.map((item) => ({
+                id: item.id,
+                author: {
+                    userId: item.author!.userId!,
+                    username: item.author!.username!,
+                    imageUrl: item.author!.imageUrl!,
+                },
+                caption: item.caption,
+                tags: item.tags,
+                imageUrls: item.imageUrls,
+                likes: item.likes,
+                comments: item.comments,
+                createdAt: item.createdAt,
+            }));
+        } catch (error) {
+            console.error('Error getting Post', error);
+            return [];
+        }
+    }
     async likeAPost(userId: string, postId: string): Promise<void> {
         try {
             const post = await Post.findById(postId);

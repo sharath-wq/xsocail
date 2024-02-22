@@ -15,10 +15,11 @@ import {
     GetUserPostsUseCase,
     LikePostUseCase,
     DisLikePostUseCase,
+    GetUserFeedPostsUseCase,
 } from '../../domain/interfaces/use-cases';
 import { NextFunction } from 'express-serve-static-core';
 import { body } from 'express-validator';
-import { validateRequest } from '@scxsocialcommon/errors';
+import { requireAuth, validateRequest } from '@scxsocialcommon/errors';
 
 export default function PostRouter(
     createPostUseCase: CreatePostUseCase,
@@ -28,7 +29,8 @@ export default function PostRouter(
     updatePostUseCase: UpdatePostUseCase,
     getUserPostsUseCase: GetUserPostsUseCase,
     likePostUseCase: LikePostUseCase,
-    disLikePostUseCase: DisLikePostUseCase
+    disLikePostUseCase: DisLikePostUseCase,
+    getUserFeedPostsUseCase: GetUserFeedPostsUseCase
 ) {
     const router = express.Router();
     const postController = new PostController(
@@ -39,7 +41,8 @@ export default function PostRouter(
         getUserPostsUseCase,
         updatePostUseCase,
         likePostUseCase,
-        disLikePostUseCase
+        disLikePostUseCase,
+        getUserFeedPostsUseCase
     );
 
     router.patch('/like/:postId', async (req, res, next) => {
@@ -48,6 +51,10 @@ export default function PostRouter(
 
     router.patch('/dislike/:postId', async (req, res, next) => {
         postController.disLikePost(req, res, next);
+    });
+
+    router.get('/feed', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
+        postController.getUserFeed(req, res, next);
     });
 
     router.get('/', async (req, res) => {
