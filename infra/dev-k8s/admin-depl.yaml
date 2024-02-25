@@ -1,30 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: client-depl
+    name: admin-depl
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: client
+            app: admin
     template:
         metadata:
             labels:
-                app: client
+                app: admin
         spec:
             containers:
-                - name: client
-                  image: sharathchandranp/xsocial-client
+                - name: admin
+                  image: sharathchandranp/xsocial-admin
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    name: client-srv
+    name: admin-srv
 spec:
     selector:
-        app: client
+        app: admin
     ports:
-        - name: client
+        - name: admin
           protocol: TCP
           port: 3000
           targetPort: 3000
