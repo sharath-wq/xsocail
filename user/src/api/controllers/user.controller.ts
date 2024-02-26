@@ -9,6 +9,8 @@ import {
     UpdateUserProfileImageUseCase,
     SendVerificationOtpUseCase,
     VerifyUserEmailUseCase,
+    BlockUserUseCase,
+    UnblockUserUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
@@ -18,7 +20,7 @@ import { natsWrapper } from '../../../nats-wrapper';
 import { UserCreatedPublisher } from '../events/pub/user-created-publisher';
 import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
 import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
-import { BadRequestError } from '@scxsocialcommon/errors';
+import { BadRequestError, currentUser } from '@scxsocialcommon/errors';
 
 import sharp from 'sharp';
 import { CloudinaryFile, cloudinary } from '../../config/cloudinary.config';
@@ -38,6 +40,8 @@ export class UserController implements UserControllerInterface {
     updateUserProfileImageUseCase: UpdateUserProfileImageUseCase;
     sendVerificationOtpUseCase: SendVerificationOtpUseCase;
     verifyUserEmailUseCase: VerifyUserEmailUseCase;
+    blockUserUseCase: BlockUserUseCase;
+    unblockUserUseCase: UnblockUserUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -50,7 +54,9 @@ export class UserController implements UserControllerInterface {
         resetPasswordUsecase: ResetPasswordUseCase,
         updateUserProfileImageUseCase: UpdateUserProfileImageUseCase,
         sendVerificationOtpUseCase: SendVerificationOtpUseCase,
-        verifyUserEmailUseCase: VerifyUserEmailUseCase
+        verifyUserEmailUseCase: VerifyUserEmailUseCase,
+        blockUserUseCase: BlockUserUseCase,
+        unblockUserUseCase: UnblockUserUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -63,7 +69,29 @@ export class UserController implements UserControllerInterface {
         this.updateUserProfileImageUseCase = updateUserProfileImageUseCase;
         this.sendVerificationOtpUseCase = sendVerificationOtpUseCase;
         this.verifyUserEmailUseCase = verifyUserEmailUseCase;
+        this.blockUserUseCase = blockUserUseCase;
+        this.unblockUserUseCase = unblockUserUseCase;
     }
+    async blockUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { id } = req.params;
+        try {
+            await this.blockUserUseCase.execute(id);
+            res.send({});
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async unblockUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { id } = req.params;
+        try {
+            await this.unblockUserUseCase.execute(id);
+            res.send({});
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async resendOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { email } = req.body;
         try {

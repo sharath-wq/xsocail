@@ -10,6 +10,8 @@ import { DeletePostUseCase } from './delete-post.use-case';
 import { UpdateUserProfileImageUseCase } from './update-user-profile-image.use-case';
 import { SendVerificationOtpUseCase } from './send-verification-otp.use-case';
 import { VerifyUserEmailUseCase } from './verify-user-email.use-case';
+import { BlockUserUseCase } from './block-user.use-case';
+import { UnblockUserUseCase } from './unblock-user.use-case';
 
 export {
     CretaeUserUseCase,
@@ -24,4 +26,6 @@ export {
     UpdateUserProfileImageUseCase,
     SendVerificationOtpUseCase,
     VerifyUserEmailUseCase,
+    BlockUserUseCase,
+    UnblockUserUseCase,
 };

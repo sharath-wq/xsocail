@@ -14,6 +14,7 @@ import {
 import { UserModel, UserRequestModel } from '../../domain/entities/user';
 import { GetByUsernameUseCase } from '../../domain/interface/use-cases/get-by-username.use-case';
 import { generateRandomPassword } from '../../lib/generate-random-password';
+import { BadRequestError } from '@scxsocialcommon/errors';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CreateUserUseCase;
@@ -34,6 +35,38 @@ export class UserController implements UserControllerInterface {
         this.getUserUseCase = getUserUseCase;
         this.getByUsernameUseCase = getByUsernameUseCase;
         this.getUserByEmailUseCase = getUserByEmailUseCase;
+    }
+
+    async blockUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { id } = req.params;
+        const path = req.originalUrl.replace('/api/users', '');
+        try {
+            if (req.currentUser!.userId === id) {
+                throw new BadRequestError("You can't block yourself");
+            }
+
+            const response = await axios.put(`${USER_SERVICE_ENDPOINT}${path}`);
+
+            res.status(response.status).send(response.data);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async unblockUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { id } = req.params;
+        const path = req.originalUrl.replace('/api/users', '');
+        try {
+            if (req.currentUser!.userId === id) {
+                throw new BadRequestError("You can't unblock Yourself");
+            }
+
+            const response = await axios.put(`${USER_SERVICE_ENDPOINT}${path}`);
+
+            res.status(response.status).send(response.data);
+        } catch (error) {
+            next(error);
+        }
     }
 
     async createUser(data: UserModel): Promise<UserModel | null> {
@@ -77,6 +110,7 @@ export class UserController implements UserControllerInterface {
                         username: response.data.user.username,
                         isAdmin: response.data.user.isAdmin,
                         imageUrl: response.data.user.imageUrl,
+                        isBlocked: response.data.user.isBlocked,
                     },
                     process.env.JWT_KEY!
                 );
@@ -115,6 +149,9 @@ export class UserController implements UserControllerInterface {
                     break;
                 case 'PATCH':
                     axiosMethod = axios.patch;
+                    break;
+                case 'PUT':
+                    axiosMethod = axios.put;
                     break;
                 case 'DELETE':
                     axiosMethod = axios.delete;

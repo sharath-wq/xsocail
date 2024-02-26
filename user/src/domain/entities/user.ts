@@ -1,3 +1,5 @@
+import { BoolEnum } from 'sharp';
+
 export interface UserRequestModel {
     username: string;
     email: string;
@@ -20,6 +22,7 @@ export interface UpdateUserRequstModel {
     gender?: 'male' | 'female';
     post?: string;
     verified?: boolean;
+    isBlocked?: boolean;
 }
 
 export interface UserResponseModel {
@@ -36,6 +39,7 @@ export interface UserResponseModel {
     createdAt: Date;
     isAdmin: boolean;
     verified: boolean;
+    isBlocked: boolean;
 }
 
 export interface UserModel {

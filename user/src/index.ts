@@ -4,6 +4,7 @@ import { connect } from './data/data-source/mongodb/connection';
 import UserRouter from './api/routes/user.routes';
 import {
     AddPost,
+    BlockUser,
     CreateUser,
     DeletePost,
     DeleteUser,
@@ -13,6 +14,7 @@ import {
     ResetPassword,
     SendResetToken,
     SendVerificationOtp,
+    UnblockUser,
     UpdateUser,
     UpdateUserProfile,
     VerifyUserEmail,
@@ -62,7 +64,9 @@ const start = async () => {
         new ResetPassword(new TokenRepositoryImpl(new MongoDBTokenDataSource()), new UserRepositoryImpl(datasource)),
         new UpdateUserProfile(new UserRepositoryImpl(datasource)),
         new SendVerificationOtp(new UserRepositoryImpl(datasource), new OtpReposiotryImpl(new MongoDBOtpDatasource())),
-        new VerifyUserEmail(new UserRepositoryImpl(datasource), new OtpReposiotryImpl(new MongoDBOtpDatasource()))
+        new VerifyUserEmail(new UserRepositoryImpl(datasource), new OtpReposiotryImpl(new MongoDBOtpDatasource())),
+        new BlockUser(new UserRepositoryImpl(datasource)),
+        new UnblockUser(new UserRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

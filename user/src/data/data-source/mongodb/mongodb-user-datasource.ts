@@ -23,6 +23,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     imageUrl: updateduser.imageUrl,
                     posts: updateduser.posts,
                     verified: updateduser.verified,
+                    isBlocked: updateduser.isBlocked,
                 };
             }
             return null;
@@ -88,6 +89,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                 imageUrl: item.imageUrl,
                 posts: item.posts,
                 verified: item.verified,
+                isBlocked: item.isBlocked,
             }));
         } catch (error: any) {
             console.log('Error Finding User');
@@ -113,6 +115,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     imageUrl: result.imageUrl,
                     posts: result.posts,
                     verified: result.verified,
+                    isBlocked: result.isBlocked,
                 };
             } else {
                 return null;
@@ -148,6 +151,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     imageUrl: existingUser.imageUrl,
                     posts: existingUser.posts,
                     verified: existingUser.verified,
+                    isBlocked: existingUser.isBlocked,
                 };
             } else {
                 return null;
@@ -176,6 +180,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     imageUrl: result.imageUrl,
                     posts: result.posts,
                     verified: result.verified,
+                    isBlocked: result.isBlocked,
                 };
             } else {
                 return null;
@@ -234,6 +239,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     imageUrl: result.imageUrl,
                     posts: result.posts,
                     verified: result.verified,
+                    isBlocked: result.isBlocked,
                 };
             } else {
                 return null;
