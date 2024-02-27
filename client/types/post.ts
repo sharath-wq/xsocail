@@ -1,18 +1,19 @@
-export interface PostProps {
-    id: number;
-    author: {
-        userId: string;
-        username: string;
-        imageUrl: string;
-    };
+export type Author = {
+    userId: string;
+    username: string;
+    imageUrl: string;
+};
+
+export type PostProps = {
+    id: string;
+    author: Author;
     caption: string;
     tags: string[];
     imageUrls: string[];
     likes: string[];
     comments: string[];
-    createdAt: Date;
-    getData: () => void;
-}
+    createdAt: string;
+};
 
 export type UserPostData = {
     id: string;

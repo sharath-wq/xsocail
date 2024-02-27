@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import GoogleBtn from '@/components/googleButton/GoogleBtn';
 import { useUser } from '@/context/userContext';
+import Comment from '@/components/post/actions/comment/Comment';
 
 const LoginPage: React.FC = () => {
     // 1. Define your form.
@@ -129,6 +130,7 @@ const LoginPage: React.FC = () => {
                         Not Verified? verify now.
                     </Link>
                 )}
+                <Comment />
             </div>
         </div>
     );

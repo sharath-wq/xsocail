@@ -42,8 +42,9 @@ import TimeAgo from 'react-timeago';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import Actions from './actions/Actions';
+import { usePost } from '@/context/postContext';
 
-const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, getData }: PostProps) => {
+const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags }: PostProps) => {
     const { currentUser } = useUser();
     const [likeCount, setLikeCount] = useState(likes.length);
     const [commentCount, setCommentCount] = useState(comments.length);
@@ -59,6 +60,8 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
         doRequest();
     };
 
+    const { getPosts } = usePost();
+
     const { doRequest, errors } = useRequest({
         url: `/api/posts/${id}`,
         method: 'delete',
@@ -67,7 +70,7 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
             toast({
                 description: 'Post Deleted',
             });
-            getData();
+            getPosts();
         },
     });
 
