@@ -8,13 +8,14 @@ import {
     GetUserUseCase,
     UpdateUserUseCase,
     LoginUseCase,
-    LogoutUseCase,
     UpdateUserProfileImageUseCase,
     SendVerificationOtpUseCase,
     VerifyUserEmailUseCase,
+    BlockUserUseCase,
+    UnblockUserUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
-import { validateRequest } from '@scxsocialcommon/errors';
+import { requireAdmin, requireAuth, validateRequest } from '@scxsocialcommon/errors';
 import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
 import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
 
@@ -32,7 +33,9 @@ export default function UserRouter(
     resetPasswordUsecase: ResetPasswordUseCase,
     updateUserProfileImageUseCase: UpdateUserProfileImageUseCase,
     sendVerificationOtpUseCase: SendVerificationOtpUseCase,
-    verifyUserEmailUseCase: VerifyUserEmailUseCase
+    verifyUserEmailUseCase: VerifyUserEmailUseCase,
+    blockUserUseCase: BlockUserUseCase,
+    unblockUserUseCase: UnblockUserUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -46,7 +49,9 @@ export default function UserRouter(
         resetPasswordUsecase,
         updateUserProfileImageUseCase,
         sendVerificationOtpUseCase,
-        verifyUserEmailUseCase
+        verifyUserEmailUseCase,
+        blockUserUseCase,
+        unblockUserUseCase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -106,6 +111,14 @@ export default function UserRouter(
 
     router.post('/resend', async (req: Request, res: Response, next: NextFunction) => {
         userController.resendOtp(req, res, next);
+    });
+
+    router.put('/block/:id', async (req: Request, res: Response, next: NextFunction) => {
+        userController.blockUser(req, res, next);
+    });
+
+    router.put('/unblock/:id', async (req: Request, res: Response, next: NextFunction) => {
+        userController.unblockUser(req, res, next);
     });
 
     return router;

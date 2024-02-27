@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response, response } from 'express';
 
 export interface UserControllerInterface {
     createUser(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -10,4 +10,6 @@ export interface UserControllerInterface {
     updateUserProfileImage(req: Request, res: Response, next: NextFunction): Promise<void>;
     verifyUserEmail(req: Request, res: Response, next: NextFunction): Promise<void>;
     resendOtp(req: Request, res: Response, next: NextFunction): Promise<void>;
+    blockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
+    unblockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

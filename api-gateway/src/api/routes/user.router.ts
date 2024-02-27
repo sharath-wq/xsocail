@@ -8,6 +8,7 @@ import {
 } from '../../domain/interface/use-cases';
 import passport from 'passport';
 import { GetByUsernameUseCase } from '../../domain/interface/use-cases/get-by-username.use-case';
+import { requireAdmin, requireAuth } from '@scxsocialcommon/errors';
 
 export default function UserRouter(
     createUserUseCase: CreateUserUseCase,
@@ -40,6 +41,14 @@ export default function UserRouter(
 
     router.post('/google', async (req, res, next) => {
         userController.googleAuth(req, res, next);
+    });
+
+    router.put('/block/:id', requireAuth, requireAdmin, async (req, res, next) => {
+        userController.blockUser(req, res, next);
+    });
+
+    router.put('/unblock/:id', requireAuth, requireAdmin, async (req, res, next) => {
+        userController.unblockUser(req, res, next);
     });
 
     router.all('/*', async (req, res, next) => {

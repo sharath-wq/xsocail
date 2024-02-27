@@ -8,4 +8,6 @@ export interface UserControllerInterface {
     logout(req: Request, res: Response, next: NextFunction): Promise<void>;
     createUser(data: UserModel): Promise<UserModel | null>;
     updateUser(userId: string, data: UserModel): Promise<UserModel | null>;
+    blockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
+    unblockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
