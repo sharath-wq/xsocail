@@ -1,5 +1,5 @@
 export interface IAuthor {
-    id: string;
+    userId: string;
     username: string;
     imageUrl: string;
 }

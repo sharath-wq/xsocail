@@ -15,6 +15,7 @@ import { POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from './constants/endpoi
 import { GetByUsername } from './domain/use-cases/get-by-user-name.use-case';
 import { GetUserByEmail } from './domain/use-cases/get-user-by-email.use-case';
 import { UserUpdatedListener } from './api/events/user-updated-listener';
+import CommentRouter from './api/routes/comment.router';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -51,6 +52,8 @@ const start = async () => {
         new GetUserByEmail(new UserRepositoryImpl(datasource))
     );
 
+    const CommentMiddleware = CommentRouter(new GetUser(new UserRepositoryImpl(datasource)));
+
     app.use(currentUser);
 
     app.use(
@@ -63,6 +66,8 @@ const start = async () => {
     );
 
     app.use('/api/users/', UserMiddleware);
+
+    app.use('/api/comments/', CommentMiddleware);
 
     app.use(
         '/api/posts',

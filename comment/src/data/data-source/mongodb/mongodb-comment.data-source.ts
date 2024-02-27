@@ -12,8 +12,12 @@ export class CommentDataSource implements ICommentDataSource {
             }
 
             return results.map((item) => ({
-                ...item,
                 id: item.id,
+                author: item.author,
+                content: item.content,
+                createdAt: item.createdAt,
+                likes: item.likes,
+                postId: item.postId,
             }));
         } catch (error) {
             console.log(error);
@@ -30,8 +34,12 @@ export class CommentDataSource implements ICommentDataSource {
             }
 
             return {
-                ...result,
                 id: result.id,
+                author: result.author,
+                content: result.content,
+                createdAt: result.createdAt,
+                likes: result.likes,
+                postId: result.postId,
             };
         } catch (error) {
             console.log(error);
