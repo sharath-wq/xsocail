@@ -41,9 +41,12 @@ import { toast } from '../ui/use-toast';
 import TimeAgo from 'react-timeago';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
+import Actions from './actions/Actions';
 
 const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, getData }: PostProps) => {
     const { currentUser } = useUser();
+    const [likeCount, setLikeCount] = useState(likes.length);
+    const [commentCount, setCommentCount] = useState(comments.length);
 
     const [expanded, setExpanded] = useState(false);
 
@@ -206,27 +209,10 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                 </Carousel>
             </CardContent>
             <CardFooter className='flex flex-col'>
-                <div className='flex justify-between w-full'>
-                    <div>
-                        <Button variant={'ghost'}>
-                            <Heart />
-                        </Button>
-                        <Button variant={'ghost'}>
-                            <MessageCircle />
-                        </Button>
-                        <Button variant={'ghost'}>
-                            <Send />
-                        </Button>
-                    </div>
-                    <div>
-                        <Button variant={'ghost'}>
-                            <Bookmark />
-                        </Button>
-                    </div>
-                </div>
+                <Actions setLikeCount={setLikeCount} id={id} likes={likes} />
                 <Separator className='my-2' />
                 <div className='flex w-full ml-8 flex-col items-start'>
-                    {likes && likes.length !== 0 && <div className='text-lg font-semibold'>{likes.length} Likes</div>}
+                    {likeCount !== 0 && <div className='text-lg font-semibold'>{likeCount} Likes</div>}
                     {caption && (
                         <div className='flex'>
                             <p
