@@ -12,7 +12,7 @@ export type PostProps = {
     imageUrls: string[];
     likes: string[];
     comments: string[];
-    createdAt: string;
+    createdAt: Date;
 };
 
 export type UserPostData = {

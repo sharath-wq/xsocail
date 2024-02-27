@@ -130,7 +130,6 @@ const LoginPage: React.FC = () => {
                         Not Verified? verify now.
                     </Link>
                 )}
-                <Comment />
             </div>
         </div>
     );
