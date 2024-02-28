@@ -20,23 +20,25 @@ const VerifyOtpPage: React.FC = () => {
 
     useEffect(() => {
         const storedOtpDetails = typeof window !== 'undefined' ? localStorage?.getItem('otpDetails') : null;
-        setOtpData(storedOtpDetails ? JSON.parse(storedOtpDetails) : null);
+        const otpDetails = storedOtpDetails ? JSON.parse(storedOtpDetails) : null;
 
-        const findTimeLeft = () => {
-            if (otpData) {
-                const msLeft = new Date(otpData.expires).getTime() - new Date().getTime();
+        if (otpDetails) {
+            setOtpData(otpDetails);
+
+            const findTimeLeft = () => {
+                const msLeft = new Date(otpDetails.expires).getTime() - new Date().getTime();
                 const roundedTimeLeft = Math.max(0, Math.round(msLeft / 1000));
                 setTimeLeft(roundedTimeLeft);
-            }
-        };
+            };
 
-        findTimeLeft();
-        const timerId = setInterval(findTimeLeft, 1000);
+            findTimeLeft();
+            const timerId = setInterval(findTimeLeft, 1000);
 
-        return () => {
-            clearInterval(timerId);
-        };
-    }, [otpData]);
+            return () => {
+                clearInterval(timerId);
+            };
+        }
+    }, [timeLeft]);
 
     const { doRequest, errors } = useRequest({
         url: '/api/users/verify',

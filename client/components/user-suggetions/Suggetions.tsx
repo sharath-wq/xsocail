@@ -37,10 +37,10 @@ export function Suggetions() {
                             (user, idx) =>
                                 // Change this when changing the suggested user route
                                 user.id !== currentUser!.userId && (
-                                    <>
+                                    <div key={user.id}>
                                         <SingleSuggesteduser {...user} />
                                         {idx < suggestedUsers.length - 1 && <Separator className='my-2' />}
-                                    </>
+                                    </div>
                                 )
                         )}
                     </div>
