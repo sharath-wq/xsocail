@@ -212,7 +212,7 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                 </Carousel>
             </CardContent>
             <CardFooter className='flex flex-col'>
-                <Actions setLikeCount={setLikeCount} id={id} likes={likes} />
+                <Actions setCommentCount={setCommentCount} setLikeCount={setLikeCount} id={id} likes={likes} />
                 <Separator className='my-2' />
                 <div className='flex w-full ml-8 flex-col items-start'>
                     {likeCount !== 0 && <div className='text-lg font-semibold'>{likeCount} Likes</div>}
@@ -228,8 +228,8 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                             </p>
                         </div>
                     )}
-                    {comments && comments.length !== 0 && (
-                        <p className='text-xl text-muted-foreground'>View all {comments?.length} comments</p>
+                    {commentCount !== 0 && (
+                        <p className='text-xl text-muted-foreground'>View all {commentCount} comments</p>
                     )}
                     {tags && tags.length !== 0 && (
                         <p className='text-sm text-muted-foreground'>{tags && tags.map((tag: string) => tag)}</p>

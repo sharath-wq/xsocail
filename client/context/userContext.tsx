@@ -8,6 +8,7 @@ interface UserContextType {
         isAdmin: boolean;
         imageUrl: string;
         savedPosts: string[];
+        following: string[];
         iat: number;
     } | null;
     getCurrentUser: () => Promise<void>;
