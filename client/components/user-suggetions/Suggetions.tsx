@@ -36,6 +36,7 @@ export function Suggetions() {
                         {suggestedUsers.map(
                             (user, idx) =>
                                 // Change this when changing the suggested user route
+                                currentUser &&
                                 user.id !== currentUser!.userId && (
                                     <div key={user.id}>
                                         <SingleSuggesteduser {...user} />
