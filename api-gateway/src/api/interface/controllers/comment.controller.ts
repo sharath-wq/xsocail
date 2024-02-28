@@ -4,4 +4,6 @@ export interface CommentControllerInterface {
     createComment(req: Request, res: Response, next: NextFunction): Promise<void>;
     getCommentsByPostId(req: Request, res: Response, next: NextFunction): Promise<void>;
     commentService(req: Request, res: Response, next: NextFunction): Promise<void>;
+    likeComment(req: Request, res: Response, next: NextFunction): Promise<void>;
+    dislikeComment(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

@@ -4,12 +4,44 @@ import { GetUserUseCase } from '../../domain/interface/use-cases';
 import axios from 'axios';
 import { COMMENT_SERVICE_ENDPOINT } from '../../constants/endpoints';
 import { NotFoundError } from '@scxsocialcommon/errors';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 
 export class CommentController implements CommentControllerInterface {
     getUserUseCase: GetUserUseCase;
 
     constructor(getUserUseCase: GetUserUseCase) {
         this.getUserUseCase = getUserUseCase;
+    }
+
+    async likeComment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const userId = req.currentUser!.userId;
+        const path = req.originalUrl.replace('/api/comments', '');
+
+        try {
+            const response = await axios.put(`${COMMENT_SERVICE_ENDPOINT}${path}`, {
+                userId,
+            });
+
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error.response?.status || 500).send(error.response?.data || 'Internal Server Error');
+        }
+    }
+
+    async dislikeComment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const userId = req.currentUser!.userId;
+        const path = req.originalUrl.replace('/api/comments', '');
+
+        try {
+            const response = await axios.put(`${COMMENT_SERVICE_ENDPOINT}${path}`, {
+                userId,
+            });
+
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error.response?.status || 500).send(error.response?.data || 'Internal Server Error');
+        }
     }
 
     async createComment(req: Request, res: Response, next: NextFunction): Promise<void> {
