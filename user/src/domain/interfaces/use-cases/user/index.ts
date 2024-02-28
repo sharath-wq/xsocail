@@ -14,6 +14,8 @@ import { BlockUserUseCase } from './block-user.use-case';
 import { UnblockUserUseCase } from './unblock-user.use-case';
 import { SavePostUseCase } from './save-post.use-case';
 import { UnsavePostUseCase } from './unsave-post.use.case';
+import { FollowUserUseCase } from './follow-user.use-case';
+import { UnfollowUserUseCase } from './unfollow-user.use-case';
 
 export {
     CretaeUserUseCase,
@@ -32,4 +34,6 @@ export {
     UnblockUserUseCase,
     SavePostUseCase,
     UnsavePostUseCase,
+    FollowUserUseCase,
+    UnfollowUserUseCase,
 };

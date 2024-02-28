@@ -15,6 +15,8 @@ import {
     UnblockUserUseCase,
     SavePostUseCase,
     UnsavePostUseCase,
+    FollowUserUseCase,
+    UnfollowUserUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
 import { requireAdmin, requireAuth, validateRequest } from '@scxsocialcommon/errors';
@@ -39,7 +41,9 @@ export default function UserRouter(
     blockUserUseCase: BlockUserUseCase,
     unblockUserUseCase: UnblockUserUseCase,
     savePostUseCase: SavePostUseCase,
-    unsavePostUseCase: UnsavePostUseCase
+    unsavePostUseCase: UnsavePostUseCase,
+    followUserUseCase: FollowUserUseCase,
+    unfollowUserUseCase: UnfollowUserUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -57,7 +61,9 @@ export default function UserRouter(
         blockUserUseCase,
         unblockUserUseCase,
         savePostUseCase,
-        unsavePostUseCase
+        unsavePostUseCase,
+        followUserUseCase,
+        unfollowUserUseCase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -133,6 +139,14 @@ export default function UserRouter(
 
     router.put('/unsave/:postId', async (req: Request, res: Response, next: NextFunction) => {
         userController.unsavePost(req, res, next);
+    });
+
+    router.put('/follow', async (req: Request, res: Response, next: NextFunction) => {
+        userController.follow(req, res, next);
+    });
+
+    router.put('/unfollow', async (req: Request, res: Response, next: NextFunction) => {
+        userController.unfollow(req, res, next);
     });
 
     return router;

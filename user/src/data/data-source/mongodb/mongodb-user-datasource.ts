@@ -4,9 +4,25 @@ import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
 export class MongoDBUserDataSource implements UserDataSource {
-    async addToSaved(userId: string, postId: string): Promise<void> {
-        console.log(postId);
+    async follow(userId: string, followerId: string): Promise<void> {
+        try {
+            await User.findOneAndUpdate({ _id: userId }, { $addToSet: { following: followerId } });
+            await User.findOneAndUpdate({ _id: followerId }, { $addToSet: { followers: userId } });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
+    async unFollow(userId: string, followerId: string): Promise<void> {
+        try {
+            await User.findOneAndUpdate({ _id: userId }, { $pull: { following: followerId } });
+            await User.findOneAndUpdate({ _id: followerId }, { $pull: { followers: userId } });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async addToSaved(userId: string, postId: string): Promise<void> {
         try {
             await User.findOneAndUpdate({ _id: userId }, { $push: { savedPosts: postId } });
         } catch (error) {

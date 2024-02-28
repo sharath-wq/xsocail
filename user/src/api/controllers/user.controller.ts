@@ -13,6 +13,8 @@ import {
     UnblockUserUseCase,
     SavePostUseCase,
     UnsavePostUseCase,
+    FollowUserUseCase,
+    UnfollowUserUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
@@ -27,8 +29,6 @@ import { BadRequestError, currentUser } from '@scxsocialcommon/errors';
 import sharp from 'sharp';
 import { CloudinaryFile, cloudinary } from '../../config/cloudinary.config';
 import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -46,6 +46,8 @@ export class UserController implements UserControllerInterface {
     unblockUserUseCase: UnblockUserUseCase;
     savePostUseCase: SavePostUseCase;
     unsavePostUseCase: UnsavePostUseCase;
+    followUserUseCase: FollowUserUseCase;
+    unfollowUserUseCase: UnfollowUserUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -62,7 +64,9 @@ export class UserController implements UserControllerInterface {
         blockUserUseCase: BlockUserUseCase,
         unblockUserUseCase: UnblockUserUseCase,
         savePostUseCase: SavePostUseCase,
-        unsavePostUseCase: UnsavePostUseCase
+        unsavePostUseCase: UnsavePostUseCase,
+        followUserUseCase: FollowUserUseCase,
+        unfollowUserUseCase: UnfollowUserUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -79,7 +83,30 @@ export class UserController implements UserControllerInterface {
         this.unblockUserUseCase = unblockUserUseCase;
         this.savePostUseCase = savePostUseCase;
         this.unsavePostUseCase = unsavePostUseCase;
+        this.followUserUseCase = followUserUseCase;
+        this.unfollowUserUseCase = unfollowUserUseCase;
     }
+
+    async follow(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { userId, followerId } = req.body;
+        try {
+            await this.followUserUseCase.execute(userId, followerId);
+            res.send({ status: 'ok' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async unfollow(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { userId, followerId } = req.body;
+        try {
+            await this.unfollowUserUseCase.execute(userId, followerId);
+            res.send({ status: 'ok' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async savePost(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { userId } = req.body;
         const { postId } = req.params;

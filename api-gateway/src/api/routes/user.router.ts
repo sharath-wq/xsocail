@@ -63,6 +63,14 @@ export default function UserRouter(
         userController.unsavePost(req, res, next);
     });
 
+    router.put('/follow/:followerId', requireAuth, async (req, res, next) => {
+        userController.follow(req, res, next);
+    });
+
+    router.put('/unfollow/:followerId', requireAuth, async (req, res, next) => {
+        userController.unfollow(req, res, next);
+    });
+
     router.all('/*', async (req, res, next) => {
         userController.userService(req, res, next);
     });

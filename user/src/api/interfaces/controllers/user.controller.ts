@@ -14,4 +14,6 @@ export interface UserControllerInterface {
     unblockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
     savePost(req: Request, res: Response, next: NextFunction): Promise<void>;
     unsavePost(req: Request, res: Response, next: NextFunction): Promise<void>;
+    follow(req: Request, res: Response, next: NextFunction): Promise<void>;
+    unfollow(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

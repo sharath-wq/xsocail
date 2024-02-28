@@ -14,4 +14,6 @@ export interface UserDataSource {
     updateProfileImage(userId: string, postId: string): Promise<UserResponseModel | null>;
     addToSaved(userId: string, postId: string): Promise<void>;
     removeFromSaved(userId: string, postId: string): Promise<void>;
+    follow(userId: string, followerId: string): Promise<void>;
+    unFollow(userId: string, followerId: string): Promise<void>;
 }

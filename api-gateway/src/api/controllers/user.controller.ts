@@ -37,6 +37,35 @@ export class UserController implements UserControllerInterface {
         this.getUserByEmailUseCase = getUserByEmailUseCase;
     }
 
+    async follow(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const userId = req.currentUser!.userId;
+        const { followerId } = req.params;
+        try {
+            const response = await axios.put(`${USER_SERVICE_ENDPOINT}/follow`, {
+                userId: userId,
+                followerId: followerId,
+            });
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error?.response?.status).send(error.response.data);
+        }
+    }
+
+    async unfollow(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const userId = req.currentUser!.userId;
+        const { followerId } = req.params;
+        try {
+            const response = await axios.put(`${USER_SERVICE_ENDPOINT}/unfollow`, {
+                userId: userId,
+                followerId: followerId,
+            });
+
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error?.response?.status).send(error.response.data);
+        }
+    }
+
     async getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
         const userId = req.currentUser!.userId;
         try {

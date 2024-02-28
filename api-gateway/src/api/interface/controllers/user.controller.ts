@@ -13,4 +13,6 @@ export interface UserControllerInterface {
     savePost(req: Request, res: Response, next: NextFunction): Promise<void>;
     unsavePost(req: Request, res: Response, next: NextFunction): Promise<void>;
     getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
+    follow(req: Request, res: Response, next: NextFunction): Promise<void>;
+    unfollow(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
