@@ -12,9 +12,11 @@ import {
     GetUser,
     Login,
     ResetPassword,
+    SavePost,
     SendResetToken,
     SendVerificationOtp,
     UnblockUser,
+    UnsavePost,
     UpdateUser,
     UpdateUserProfile,
     VerifyUserEmail,
@@ -66,7 +68,9 @@ const start = async () => {
         new SendVerificationOtp(new UserRepositoryImpl(datasource), new OtpReposiotryImpl(new MongoDBOtpDatasource())),
         new VerifyUserEmail(new UserRepositoryImpl(datasource), new OtpReposiotryImpl(new MongoDBOtpDatasource())),
         new BlockUser(new UserRepositoryImpl(datasource)),
-        new UnblockUser(new UserRepositoryImpl(datasource))
+        new UnblockUser(new UserRepositoryImpl(datasource)),
+        new SavePost(new UserRepositoryImpl(datasource)),
+        new UnsavePost(new UserRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

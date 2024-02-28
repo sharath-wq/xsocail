@@ -11,4 +11,5 @@ export interface PostDataSource {
     likeAPost(userId: string, postId: string): Promise<void>;
     disLikeAPost(userIndex: number, postId: string): Promise<void>;
     getUserFeed(): Promise<PostModel[] | []>;
+    getSavedPosts(postsIds: string[]): Promise<PostModel[] | []>;
 }

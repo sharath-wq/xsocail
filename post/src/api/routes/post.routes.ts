@@ -16,6 +16,7 @@ import {
     LikePostUseCase,
     DisLikePostUseCase,
     GetUserFeedPostsUseCase,
+    GetSavedPostsUseCase,
 } from '../../domain/interfaces/use-cases';
 import { NextFunction } from 'express-serve-static-core';
 import { body } from 'express-validator';
@@ -30,7 +31,8 @@ export default function PostRouter(
     getUserPostsUseCase: GetUserPostsUseCase,
     likePostUseCase: LikePostUseCase,
     disLikePostUseCase: DisLikePostUseCase,
-    getUserFeedPostsUseCase: GetUserFeedPostsUseCase
+    getUserFeedPostsUseCase: GetUserFeedPostsUseCase,
+    getSavedPostsUseCase: GetSavedPostsUseCase
 ) {
     const router = express.Router();
     const postController = new PostController(
@@ -42,7 +44,8 @@ export default function PostRouter(
         updatePostUseCase,
         likePostUseCase,
         disLikePostUseCase,
-        getUserFeedPostsUseCase
+        getUserFeedPostsUseCase,
+        getSavedPostsUseCase
     );
 
     router.patch('/like/:postId', async (req, res, next) => {
@@ -84,6 +87,10 @@ export default function PostRouter(
 
     router.delete('/:id', async (req, res, next) => {
         postController.deletePost(req, res, next);
+    });
+
+    router.post('/saved', async (req, res, next) => {
+        postController.getSavedPosts(req, res, next);
     });
 
     return router;

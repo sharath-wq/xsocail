@@ -4,6 +4,30 @@ import { PostDataSource } from '../../interface/data-source/post-data-source';
 import { Post } from './schema/post.schema';
 
 export class MongoDBPostDataSource implements PostDataSource {
+    async getSavedPosts(postsIds: string[]): Promise<[] | PostModel[]> {
+        try {
+            const results = await Post.find({ _id: { $in: postsIds } });
+
+            return results.map((item) => ({
+                id: item.id,
+                author: {
+                    userId: item.author!.userId!,
+                    username: item.author!.username!,
+                    imageUrl: item.author!.imageUrl!,
+                },
+                caption: item.caption,
+                tags: item.tags,
+                imageUrls: item.imageUrls,
+                likes: item.likes,
+                comments: item.comments,
+                createdAt: item.createdAt,
+            }));
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+
     async getUserFeed(): Promise<[] | PostModel[]> {
         try {
             const result = await Post.find({}).sort({ createdAt: -1 });

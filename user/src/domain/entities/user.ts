@@ -23,6 +23,7 @@ export interface UpdateUserRequstModel {
     post?: string;
     verified?: boolean;
     isBlocked?: boolean;
+    savedPosts?: string[];
 }
 
 export interface UserResponseModel {

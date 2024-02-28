@@ -10,4 +10,5 @@ export interface PostControllerInterface {
     likePost(req: Request, res: Response, next: NextFunction): Promise<void>;
     disLikePost(req: Request, res: Response, next: NextFunction): Promise<void>;
     getUserFeed(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

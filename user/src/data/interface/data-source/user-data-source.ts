@@ -12,4 +12,6 @@ export interface UserDataSource {
     addPost(userId: string, postId: string): Promise<void>;
     deletePost(userId: string, postId: string): Promise<void>;
     updateProfileImage(userId: string, postId: string): Promise<UserResponseModel | null>;
+    addToSaved(userId: string, postId: string): Promise<void>;
+    removeFromSaved(userId: string, postId: string): Promise<void>;
 }

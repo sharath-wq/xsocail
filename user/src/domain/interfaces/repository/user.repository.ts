@@ -12,4 +12,6 @@ export interface UserRepository {
     addPost(userId: string, postId: string): Promise<void>;
     deletePost(userId: string, postId: string): Promise<void>;
     updateUserProfileImage(userId: string, imageUrl: string): Promise<UserResponseModel | null>;
+    addToSaved(userId: string, postId: string): Promise<void>;
+    removeFromSaved(userId: string, postId: string): Promise<void>;
 }

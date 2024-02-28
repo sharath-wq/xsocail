@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserControllerInterface } from '../interface/controllers/user.controller';
 import axios from 'axios';
-import { USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
+import { POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import jwt from 'jsonwebtoken';
@@ -35,6 +35,49 @@ export class UserController implements UserControllerInterface {
         this.getUserUseCase = getUserUseCase;
         this.getByUsernameUseCase = getByUsernameUseCase;
         this.getUserByEmailUseCase = getUserByEmailUseCase;
+    }
+
+    async getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const userId = req.currentUser!.userId;
+        try {
+            const { data } = await axios.get(`${USER_SERVICE_ENDPOINT}/${userId}`);
+
+            const response = await axios.post(`${POST_SERVICE_ENDPOINT}/saved`, {
+                postIds: [...data.savedPosts],
+            });
+
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error?.response?.status).send(error.response.data);
+        }
+    }
+
+    async savePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const userId = req.currentUser!.userId;
+        const path = req.originalUrl.replace('/api/users', '');
+        try {
+            const response = await axios.put(`${USER_SERVICE_ENDPOINT}${path}`, {
+                userId: userId,
+            });
+
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error?.response?.status).send(error.response.data);
+        }
+    }
+
+    async unsavePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const userId = req.currentUser!.userId;
+        const path = req.originalUrl.replace('/api/users', '');
+        try {
+            const response = await axios.put(`${USER_SERVICE_ENDPOINT}${path}`, {
+                userId: userId,
+            });
+
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error?.response?.status).send(error.response.data);
+        }
     }
 
     async blockUser(req: Request, res: Response, next: NextFunction): Promise<void> {

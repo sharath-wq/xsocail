@@ -11,4 +11,5 @@ export interface PostRepository {
     likePost(userId: string, postId: string): Promise<void>;
     dislikePost(userIndex: number, postId: string): Promise<void>;
     getUserFeeds(): Promise<PostModel[] | []>;
+    getSavedPosts(postIds: string[]): Promise<PostModel[] | []>;
 }

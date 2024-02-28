@@ -7,6 +7,7 @@ interface UserContextType {
         username: string;
         isAdmin: boolean;
         imageUrl: string;
+        savedPosts: string[];
         iat: number;
     } | null;
     getCurrentUser: () => Promise<void>;
@@ -29,15 +30,12 @@ export const UserProvider: React.FC = ({ children }: any) => {
             const { data } = await axios.get('/api/users/currentuser');
             setCurrentUser(data.currentUser);
 
-            // Make an additional API call if currentUser is present
             if (data.currentUser) {
                 const userApiUrl = `/api/users/${data.currentUser.userId}`;
                 const userApiResponse = await axios.get(userApiUrl);
 
-                // Update the response to the current user
                 setCurrentUser((prevUser: any) => ({
                     ...prevUser,
-                    // Assuming userApiResponse.data contains the updated user information
                     ...userApiResponse.data,
                 }));
             }

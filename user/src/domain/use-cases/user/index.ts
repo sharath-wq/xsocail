@@ -15,6 +15,8 @@ import { SendVerificationOtp } from './send-verification-otp.use-case';
 import { VerifyUserEmail } from './verify-user-email.use-case';
 import { BlockUser } from './block-user.use-case';
 import { UnblockUser } from './unblock-user.use-case';
+import { SavePost } from './save-post.use-case';
+import { UnsavePost } from './unsave-post.use-case';
 
 export {
     CreateUser,
@@ -34,4 +36,6 @@ export {
     VerifyUserEmail,
     BlockUser,
     UnblockUser,
+    SavePost,
+    UnsavePost,
 };

@@ -9,6 +9,11 @@ export class PostRepositoryImpl implements PostRepository {
         this.postDataSource = postDataSource;
     }
 
+    async getSavedPosts(postIds: string[]): Promise<PostModel[] | []> {
+        const results = await this.postDataSource.getSavedPosts(postIds);
+        return results;
+    }
+
     async getUserFeeds(): Promise<[] | PostModel[]> {
         const result = await this.postDataSource.getUserFeed();
         return result;

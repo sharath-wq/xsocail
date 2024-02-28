@@ -12,6 +12,8 @@ import { SendVerificationOtpUseCase } from './send-verification-otp.use-case';
 import { VerifyUserEmailUseCase } from './verify-user-email.use-case';
 import { BlockUserUseCase } from './block-user.use-case';
 import { UnblockUserUseCase } from './unblock-user.use-case';
+import { SavePostUseCase } from './save-post.use-case';
+import { UnsavePostUseCase } from './unsave-post.use.case';
 
 export {
     CretaeUserUseCase,
@@ -28,4 +30,6 @@ export {
     VerifyUserEmailUseCase,
     BlockUserUseCase,
     UnblockUserUseCase,
+    SavePostUseCase,
+    UnsavePostUseCase,
 };

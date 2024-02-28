@@ -11,6 +11,8 @@ import {
     VerifyUserEmailUseCase,
     BlockUserUseCase,
     UnblockUserUseCase,
+    SavePostUseCase,
+    UnsavePostUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
@@ -42,6 +44,8 @@ export class UserController implements UserControllerInterface {
     verifyUserEmailUseCase: VerifyUserEmailUseCase;
     blockUserUseCase: BlockUserUseCase;
     unblockUserUseCase: UnblockUserUseCase;
+    savePostUseCase: SavePostUseCase;
+    unsavePostUseCase: UnsavePostUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -56,7 +60,9 @@ export class UserController implements UserControllerInterface {
         sendVerificationOtpUseCase: SendVerificationOtpUseCase,
         verifyUserEmailUseCase: VerifyUserEmailUseCase,
         blockUserUseCase: BlockUserUseCase,
-        unblockUserUseCase: UnblockUserUseCase
+        unblockUserUseCase: UnblockUserUseCase,
+        savePostUseCase: SavePostUseCase,
+        unsavePostUseCase: UnsavePostUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -71,6 +77,29 @@ export class UserController implements UserControllerInterface {
         this.verifyUserEmailUseCase = verifyUserEmailUseCase;
         this.blockUserUseCase = blockUserUseCase;
         this.unblockUserUseCase = unblockUserUseCase;
+        this.savePostUseCase = savePostUseCase;
+        this.unsavePostUseCase = unsavePostUseCase;
+    }
+    async savePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { userId } = req.body;
+        const { postId } = req.params;
+        try {
+            await this.savePostUseCase.execute(postId, userId);
+            res.send({ status: 'ok' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async unsavePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { userId } = req.body;
+        const { postId } = req.params;
+        try {
+            await this.unsavePostUseCase.execute(postId, userId);
+            res.send({ status: 'ok' });
+        } catch (error) {
+            next(error);
+        }
     }
     async blockUser(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { id } = req.params;
