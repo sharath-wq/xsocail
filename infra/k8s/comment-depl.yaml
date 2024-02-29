@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: user-depl
+    name: comment-depl
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: user
+            app: comment
     template:
         metadata:
             labels:
-                app: user
+                app: comment
         spec:
             containers:
-                - name: user
-                  image: sharathchandranp/xsocial-user
+                - name: comment
+                  image: sharathchandranp/xsocial-comments
                   env:
                       - name: NATS_CLIENT_ID
                         valueFrom:
@@ -25,7 +25,7 @@ spec:
                       - name: 'NATS_CLUSTER_ID'
                         value: ecomm
                       - name: MONGO_URI
-                        value: 'mongodb+srv://sharath-wq:i3x3j4bpfx@cluster0.xipfc3c.mongodb.net/xsocial'
+                        value: 'mongodb://comment-mongo-srv:27017/comment'
                       - name: JWT_KEY
                         valueFrom:
                             secretKeyRef:
@@ -35,12 +35,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: user-srv
+    name: comment-srv
 spec:
     selector:
-        app: user
+        app: comment
     ports:
-        - name: user
+        - name: comment
           protocol: TCP
           port: 3000
           targetPort: 3000

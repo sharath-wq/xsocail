@@ -25,7 +25,7 @@ spec:
                       - name: 'NATS_CLUSTER_ID'
                         value: ecomm
                       - name: MONGO_URI
-                        value: 'mongodb://api-gateway-mongo-srv:27017/api-gateway'
+                        value: 'mongodb+srv://sharath-wq:i3x3j4bpfx@cluster0.xipfc3c.mongodb.net/xsocial'
                       - name: JWT_KEY
                         valueFrom:
                             secretKeyRef:
