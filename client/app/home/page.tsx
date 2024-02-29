@@ -15,12 +15,12 @@ const Home = () => {
     const router = useRouter();
 
     useEffect(() => {
-        if (!currentUser) {
+        const sessionCookie = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('session='));
+
+        if (!currentUser && !sessionCookie) {
             router.push('/auth/login');
-        } else if (currentUser.isBlocked) {
+        } else if (currentUser && currentUser.isBlocked) {
             router.replace('/auth/blocked');
-        } else {
-            router.push('/home');
         }
     }, [currentUser, router]);
 

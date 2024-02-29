@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { UserControllerInterface } from '../interface/controllers/user.controller';
 import axios from 'axios';
 import { POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
 import jwt from 'jsonwebtoken';
 import {
     UpdateUserUseCase,
@@ -179,10 +177,7 @@ export class UserController implements UserControllerInterface {
                 const userJwt = jwt.sign(
                     {
                         userId: response.data.user.userId,
-                        username: response.data.user.username,
                         isAdmin: response.data.user.isAdmin,
-                        imageUrl: response.data.user.imageUrl,
-                        isBlocked: response.data.user.isBlocked,
                     },
                     process.env.JWT_KEY!
                 );
@@ -275,10 +270,8 @@ export class UserController implements UserControllerInterface {
 
                 const userJwt = jwt.sign(
                     {
-                        userId: newUser.data.userId,
-                        username: newUser.data.username,
+                        userId: newUser.data.id,
                         isAdmin: newUser.data.isAdmin,
-                        imageUrl: newUser.data.imageUrl,
                     },
                     process.env.JWT_KEY!
                 );
@@ -291,9 +284,7 @@ export class UserController implements UserControllerInterface {
                 const userJwt = jwt.sign(
                     {
                         userId: existingUser.userId,
-                        username: existingUser.username,
                         isAdmin: existingUser.isAdmin,
-                        imageUrl: existingUser.imageUrl,
                     },
                     process.env.JWT_KEY!
                 );
