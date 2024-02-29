@@ -15,6 +15,14 @@ export interface PostResponseModel {
     imaageUrl: string[];
 }
 
+export interface PostBulkUpdateRequestModel {
+    author: {
+        imageUrl: string;
+        userId: string;
+        username: string;
+    };
+}
+
 export interface PostModel {
     id: string;
     author: {

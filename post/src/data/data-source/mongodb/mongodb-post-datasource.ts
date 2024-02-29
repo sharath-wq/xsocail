@@ -1,9 +1,17 @@
-import { PostModel, PostRequestModel } from '../../../domain/entities/post';
+import { PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../../../domain/entities/post';
 import { PostDataSource } from '../../interface/data-source/post-data-source';
 
 import { Post } from './schema/post.schema';
 
 export class MongoDBPostDataSource implements PostDataSource {
+    async updatePostsByUserId(userId: string, post: PostBulkUpdateRequestModel): Promise<void> {
+        try {
+            await Post.updateMany({ 'author.userId': userId }, post);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async getSavedPosts(postsIds: string[]): Promise<[] | PostModel[]> {
         try {
             const results = await Post.find({ _id: { $in: postsIds } });

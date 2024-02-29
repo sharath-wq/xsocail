@@ -123,9 +123,9 @@ export class PostController implements PostControllerInterface {
                 caption: req.body.caption,
                 tags: req.body.tags,
                 author: {
-                    userId: req.currentUser.userId,
-                    username: req.currentUser.username,
-                    imageUrl: req.currentUser.imageUrl,
+                    userId: req.body.userId,
+                    username: req.body.username,
+                    imageUrl: req.body.imageUrl,
                 },
                 imageUrls: [],
             };

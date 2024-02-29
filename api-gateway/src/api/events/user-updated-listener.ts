@@ -1,4 +1,4 @@
-import { Listener, Subjects, UserCreatedEvent, UserUpdatedEvent } from '@scxsocialcommon/event';
+import { Listener, Subjects, UserUpdatedEvent } from '@scxsocialcommon/event';
 import { Message, Stan } from 'node-nats-streaming';
 import { queueGroupName } from './queue-group-name';
 import { UpdateUserUseCase } from '../../domain/interface/use-cases';
