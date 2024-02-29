@@ -212,7 +212,13 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                 </Carousel>
             </CardContent>
             <CardFooter className='flex flex-col'>
-                <Actions setCommentCount={setCommentCount} setLikeCount={setLikeCount} id={id} likes={likes} />
+                <Actions
+                    likeCount={likeCount}
+                    setCommentCount={setCommentCount}
+                    setLikeCount={setLikeCount}
+                    id={id}
+                    likes={likes}
+                />
                 <Separator className='my-2' />
                 <div className='flex w-full ml-8 flex-col items-start'>
                     {likeCount !== 0 && <div className='text-lg font-semibold'>{likeCount} Likes</div>}

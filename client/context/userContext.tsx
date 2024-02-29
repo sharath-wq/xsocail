@@ -9,6 +9,7 @@ interface UserContextType {
         imageUrl: string;
         savedPosts: string[];
         following: string[];
+        isBlocked: boolean;
         iat: number;
     } | null;
     getCurrentUser: () => Promise<void>;

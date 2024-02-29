@@ -17,6 +17,8 @@ const Home = () => {
     useEffect(() => {
         if (!currentUser) {
             router.push('/auth/login');
+        } else if (currentUser.isBlocked) {
+            router.replace('/auth/blocked');
         } else {
             router.push('/home');
         }
