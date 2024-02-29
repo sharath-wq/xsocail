@@ -12,4 +12,8 @@ export interface UserControllerInterface {
     resendOtp(req: Request, res: Response, next: NextFunction): Promise<void>;
     blockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
     unblockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
+    savePost(req: Request, res: Response, next: NextFunction): Promise<void>;
+    unsavePost(req: Request, res: Response, next: NextFunction): Promise<void>;
+    follow(req: Request, res: Response, next: NextFunction): Promise<void>;
+    unfollow(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

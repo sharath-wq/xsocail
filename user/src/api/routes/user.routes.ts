@@ -13,6 +13,10 @@ import {
     VerifyUserEmailUseCase,
     BlockUserUseCase,
     UnblockUserUseCase,
+    SavePostUseCase,
+    UnsavePostUseCase,
+    FollowUserUseCase,
+    UnfollowUserUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
 import { requireAdmin, requireAuth, validateRequest } from '@scxsocialcommon/errors';
@@ -35,7 +39,11 @@ export default function UserRouter(
     sendVerificationOtpUseCase: SendVerificationOtpUseCase,
     verifyUserEmailUseCase: VerifyUserEmailUseCase,
     blockUserUseCase: BlockUserUseCase,
-    unblockUserUseCase: UnblockUserUseCase
+    unblockUserUseCase: UnblockUserUseCase,
+    savePostUseCase: SavePostUseCase,
+    unsavePostUseCase: UnsavePostUseCase,
+    followUserUseCase: FollowUserUseCase,
+    unfollowUserUseCase: UnfollowUserUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -51,7 +59,11 @@ export default function UserRouter(
         sendVerificationOtpUseCase,
         verifyUserEmailUseCase,
         blockUserUseCase,
-        unblockUserUseCase
+        unblockUserUseCase,
+        savePostUseCase,
+        unsavePostUseCase,
+        followUserUseCase,
+        unfollowUserUseCase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -119,6 +131,22 @@ export default function UserRouter(
 
     router.put('/unblock/:id', async (req: Request, res: Response, next: NextFunction) => {
         userController.unblockUser(req, res, next);
+    });
+
+    router.put('/save/:postId', async (req: Request, res: Response, next: NextFunction) => {
+        userController.savePost(req, res, next);
+    });
+
+    router.put('/unsave/:postId', async (req: Request, res: Response, next: NextFunction) => {
+        userController.unsavePost(req, res, next);
+    });
+
+    router.put('/follow', async (req: Request, res: Response, next: NextFunction) => {
+        userController.follow(req, res, next);
+    });
+
+    router.put('/unfollow', async (req: Request, res: Response, next: NextFunction) => {
+        userController.unfollow(req, res, next);
     });
 
     return router;

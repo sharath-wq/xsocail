@@ -4,6 +4,43 @@ import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
 export class MongoDBUserDataSource implements UserDataSource {
+    async follow(userId: string, followerId: string): Promise<void> {
+        try {
+            await User.findOneAndUpdate({ _id: userId }, { $addToSet: { following: followerId } });
+            await User.findOneAndUpdate({ _id: followerId }, { $addToSet: { followers: userId } });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async unFollow(userId: string, followerId: string): Promise<void> {
+        try {
+            await User.findOneAndUpdate({ _id: userId }, { $pull: { following: followerId } });
+            await User.findOneAndUpdate({ _id: followerId }, { $pull: { followers: userId } });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async addToSaved(userId: string, postId: string): Promise<void> {
+        try {
+            await User.findOneAndUpdate({ _id: userId }, { $push: { savedPosts: postId } });
+        } catch (error) {
+            console.log(error);
+            throw new Error('Failed to add post to saved');
+        }
+    }
+
+    async removeFromSaved(userId: string, postId: string): Promise<void> {
+        try {
+            await User.findByIdAndUpdate(userId, {
+                $pull: { savedPosts: postId },
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async updateProfileImage(userId: string, imageUrl: string): Promise<UserResponseModel | null> {
         try {
             const updateduser = await User.findByIdAndUpdate(userId, { imageUrl: imageUrl }, { new: true });

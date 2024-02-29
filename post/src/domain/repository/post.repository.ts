@@ -1,4 +1,4 @@
-import { PostModel, PostRequestModel } from '../entities/post';
+import { PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../entities/post';
 import { PostRepository } from '../interfaces/repository/post.repository';
 import { PostDataSource } from '../../data/interface/data-source/post-data-source';
 
@@ -7,6 +7,15 @@ export class PostRepositoryImpl implements PostRepository {
 
     constructor(postDataSource: PostDataSource) {
         this.postDataSource = postDataSource;
+    }
+
+    async findPostsByUserIdAndUpdate(userId: string, post: PostBulkUpdateRequestModel): Promise<void> {
+        await this.postDataSource.updatePostsByUserId(userId, post);
+    }
+
+    async getSavedPosts(postIds: string[]): Promise<PostModel[] | []> {
+        const results = await this.postDataSource.getSavedPosts(postIds);
+        return results;
     }
 
     async getUserFeeds(): Promise<[] | PostModel[]> {

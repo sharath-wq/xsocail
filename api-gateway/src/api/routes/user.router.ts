@@ -39,6 +39,10 @@ export default function UserRouter(
         userController.getCurrentUser(req, res, next);
     });
 
+    router.get('/saved', requireAuth, async (req, res, next) => {
+        userController.getSavedPosts(req, res, next);
+    });
+
     router.post('/google', async (req, res, next) => {
         userController.googleAuth(req, res, next);
     });
@@ -49,6 +53,22 @@ export default function UserRouter(
 
     router.put('/unblock/:id', requireAuth, requireAdmin, async (req, res, next) => {
         userController.unblockUser(req, res, next);
+    });
+
+    router.put('/save/:postId', requireAuth, async (req, res, next) => {
+        userController.savePost(req, res, next);
+    });
+
+    router.put('/unsave/:postId', requireAuth, async (req, res, next) => {
+        userController.unsavePost(req, res, next);
+    });
+
+    router.put('/follow/:followerId', requireAuth, async (req, res, next) => {
+        userController.follow(req, res, next);
+    });
+
+    router.put('/unfollow/:followerId', requireAuth, async (req, res, next) => {
+        userController.unfollow(req, res, next);
     });
 
     router.all('/*', async (req, res, next) => {

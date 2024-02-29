@@ -10,4 +10,9 @@ export interface UserControllerInterface {
     updateUser(userId: string, data: UserModel): Promise<UserModel | null>;
     blockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
     unblockUser(req: Request, res: Response, next: NextFunction): Promise<void>;
+    savePost(req: Request, res: Response, next: NextFunction): Promise<void>;
+    unsavePost(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
+    follow(req: Request, res: Response, next: NextFunction): Promise<void>;
+    unfollow(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

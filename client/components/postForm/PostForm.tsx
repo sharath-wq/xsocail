@@ -15,9 +15,11 @@ import { useState } from 'react';
 import { toast } from '../ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { ButtonLoading } from '../button/LoadingButton';
+import { useUser } from '@/context/userContext';
 
 const PostForm = ({ post }: any) => {
     const [isSubmiting, setisSubmiting] = useState(false);
+    const { currentUser } = useUser();
 
     const router = useRouter();
 
@@ -34,7 +36,12 @@ const PostForm = ({ post }: any) => {
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof PostValidation>) {
         setisSubmiting(true);
-        doRequest(values);
+        doRequest({
+            ...values,
+            username: currentUser?.username,
+            userId: currentUser?.userId,
+            imageUrl: currentUser?.imageUrl,
+        });
     }
 
     const { doRequest, errors } = useRequest({

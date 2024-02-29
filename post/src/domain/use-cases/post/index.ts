@@ -6,6 +6,7 @@ import { DeletePostUseCase } from '../../interfaces/use-cases';
 import { GetUserPostsUseCase } from '../../interfaces/use-cases';
 import { LikePost } from './like-post.use-case';
 import { DisLikePost } from './dislike-post.use-case';
+import { GetSavedPosts } from './get-saved-post.use-case';
 
 export {
     CreatePostUseCase,
@@ -16,4 +17,5 @@ export {
     GetUserPostsUseCase,
     LikePost,
     DisLikePost,
+    GetSavedPosts,
 };

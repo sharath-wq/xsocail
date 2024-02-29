@@ -10,8 +10,10 @@ import { GetOnePost } from './domain/use-cases/post/get-one-post.use-case';
 import { UpdatePost } from './domain/use-cases/post/update-post.use-case';
 import { GetUserPosts } from './domain/use-cases/post/get-user-post.use-case';
 import { natsWrapper } from '../nats-wrapper';
-import { DisLikePost, LikePost } from './domain/use-cases/post';
+import { DisLikePost, GetSavedPosts, LikePost } from './domain/use-cases/post';
 import { GetUserFeedPosts } from './domain/use-cases/post/get-user-feed-post.use-case';
+import { UserUpdatedListener } from './api/events/sub/user-updated-listener';
+import { UpdatePostsByUserId } from './domain/use-cases/post/update-posts-by-user-id.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -49,7 +51,8 @@ const start = async () => {
         new GetUserPosts(new PostRepositoryImpl(datasource)),
         new LikePost(new PostRepositoryImpl(datasource)),
         new DisLikePost(new PostRepositoryImpl(datasource)),
-        new GetUserFeedPosts(new PostRepositoryImpl(datasource))
+        new GetUserFeedPosts(new PostRepositoryImpl(datasource)),
+        new GetSavedPosts(new PostRepositoryImpl(datasource))
     );
 
     app.use(currentUser);
@@ -71,6 +74,8 @@ const start = async () => {
         });
         process.on('SIGINT', () => natsWrapper.client.close());
         process.on('SIGTERM', () => natsWrapper.client.close());
+
+        new UserUpdatedListener(natsWrapper.client, new UpdatePostsByUserId(new PostRepositoryImpl(datasource))).listen();
     } catch (error) {
         console.log(error);
     }

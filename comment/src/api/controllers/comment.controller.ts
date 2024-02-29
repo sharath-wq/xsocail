@@ -1,20 +1,56 @@
 import { ICommentController } from '../interface/comment.controller';
-import { ICreateCommentUseCase, ICommentDeleteUseCase, IGetByPostIdUseCase } from '../../domain/interface/use-case';
+import {
+    ICreateCommentUseCase,
+    ICommentDeleteUseCase,
+    IGetByPostIdUseCase,
+    ILikeCommentUseCase,
+    IDislikeCommentUseCase,
+} from '../../domain/interface/use-case';
 import { Request, Response, NextFunction } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 
 export class CommentController implements ICommentController {
     createCommentUseCase: ICreateCommentUseCase;
     deleteCommentUseCase: ICommentDeleteUseCase;
     getByPostIdUseCase: IGetByPostIdUseCase;
+    likeCommentUseCase: ILikeCommentUseCase;
+    dislikeCommentUseCase: IDislikeCommentUseCase;
 
     constructor(
         createCommentUseCase: ICreateCommentUseCase,
         deleteCommentUseCase: ICommentDeleteUseCase,
-        getByPostIdUseCase: IGetByPostIdUseCase
+        getByPostIdUseCase: IGetByPostIdUseCase,
+        likeCommentUseCase: ILikeCommentUseCase,
+        dislikeCommentUseCase: IDislikeCommentUseCase
     ) {
         this.createCommentUseCase = createCommentUseCase;
         this.deleteCommentUseCase = deleteCommentUseCase;
         this.getByPostIdUseCase = getByPostIdUseCase;
+        this.likeCommentUseCase = likeCommentUseCase;
+        this.dislikeCommentUseCase = dislikeCommentUseCase;
+    }
+
+    async likeComment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { commentId } = req.params;
+        const { userId } = req.body;
+        try {
+            await this.likeCommentUseCase.execute(commentId, userId);
+            res.send({ status: 'ok' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async disLikeComment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { commentId } = req.params;
+        const { userId } = req.body;
+        try {
+            await this.dislikeCommentUseCase.execute(commentId, userId);
+            res.send({ status: 'ok' });
+        } catch (error) {
+            next(error);
+        }
     }
 
     async createComment(req: Request, res: Response, next: NextFunction): Promise<void> {

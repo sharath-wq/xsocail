@@ -12,9 +12,11 @@ import {
     GetUser,
     Login,
     ResetPassword,
+    SavePost,
     SendResetToken,
     SendVerificationOtp,
     UnblockUser,
+    UnsavePost,
     UpdateUser,
     UpdateUserProfile,
     VerifyUserEmail,
@@ -29,6 +31,8 @@ import { PostDeletedListener } from './api/events/sub/post-deleted-listener';
 import { MongoDBUserDataSource } from './data/data-source/mongodb/mongodb-user-datasource';
 import { OtpReposiotryImpl } from './domain/repository/otp.repository';
 import { MongoDBOtpDatasource } from './data/data-source/mongodb/mongodb-otp-datasource';
+import { FollowUser } from './domain/use-cases/user/follow-user.use-case';
+import { UnfollowUser } from './domain/use-cases/user/unfollow-user.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -66,7 +70,11 @@ const start = async () => {
         new SendVerificationOtp(new UserRepositoryImpl(datasource), new OtpReposiotryImpl(new MongoDBOtpDatasource())),
         new VerifyUserEmail(new UserRepositoryImpl(datasource), new OtpReposiotryImpl(new MongoDBOtpDatasource())),
         new BlockUser(new UserRepositoryImpl(datasource)),
-        new UnblockUser(new UserRepositoryImpl(datasource))
+        new UnblockUser(new UserRepositoryImpl(datasource)),
+        new SavePost(new UserRepositoryImpl(datasource)),
+        new UnsavePost(new UserRepositoryImpl(datasource)),
+        new FollowUser(new UserRepositoryImpl(datasource)),
+        new UnfollowUser(new UserRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

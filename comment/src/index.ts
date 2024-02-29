@@ -5,6 +5,8 @@ import { natsWrapper } from '../nats-wrapper';
 import CommentRouter from './api/routes/comment.router';
 import { CreateComment, DeleteComment, GetByPostId } from './domain/use-case/comment';
 import { CommentRepository } from './domain/repository/post.repository';
+import { LikePost } from './domain/use-case/comment/like-comment.use-case';
+import { DislikeComment } from './domain/use-case/comment/dislike-comment.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -36,7 +38,9 @@ const start = async () => {
     const CommentMiddleware = CommentRouter(
         new CreateComment(new CommentRepository(datasource)),
         new DeleteComment(new CommentRepository(datasource)),
-        new GetByPostId(new CommentRepository(datasource))
+        new GetByPostId(new CommentRepository(datasource)),
+        new LikePost(new CommentRepository(datasource)),
+        new DislikeComment(new CommentRepository(datasource))
     );
 
     app.use(currentUser);

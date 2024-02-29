@@ -10,6 +10,7 @@ import {
     DisLikePostUseCase,
     GetAllPostsUseCase,
     GetOnePostUseCase,
+    GetSavedPostsUseCase,
     GetUserFeedPostsUseCase,
     GetUserPostsUseCase,
     LikePostUseCase,
@@ -39,6 +40,7 @@ export class PostController implements PostControllerInterface {
     likePostUseCase: LikePostUseCase;
     disLikePostUseCase: DisLikePostUseCase;
     getUserFeedPostsUseCase: GetUserFeedPostsUseCase;
+    getSavedPostsUseCase: GetSavedPostsUseCase;
 
     constructor(
         createPostUseCase: CreatePostUseCase,
@@ -49,7 +51,8 @@ export class PostController implements PostControllerInterface {
         updatePostUseCase: UpdatePostUseCase,
         likePostUseCase: LikePostUseCase,
         disLikePostUseCase: DisLikePostUseCase,
-        getUserFeedPostsUseCase: GetUserFeedPostsUseCase
+        getUserFeedPostsUseCase: GetUserFeedPostsUseCase,
+        getSavedPostsUseCase: GetSavedPostsUseCase
     ) {
         this.createPostUseCase = createPostUseCase;
         this.deletePostUseCase = deletePostUseCase;
@@ -60,6 +63,17 @@ export class PostController implements PostControllerInterface {
         this.likePostUseCase = likePostUseCase;
         this.disLikePostUseCase = disLikePostUseCase;
         this.getUserFeedPostsUseCase = getUserFeedPostsUseCase;
+        this.getSavedPostsUseCase = getSavedPostsUseCase;
+    }
+
+    async getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { postIds } = req.body;
+        try {
+            const savedPosts = await this.getSavedPostsUseCase.execute(postIds);
+            res.send(savedPosts);
+        } catch (error) {
+            next(error);
+        }
     }
     async getUserFeed(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -109,9 +123,9 @@ export class PostController implements PostControllerInterface {
                 caption: req.body.caption,
                 tags: req.body.tags,
                 author: {
-                    userId: req.currentUser.userId,
-                    username: req.currentUser.username,
-                    imageUrl: req.currentUser.imageUrl,
+                    userId: req.body.userId,
+                    username: req.body.username,
+                    imageUrl: req.body.imageUrl,
                 },
                 imageUrls: [],
             };

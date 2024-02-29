@@ -1,4 +1,4 @@
-import { PostModel, PostRequestModel } from '../../../domain/entities/post';
+import { PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../../../domain/entities/post';
 
 export interface PostDataSource {
     create(post: PostRequestModel, authorId: string): Promise<PostModel | null>;
@@ -11,4 +11,6 @@ export interface PostDataSource {
     likeAPost(userId: string, postId: string): Promise<void>;
     disLikeAPost(userIndex: number, postId: string): Promise<void>;
     getUserFeed(): Promise<PostModel[] | []>;
+    getSavedPosts(postsIds: string[]): Promise<PostModel[] | []>;
+    updatePostsByUserId(userId: string, post: PostBulkUpdateRequestModel): Promise<void>;
 }

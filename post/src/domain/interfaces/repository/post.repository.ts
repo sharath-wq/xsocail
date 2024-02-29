@@ -1,4 +1,4 @@
-import { PostModel, PostRequestModel } from '../../entities/post';
+import { PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../../entities/post';
 
 export interface PostRepository {
     createPost(post: PostRequestModel, authorId: string): Promise<PostModel | null>;
@@ -11,4 +11,6 @@ export interface PostRepository {
     likePost(userId: string, postId: string): Promise<void>;
     dislikePost(userIndex: number, postId: string): Promise<void>;
     getUserFeeds(): Promise<PostModel[] | []>;
+    getSavedPosts(postIds: string[]): Promise<PostModel[] | []>;
+    findPostsByUserIdAndUpdate(userId: string, post: PostBulkUpdateRequestModel): Promise<void>;
 }
