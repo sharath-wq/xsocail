@@ -1,8 +1,16 @@
-import { ICommentRequestModel, ICommentResponseModel } from '../../../domain/entities/comment';
+import { ICommentAuthorDetailsModel, ICommentRequestModel, ICommentResponseModel } from '../../../domain/entities/comment';
 import { ICommentDataSource } from '../../interface/data-source/comment.data-source';
 import { Comment } from './Schema/comment.schema';
 
 export class CommentDataSource implements ICommentDataSource {
+    async findByUserIdAndUpdate(userId: string, data: ICommentAuthorDetailsModel): Promise<void> {
+        try {
+            await Comment.updateMany({ 'author.userId': userId }, data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async getById(id: string): Promise<ICommentResponseModel | null> {
         try {
             const result = await Comment.findOne({ _id: id });

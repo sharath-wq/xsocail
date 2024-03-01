@@ -1,5 +1,5 @@
 import { ICommentDataSource } from '../../data/interface/data-source/comment.data-source';
-import { ICommentRequestModel, ICommentResponseModel } from '../entities/comment';
+import { ICommentAuthorDetailsModel, ICommentRequestModel, ICommentResponseModel } from '../entities/comment';
 import { ICommentRepository } from '../interface/repository/comment.repository';
 
 export class CommentRepository implements ICommentRepository {
@@ -7,6 +7,10 @@ export class CommentRepository implements ICommentRepository {
 
     constructor(commentDataSource: ICommentDataSource) {
         this.commentDataSource = commentDataSource;
+    }
+
+    async findByUserIdAndUpdate(userId: string, data: ICommentAuthorDetailsModel): Promise<void> {
+        await this.commentDataSource.findByUserIdAndUpdate(userId, data);
     }
 
     async getById(id: string): Promise<ICommentResponseModel | null> {
