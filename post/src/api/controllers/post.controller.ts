@@ -128,6 +128,7 @@ export class PostController implements PostControllerInterface {
                     imageUrl: req.body.imageUrl,
                 },
                 imageUrls: [],
+                isEdited: false,
             };
 
             const uploadPromises: Promise<void>[] = [];

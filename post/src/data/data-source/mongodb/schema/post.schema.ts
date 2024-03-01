@@ -46,6 +46,11 @@ const PostSchema = new mongoose.Schema(
                 type: String,
             },
         ],
+        isEdited: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
     },
     {
         toJSON: {

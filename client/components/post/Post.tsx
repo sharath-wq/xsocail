@@ -44,7 +44,7 @@ import { Input } from '../ui/input';
 import Actions from './actions/Actions';
 import { usePost } from '@/context/postContext';
 
-const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags }: PostProps) => {
+const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, isEdited }: PostProps) => {
     const { currentUser } = useUser();
     const [likeCount, setLikeCount] = useState(likes.length);
     const [commentCount, setCommentCount] = useState(comments.length);
@@ -93,7 +93,10 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div>
-                            <CardTitle>{author.username}</CardTitle>
+                            <CardTitle>
+                                {author.username}{' '}
+                                {isEdited && <span className='text-sm text-muted-foreground'>(edited)</span>}
+                            </CardTitle>
                             <CardDescription>{timeAgo}</CardDescription>
                         </div>
                     </div>
