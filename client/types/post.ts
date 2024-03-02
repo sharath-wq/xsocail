@@ -13,6 +13,7 @@ export type PostProps = {
     likes: string[];
     comments: string[];
     createdAt: Date;
+    isEdited: boolean;
 };
 
 export type UserPostData = {

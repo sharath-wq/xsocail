@@ -7,12 +7,7 @@ export interface PostRequestModel {
         username: string;
         imageUrl: string;
     };
-}
-
-export interface PostResponseModel {
-    id: string;
-    tags: string[];
-    imaageUrl: string[];
+    isEdited: boolean;
 }
 
 export interface PostBulkUpdateRequestModel {
@@ -36,4 +31,5 @@ export interface PostModel {
     likes: string[];
     comments: string[];
     createdAt: Date;
+    isEdited: boolean;
 }

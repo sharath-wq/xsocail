@@ -14,6 +14,7 @@
     "components": "@/components",
     "utils": "@/lib/utils",
     "constants" : "@/lib/constants",
-    "context" : "@/context"
+    "context" : "@/context",
+    "public" : "@/public"
   }
 }

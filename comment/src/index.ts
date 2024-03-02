@@ -3,10 +3,11 @@ import { app } from './app';
 import { connect } from './data/data-source/mongodb/connection';
 import { natsWrapper } from '../nats-wrapper';
 import CommentRouter from './api/routes/comment.router';
-import { CreateComment, DeleteComment, GetByPostId } from './domain/use-case/comment';
+import { CreateComment, DeleteComment, FindByUserIdAndUpdate, GetByPostId } from './domain/use-case/comment';
 import { CommentRepository } from './domain/repository/post.repository';
 import { LikePost } from './domain/use-case/comment/like-comment.use-case';
 import { DislikeComment } from './domain/use-case/comment/dislike-comment.use-case';
+import { UserUpdatedListener } from './api/events/sub/user-updated-listener';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -62,6 +63,8 @@ const start = async () => {
         });
         process.on('SIGINT', () => natsWrapper.client.close());
         process.on('SIGTERM', () => natsWrapper.client.close());
+
+        new UserUpdatedListener(natsWrapper.client, new FindByUserIdAndUpdate(new CommentRepository(datasource))).listen();
     } catch (error) {
         console.log(error);
     }

@@ -9,11 +9,10 @@ export class UpdatePost implements UpdatePostUseCase {
         this.postRepository = postRepository;
     }
     async execute(id: string, data: PostRequestModel, userId: string): Promise<PostModel | null> {
-        // check if the user id and the auther id is same
         const existingPost = await this.postRepository.getPostById(id);
 
         if (existingPost && existingPost.author.userId === userId) {
-            const result = await this.postRepository.updatePost(id, data);
+            const result = await this.postRepository.updatePost(id, { ...data, isEdited: true });
             return result;
         }
 

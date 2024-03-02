@@ -18,6 +18,10 @@ export interface ICommentRequestModel {
     content: string;
 }
 
+export interface ICommentAuthorDetailsModel {
+    author: IAuthor;
+}
+
 export interface ICommentResponseModel {
     id: string;
     postId: string;

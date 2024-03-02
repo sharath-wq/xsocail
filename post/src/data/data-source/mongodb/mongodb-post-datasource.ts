@@ -29,6 +29,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                 likes: item.likes,
                 comments: item.comments,
                 createdAt: item.createdAt,
+                isEdited: item.isEdited,
             }));
         } catch (error) {
             console.log(error);
@@ -53,6 +54,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                 likes: item.likes,
                 comments: item.comments,
                 createdAt: item.createdAt,
+                isEdited: item.isEdited,
             }));
         } catch (error) {
             console.error('Error getting Post', error);
@@ -101,6 +103,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     likes: item.likes,
                     comments: item.comments,
                     createdAt: item.createdAt,
+                    isEdited: item.isEdited,
                 }));
             }
 
@@ -129,6 +132,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
+                    isEdited: result.isEdited,
                 };
             } else {
                 return null;
@@ -159,6 +163,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
+                    isEdited: result.isEdited,
                 };
             } else {
                 return null;
@@ -186,6 +191,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                 likes: item.likes,
                 comments: item.comments,
                 createdAt: item.createdAt,
+                isEdited: item.isEdited,
             }));
         } catch (error) {
             console.error('Error getting Post', error);
@@ -220,6 +226,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
+                    isEdited: result.isEdited,
                 };
             } else {
                 return null;
@@ -248,6 +255,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
+                    isEdited: result.isEdited,
                 };
             }
 
