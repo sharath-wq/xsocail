@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: post-depl
+    name: chat-depl
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: post
+            app: chat
     template:
         metadata:
             labels:
-                app: post
+                app: chat
         spec:
             containers:
-                - name: post
-                  image: sharathchandranp/xsocial-posts
+                - name: chat
+                  image: sharathchandranp/xsocial-chat
                   env:
                       - name: NATS_CLIENT_ID
                         valueFrom:
@@ -38,12 +38,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: post-srv
+    name: chat-srv
 spec:
     selector:
-        app: post
+        app: chat
     ports:
-        - name: post
+        - name: chat
           protocol: TCP
           port: 3000
           targetPort: 3000
