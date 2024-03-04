@@ -4,8 +4,6 @@ import { GetUserUseCase } from '../../domain/interface/use-cases';
 import axios from 'axios';
 import { COMMENT_SERVICE_ENDPOINT } from '../../constants/endpoints';
 import { NotFoundError } from '@scxsocialcommon/errors';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
 
 export class CommentController implements CommentControllerInterface {
     getUserUseCase: GetUserUseCase;

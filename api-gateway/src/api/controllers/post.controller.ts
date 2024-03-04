@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { IPostController } from '../interface/controllers/post.controller';
 import axios from 'axios';
 import FormData from 'form-data';
-import { POST_SERVICE_ENDPOINT, POST_SERVICE_INSTANCE } from '../../constants/endpoints';
+import { POST_SERVICE_ENDPOINT } from '../../constants/endpoints';
 
 export class PostController implements IPostController {
     async postService(req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -26,34 +26,42 @@ build:
                     dest: .
                   - src: 'src/**/*.html'
                     dest: .
-        - image: sharathchandranp/xsocial-posts
-          context: post
+        # - image: sharathchandranp/xsocial-posts
+        #   context: post
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: 'src/**/*.ts'
+        #             dest: .
+        # - image: sharathchandranp/xsocial-comments
+        #   context: comment
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: 'src/**/*.ts'
+        #             dest: .
+        - image: sharathchandranp/xsocial-chat
+          context: chat
           docker:
               dockerfile: Dockerfile
           sync:
               manual:
                   - src: 'src/**/*.ts'
                     dest: .
-        - image: sharathchandranp/xsocial-comments
-          context: comment
-          docker:
-              dockerfile: Dockerfile
-          sync:
-              manual:
-                  - src: 'src/**/*.ts'
-                    dest: .
-        - image: sharathchandranp/xsocial-client
-          context: client
-          docker:
-              dockerfile: Dockerfile
-          sync:
-              manual:
-                  - src: 'app/**{.js,.jsx,.ts, .tsx}'
-                    dest: .
-                  - src: 'components/**{.js,.jsx, .ts, .tsx}'
-                    dest: .
-                  - src: 'lib/**{.js,.jsx, .ts, .tsx}'
-                    dest: .
+        # - image: sharathchandranp/xsocial-client
+        #   context: client
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: 'app/**{.js,.jsx,.ts, .tsx}'
+        #             dest: .
+        #           - src: 'components/**{.js,.jsx, .ts, .tsx}'
+        #             dest: .
+        #           - src: 'lib/**{.js,.jsx, .ts, .tsx}'
+        #             dest: .
         # - image: sharathchandranp/xsocial-admin
         #   context: admin
         #   docker:
