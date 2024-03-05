@@ -14,7 +14,7 @@ export class ConversationReposity implements IConversationRepository {
         return result;
     }
 
-    async getConversationByUserId(userId: string): Promise<IConversations | null> {
+    async getConversationByUserId(userId: string): Promise<IConversations[] | []> {
         const result = await this.conversationDataSource.getConversationByUserId(userId);
         return result;
     }

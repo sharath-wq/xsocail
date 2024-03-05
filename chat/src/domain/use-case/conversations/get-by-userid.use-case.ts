@@ -9,7 +9,7 @@ export class GetByUserId implements GetByUserIdUseCase {
         this.conversationRepository = conversationRepository;
     }
 
-    async execute(userId: string): Promise<IConversations | null> {
+    async execute(userId: string): Promise<IConversations[] | []> {
         return await this.conversationRepository.getConversationByUserId(userId);
     }
 }
