@@ -9,6 +9,10 @@ export class UserRepositoryImpl implements UserRepository {
         this.UserDataSource = UserDataSource;
     }
 
+    async getUserFriends(userId: string): Promise<[] | UserResponseModel[]> {
+        return await this.UserDataSource.getUserFriends(userId);
+    }
+
     async follow(userId: string, followerId: string): Promise<void> {
         await this.UserDataSource.follow(userId, followerId);
     }

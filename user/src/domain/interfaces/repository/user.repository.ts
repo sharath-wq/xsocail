@@ -16,4 +16,5 @@ export interface UserRepository {
     removeFromSaved(userId: string, postId: string): Promise<void>;
     follow(userId: string, followerId: string): Promise<void>;
     unFollow(userId: string, followerId: string): Promise<void>;
+    getUserFriends(userId: string): Promise<UserResponseModel[] | []>;
 }

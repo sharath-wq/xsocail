@@ -11,6 +11,8 @@ import { CreateMessage, FindAllMessageByConversationId } from './domain/use-case
 import { MessageRepository } from './domain/repository/message.repository';
 import { MongoDBMessageDataSource } from './data/data-source/mongodb/mongodb-message-data-source';
 
+import { Server } from 'socket.io';
+
 const start = async () => {
     if (!process.env.MONGO_URI) {
         throw new Error('MONGO URI must be defiend');

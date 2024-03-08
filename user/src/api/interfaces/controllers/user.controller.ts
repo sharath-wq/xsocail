@@ -16,4 +16,5 @@ export interface UserControllerInterface {
     unsavePost(req: Request, res: Response, next: NextFunction): Promise<void>;
     follow(req: Request, res: Response, next: NextFunction): Promise<void>;
     unfollow(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getUserFriends(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

@@ -17,6 +17,7 @@ import {
     UnsavePostUseCase,
     FollowUserUseCase,
     UnfollowUserUseCase,
+    GetUserFriendsUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
 import { requireAdmin, requireAuth, validateRequest } from '@scxsocialcommon/errors';
@@ -43,7 +44,8 @@ export default function UserRouter(
     savePostUseCase: SavePostUseCase,
     unsavePostUseCase: UnsavePostUseCase,
     followUserUseCase: FollowUserUseCase,
-    unfollowUserUseCase: UnfollowUserUseCase
+    unfollowUserUseCase: UnfollowUserUseCase,
+    getUserFriendsUseCase: GetUserFriendsUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -63,7 +65,8 @@ export default function UserRouter(
         savePostUseCase,
         unsavePostUseCase,
         followUserUseCase,
-        unfollowUserUseCase
+        unfollowUserUseCase,
+        getUserFriendsUseCase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -81,6 +84,8 @@ export default function UserRouter(
     );
 
     router.get('/:id', async (req, res, next) => userController.getUser(req, res, next));
+
+    router.get('/friends/:userId', async (req, res, next) => userController.getUserFriends(req, res, next));
 
     router.delete('/:id', async (req, res, next) => userController.deleteUser(req, res, next));
 
