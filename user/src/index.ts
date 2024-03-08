@@ -10,6 +10,7 @@ import {
     DeleteUser,
     GetAllUsers,
     GetUser,
+    GetUserFriends,
     Login,
     ResetPassword,
     SavePost,
@@ -74,7 +75,8 @@ const start = async () => {
         new SavePost(new UserRepositoryImpl(datasource)),
         new UnsavePost(new UserRepositoryImpl(datasource)),
         new FollowUser(new UserRepositoryImpl(datasource)),
-        new UnfollowUser(new UserRepositoryImpl(datasource))
+        new UnfollowUser(new UserRepositoryImpl(datasource)),
+        new GetUserFriends(new UserRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

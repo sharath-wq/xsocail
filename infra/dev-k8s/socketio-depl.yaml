@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: socketio-depl
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: socketio
+    template:
+        metadata:
+            labels:
+                app: socketio
+        spec:
+            containers:
+                - name: socketio
+                  image: sharathchandranp/xsocial-socketio
+                  ports:
+                      - containerPort: 8900
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: socketio-srv
+spec:
+    selector:
+        app: socketio
+    ports:
+        - name: socketio
+          protocol: TCP
+          port: 8900
+          targetPort: 8900

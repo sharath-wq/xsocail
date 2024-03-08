@@ -17,6 +17,7 @@ import { BlockUser } from './block-user.use-case';
 import { UnblockUser } from './unblock-user.use-case';
 import { SavePost } from './save-post.use-case';
 import { UnsavePost } from './unsave-post.use-case';
+import { GetUserFriends } from './get-user-friends.use-case';
 
 export {
     CreateUser,
@@ -38,4 +39,5 @@ export {
     UnblockUser,
     SavePost,
     UnsavePost,
+    GetUserFriends,
 };

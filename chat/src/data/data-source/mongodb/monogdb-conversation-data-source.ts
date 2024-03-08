@@ -27,29 +27,23 @@ export class MongoDBConversationDataSource implements IConversationDataSource {
         }
     }
 
-    async getConversationByUserId(userId: string): Promise<IConversationsRes | null> {
+    async getConversationByUserId(userId: string): Promise<IConversationsRes[] | []> {
         try {
-            const result = await Conversation.findOne({
+            const result = await Conversation.find({
                 members: {
                     $in: [userId],
                 },
             });
 
-            if (!result) {
-                return null;
-            }
-
-            const { id, members, createdAt, updatedAt } = result;
-
-            return {
+            return result.map(({ id, members, createdAt, updatedAt }) => ({
                 id,
                 members,
                 createdAt,
                 updatedAt,
-            };
+            }));
         } catch (error) {
             console.log(error);
-            return null;
+            return [];
         }
     }
 

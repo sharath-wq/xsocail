@@ -26,6 +26,14 @@ build:
                     dest: .
                   - src: 'src/**/*.html'
                     dest: .
+        - image: sharathchandranp/socketio
+          context: socketio
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'src/**/*.ts'
+                    dest: .
         # - image: sharathchandranp/xsocial-posts
         #   context: post
         #   docker:
@@ -50,18 +58,26 @@ build:
               manual:
                   - src: 'src/**/*.ts'
                     dest: .
-        # - image: sharathchandranp/xsocial-client
-        #   context: client
-        #   docker:
-        #       dockerfile: Dockerfile
-        #   sync:
-        #       manual:
-        #           - src: 'app/**{.js,.jsx,.ts, .tsx}'
-        #             dest: .
-        #           - src: 'components/**{.js,.jsx, .ts, .tsx}'
-        #             dest: .
-        #           - src: 'lib/**{.js,.jsx, .ts, .tsx}'
-        #             dest: .
+        - image: sharathchandranp/xsocial-socketio
+          context: socketio
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'src/**/*.ts'
+                    dest: .
+        - image: sharathchandranp/xsocial-client
+          context: client
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'app/**{.js,.jsx,.ts, .tsx}'
+                    dest: .
+                  - src: 'components/**{.js,.jsx, .ts, .tsx}'
+                    dest: .
+                  - src: 'lib/**{.js,.jsx, .ts, .tsx}'
+                    dest: .
         # - image: sharathchandranp/xsocial-admin
         #   context: admin
         #   docker:

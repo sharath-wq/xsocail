@@ -1,9 +1,44 @@
-import { NotFoundError } from '@scxsocialcommon/errors';
 import { UpdateUserRequstModel, UserModel, UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
 import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
 export class MongoDBUserDataSource implements UserDataSource {
+    async getUserFriends(userId: string): Promise<UserResponseModel[] | []> {
+        try {
+            const user = await User.findById(userId);
+
+            if (user) {
+                const friends = await Promise.all(
+                    user.following.map((friendId) => {
+                        return User.findById(friendId);
+                    })
+                );
+
+                return friends.map((item) => ({
+                    id: item!.id,
+                    bio: item!.bio,
+                    followers: item!.followers,
+                    following: item!.following,
+                    savedPosts: item!.savedPosts,
+                    username: item!.username,
+                    email: item!.email,
+                    fullName: item!.fullName,
+                    createdAt: item!.createdAt,
+                    isAdmin: item!.isAdmin,
+                    imageUrl: item!.imageUrl,
+                    posts: item!.posts,
+                    verified: item!.verified,
+                    isBlocked: item!.isBlocked,
+                }));
+            }
+
+            return [];
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+
     async follow(userId: string, followerId: string): Promise<void> {
         try {
             await User.findOneAndUpdate({ _id: userId }, { $addToSet: { following: followerId } });

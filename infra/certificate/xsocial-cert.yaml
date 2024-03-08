@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+    name: xsocial-cert
+spec:
+    secretName: xsocial-tls-secret
+    issuerRef:
+        name: xsocial-clusterissuer
+        kind: ClusterIssuer
+    dnsNames:
+        - xsocial.dev

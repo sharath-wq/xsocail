@@ -20,7 +20,7 @@ export default function ConversationRouter(
         getByUserIdUseCase
     );
 
-    router.get('/c/:firstId/:secondId', async (req, res, next) => {
+    router.get('/:firstId/:secondId', async (req, res, next) => {
         conversationController.getConversationByBothIds(req, res, next);
     });
 

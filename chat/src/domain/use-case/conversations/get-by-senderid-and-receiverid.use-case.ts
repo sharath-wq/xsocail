@@ -10,6 +10,13 @@ export class GetBySenderAndReceiverId implements GetBySenderAndReceiverIdUseCase
     }
 
     async execute(firstId: string, secondId: string): Promise<IConversations | null> {
-        return await this.conversationRepository.getConversationByBothIds(firstId, secondId);
+        const existingConversation = await this.conversationRepository.getConversationByBothIds(firstId, secondId);
+
+        if (!existingConversation) {
+            const newConversation = await this.conversationRepository.create(firstId, secondId);
+            return newConversation;
+        }
+
+        return existingConversation;
     }
 }
