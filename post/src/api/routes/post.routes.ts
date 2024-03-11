@@ -17,6 +17,7 @@ import {
     DisLikePostUseCase,
     GetUserFeedPostsUseCase,
     GetSavedPostsUseCase,
+    GetBatchPostUseCase,
 } from '../../domain/interfaces/use-cases';
 import { NextFunction } from 'express-serve-static-core';
 import { body } from 'express-validator';
@@ -32,7 +33,8 @@ export default function PostRouter(
     likePostUseCase: LikePostUseCase,
     disLikePostUseCase: DisLikePostUseCase,
     getUserFeedPostsUseCase: GetUserFeedPostsUseCase,
-    getSavedPostsUseCase: GetSavedPostsUseCase
+    getSavedPostsUseCase: GetSavedPostsUseCase,
+    getBatchPostUseCase: GetBatchPostUseCase
 ) {
     const router = express.Router();
     const postController = new PostController(
@@ -45,7 +47,8 @@ export default function PostRouter(
         likePostUseCase,
         disLikePostUseCase,
         getUserFeedPostsUseCase,
-        getSavedPostsUseCase
+        getSavedPostsUseCase,
+        getBatchPostUseCase
     );
 
     router.patch('/like/:postId', async (req, res, next) => {
@@ -66,6 +69,10 @@ export default function PostRouter(
 
     router.post('/', upload.array('files[]'), validateRequest, async (req: Request, res: Response, next: NextFunction) => {
         postController.createPost(req, res, next);
+    });
+
+    router.post('/batch', async (req: Request, res: Response, next: NextFunction) => {
+        postController.getBatchPosts(req, res, next);
     });
 
     router.patch(

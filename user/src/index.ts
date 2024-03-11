@@ -34,6 +34,7 @@ import { OtpReposiotryImpl } from './domain/repository/otp.repository';
 import { MongoDBOtpDatasource } from './data/data-source/mongodb/mongodb-otp-datasource';
 import { FollowUser } from './domain/use-cases/user/follow-user.use-case';
 import { UnfollowUser } from './domain/use-cases/user/unfollow-user.use-case';
+import { GetUserBatch } from './domain/use-cases/user/get-user-batch.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -76,7 +77,8 @@ const start = async () => {
         new UnsavePost(new UserRepositoryImpl(datasource)),
         new FollowUser(new UserRepositoryImpl(datasource)),
         new UnfollowUser(new UserRepositoryImpl(datasource)),
-        new GetUserFriends(new UserRepositoryImpl(datasource))
+        new GetUserFriends(new UserRepositoryImpl(datasource)),
+        new GetUserBatch(new UserRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

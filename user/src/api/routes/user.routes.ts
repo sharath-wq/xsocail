@@ -23,6 +23,7 @@ import { body } from 'express-validator';
 import { requireAdmin, requireAuth, validateRequest } from '@scxsocialcommon/errors';
 import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
 import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
+import { GetUserBatchUseCase } from '../../domain/interfaces/use-cases/user/get-user-batch.use-case';
 
 const storage = multer.memoryStorage();
 export const upload: Multer = multer({ storage: storage });
@@ -45,7 +46,8 @@ export default function UserRouter(
     unsavePostUseCase: UnsavePostUseCase,
     followUserUseCase: FollowUserUseCase,
     unfollowUserUseCase: UnfollowUserUseCase,
-    getUserFriendsUseCase: GetUserFriendsUseCase
+    getUserFriendsUseCase: GetUserFriendsUseCase,
+    getUserBatchUseCase: GetUserBatchUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -66,7 +68,8 @@ export default function UserRouter(
         unsavePostUseCase,
         followUserUseCase,
         unfollowUserUseCase,
-        getUserFriendsUseCase
+        getUserFriendsUseCase,
+        getUserBatchUseCase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -152,6 +155,10 @@ export default function UserRouter(
 
     router.put('/unfollow', async (req: Request, res: Response, next: NextFunction) => {
         userController.unfollow(req, res, next);
+    });
+
+    router.post('/batch', async (req: Request, res: Response, next: NextFunction) => {
+        userController.getUserBatch(req, res, next);
     });
 
     return router;

@@ -26,40 +26,40 @@ build:
                     dest: .
                   - src: 'src/**/*.html'
                     dest: .
-        - image: sharathchandranp/socketio
-          context: socketio
+        - image: sharathchandranp/xsocial-posts
+          context: post
           docker:
               dockerfile: Dockerfile
           sync:
               manual:
                   - src: 'src/**/*.ts'
                     dest: .
-        # - image: sharathchandranp/xsocial-posts
-        #   context: post
-        #   docker:
-        #       dockerfile: Dockerfile
-        #   sync:
-        #       manual:
-        #           - src: 'src/**/*.ts'
-        #             dest: .
-        # - image: sharathchandranp/xsocial-comments
-        #   context: comment
-        #   docker:
-        #       dockerfile: Dockerfile
-        #   sync:
-        #       manual:
-        #           - src: 'src/**/*.ts'
-        #             dest: .
-        - image: sharathchandranp/xsocial-chat
-          context: chat
+        - image: sharathchandranp/xsocial-comments
+          context: comment
           docker:
               dockerfile: Dockerfile
           sync:
               manual:
                   - src: 'src/**/*.ts'
                     dest: .
-        - image: sharathchandranp/xsocial-socketio
-          context: socketio
+        # - image: sharathchandranp/xsocial-chat
+        #   context: chat
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: 'src/**/*.ts'
+        #             dest: .
+        # - image: sharathchandranp/xsocial-socketio
+        #   context: socketio
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: 'src/**/*.ts'
+        #             dest: .
+        - image: sharathchandranp/xsocial-notifications
+          context: notification
           docker:
               dockerfile: Dockerfile
           sync:

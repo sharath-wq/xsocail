@@ -9,6 +9,7 @@ import { DisLikePostUseCase } from './dislike-post.use-case';
 import { GetUserFeedPostsUseCase } from './get-user-post.use.case';
 import { GetSavedPostsUseCase } from './get-saved-post.use-case';
 import { UpdatePostsByUserIdUseCase } from './update-posts-by-user-id.use-case';
+import { GetBatchPostUseCase } from './get-batch-post.use-case';
 
 export {
     CreatePostUseCase,
@@ -22,4 +23,5 @@ export {
     GetUserFeedPostsUseCase,
     GetSavedPostsUseCase,
     UpdatePostsByUserIdUseCase,
+    GetBatchPostUseCase,
 };

@@ -9,6 +9,10 @@ export class PostRepositoryImpl implements PostRepository {
         this.postDataSource = postDataSource;
     }
 
+    async getBatchPost(postIds: string[]): Promise<[] | PostModel[]> {
+        return await this.postDataSource.getBatchPost(postIds);
+    }
+
     async findPostsByUserIdAndUpdate(userId: string, post: PostBulkUpdateRequestModel): Promise<void> {
         await this.postDataSource.updatePostsByUserId(userId, post);
     }
