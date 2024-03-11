@@ -9,6 +9,10 @@ export class UserRepositoryImpl implements UserRepository {
         this.UserDataSource = UserDataSource;
     }
 
+    async getUserBatch(userIds: string[]): Promise<UserResponseModel[] | []> {
+        return await this.UserDataSource.getUserBatch(userIds);
+    }
+
     async getUserFriends(userId: string): Promise<[] | UserResponseModel[]> {
         return await this.UserDataSource.getUserFriends(userId);
     }

@@ -9,6 +9,7 @@ import {
     DeletePostUseCase,
     DisLikePostUseCase,
     GetAllPostsUseCase,
+    GetBatchPostUseCase,
     GetOnePostUseCase,
     GetSavedPostsUseCase,
     GetUserFeedPostsUseCase,
@@ -27,6 +28,7 @@ import { PostRequestModel } from '../../domain/entities/post';
 import { PostCreatedPublisher } from '../events/pub/post-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 import { PostDeletedPublisher } from '../events/pub/post-deleted-publisher';
+import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 
@@ -41,6 +43,7 @@ export class PostController implements PostControllerInterface {
     disLikePostUseCase: DisLikePostUseCase;
     getUserFeedPostsUseCase: GetUserFeedPostsUseCase;
     getSavedPostsUseCase: GetSavedPostsUseCase;
+    getBatchPostUseCase: GetBatchPostUseCase;
 
     constructor(
         createPostUseCase: CreatePostUseCase,
@@ -52,7 +55,8 @@ export class PostController implements PostControllerInterface {
         likePostUseCase: LikePostUseCase,
         disLikePostUseCase: DisLikePostUseCase,
         getUserFeedPostsUseCase: GetUserFeedPostsUseCase,
-        getSavedPostsUseCase: GetSavedPostsUseCase
+        getSavedPostsUseCase: GetSavedPostsUseCase,
+        getBatchPostUseCase: GetBatchPostUseCase
     ) {
         this.createPostUseCase = createPostUseCase;
         this.deletePostUseCase = deletePostUseCase;
@@ -64,6 +68,17 @@ export class PostController implements PostControllerInterface {
         this.disLikePostUseCase = disLikePostUseCase;
         this.getUserFeedPostsUseCase = getUserFeedPostsUseCase;
         this.getSavedPostsUseCase = getSavedPostsUseCase;
+        this.getBatchPostUseCase = getBatchPostUseCase;
+    }
+
+    async getBatchPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { ids } = req.body;
+        try {
+            const posts = await this.getBatchPostUseCase.execute(ids);
+            res.send(posts);
+        } catch (error) {
+            next(error);
+        }
     }
 
     async getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -91,9 +106,18 @@ export class PostController implements PostControllerInterface {
         try {
             await this.likePostUseCase.execute(userId, postId);
 
-            // Emit and event to the notification service
+            const post = await this.getOnePostUseCase.execute(postId);
 
-            res.send({});
+            if (post) {
+                await new NotificationCreatedPublisher(natsWrapper.client).publish({
+                    postId,
+                    senderId: userId,
+                    receiverId: post.author.userId,
+                    type: 'Like',
+                });
+            }
+
+            res.send({ status: 'ok' });
         } catch (error) {
             next(error);
         }
@@ -105,7 +129,7 @@ export class PostController implements PostControllerInterface {
         try {
             await this.disLikePostUseCase.execute(userId, postId);
 
-            res.send({});
+            res.send({ status: 'ok' });
         } catch (error) {
             next(error);
         }

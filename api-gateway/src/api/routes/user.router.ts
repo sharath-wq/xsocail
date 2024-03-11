@@ -6,7 +6,6 @@ import {
     GetUserUseCase,
     GetUserByEmailUseCase,
 } from '../../domain/interface/use-cases';
-import passport from 'passport';
 import { GetByUsernameUseCase } from '../../domain/interface/use-cases/get-by-username.use-case';
 import { requireAdmin, requireAuth } from '@scxsocialcommon/errors';
 

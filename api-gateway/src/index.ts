@@ -17,6 +17,7 @@ import { UserUpdatedListener } from './api/events/user-updated-listener';
 import CommentRouter from './api/routes/comment.router';
 import { ChatController } from './api/controllers/chat.controller';
 import ChatRouter from './api/routes/chat.router';
+import NotificationRouter from './api/routes/notifications.router';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -55,6 +56,7 @@ const start = async () => {
 
     const CommentMiddleware = CommentRouter(new GetUser(new UserRepositoryImpl(datasource)));
     const ChatMiddleware = ChatRouter();
+    const NotificationMiddleware = NotificationRouter();
 
     app.use(currentUser);
 
@@ -70,6 +72,7 @@ const start = async () => {
     app.use('/api/users/', UserMiddleware);
     app.use('/api/comments/', CommentMiddleware);
     app.use('/api/chat', ChatMiddleware);
+    app.use('/api/notifications', NotificationMiddleware);
 
     app.use(
         '/api/posts',

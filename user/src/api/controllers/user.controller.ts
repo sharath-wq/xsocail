@@ -30,8 +30,7 @@ import { BadRequestError, currentUser } from '@scxsocialcommon/errors';
 import sharp from 'sharp';
 import { CloudinaryFile, cloudinary } from '../../config/cloudinary.config';
 import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
+import { GetUserBatchUseCase } from '../../domain/interfaces/use-cases/user/get-user-batch.use-case';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -52,6 +51,7 @@ export class UserController implements UserControllerInterface {
     followUserUseCase: FollowUserUseCase;
     unfollowUserUseCase: UnfollowUserUseCase;
     getUserFriendsUseCase: GetUserFriendsUseCase;
+    getUserBatchUseCase: GetUserBatchUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -71,7 +71,8 @@ export class UserController implements UserControllerInterface {
         unsavePostUseCase: UnsavePostUseCase,
         followUserUseCase: FollowUserUseCase,
         unfollowUserUseCase: UnfollowUserUseCase,
-        getUserFriendsUseCase: GetUserFriendsUseCase
+        getUserFriendsUseCase: GetUserFriendsUseCase,
+        getUserBatchUseCase: GetUserBatchUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -91,7 +92,19 @@ export class UserController implements UserControllerInterface {
         this.followUserUseCase = followUserUseCase;
         this.unfollowUserUseCase = unfollowUserUseCase;
         this.getUserFriendsUseCase = getUserFriendsUseCase;
+        this.getUserBatchUseCase = getUserBatchUseCase;
     }
+
+    async getUserBatch(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { ids } = req.body;
+        try {
+            const users = await this.getUserBatchUseCase.execute(ids);
+            res.send(users);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getUserFriends(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { userId } = req.params;
         try {

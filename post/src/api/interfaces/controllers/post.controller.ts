@@ -11,4 +11,5 @@ export interface PostControllerInterface {
     disLikePost(req: Request, res: Response, next: NextFunction): Promise<void>;
     getUserFeed(req: Request, res: Response, next: NextFunction): Promise<void>;
     getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getBatchPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

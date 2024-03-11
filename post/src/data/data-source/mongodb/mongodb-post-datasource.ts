@@ -4,6 +4,31 @@ import { PostDataSource } from '../../interface/data-source/post-data-source';
 import { Post } from './schema/post.schema';
 
 export class MongoDBPostDataSource implements PostDataSource {
+    async getBatchPost(postIds: string[]): Promise<[] | PostModel[]> {
+        try {
+            const results = await Post.find({ _id: { $in: postIds } });
+
+            return results.map((item) => ({
+                id: item.id,
+                author: {
+                    userId: item.author!.userId!,
+                    username: item.author!.username!,
+                    imageUrl: item.author!.imageUrl!,
+                },
+                caption: item.caption,
+                tags: item.tags,
+                imageUrls: item.imageUrls,
+                likes: item.likes,
+                comments: item.comments,
+                createdAt: item.createdAt,
+                isEdited: item.isEdited,
+            }));
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+
     async updatePostsByUserId(userId: string, post: PostBulkUpdateRequestModel): Promise<void> {
         try {
             await Post.updateMany({ 'author.userId': userId }, post);

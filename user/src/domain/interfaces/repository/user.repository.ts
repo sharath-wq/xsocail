@@ -17,4 +17,5 @@ export interface UserRepository {
     follow(userId: string, followerId: string): Promise<void>;
     unFollow(userId: string, followerId: string): Promise<void>;
     getUserFriends(userId: string): Promise<UserResponseModel[] | []>;
+    getUserBatch(userIds: string[]): Promise<UserResponseModel[] | []>;
 }
