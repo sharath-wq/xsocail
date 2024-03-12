@@ -10,10 +10,12 @@ import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { useUser } from '@/context/userContext';
+import { useNotifications } from '@/context/notificationContext';
 
 const Sidebar = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
     const router = useRouter();
+    const { newNotifications } = useNotifications();
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!isMobileMenuOpen);
@@ -67,6 +69,11 @@ const Sidebar = () => {
                                 >
                                     {link.icon}
                                     <Link href={link.link}>{link.label}</Link>
+                                    {link.link === '/notifications' && newNotifications.length > 0 && (
+                                        <div className='w-[10px] h-[10px] bg-red-600 rounded-full p-[10px] tex-xm flex items-center justify-center'>
+                                            {newNotifications.length}
+                                        </div>
+                                    )}
                                 </li>
                             ))}
                         </ul>
@@ -101,6 +108,11 @@ const Sidebar = () => {
                                     >
                                         {link.icon}
                                         <Link href={link.link}>{link.label}</Link>
+                                        {link.link === '/notifications' && newNotifications.length > 0 && (
+                                            <div className='w-[10px] h-[10px] bg-red-600 rounded-full p-[10px] tex-xm flex items-center justify-center'>
+                                                {newNotifications.length}
+                                            </div>
+                                        )}
                                     </li>
                                 ))}
                             </ul>

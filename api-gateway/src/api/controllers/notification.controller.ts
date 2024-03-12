@@ -7,6 +7,17 @@ import { UserResponseModel } from '../../domain/entities/user';
 import { PostModel } from '../../domain/entities/post';
 
 export class NotificationController implements INotificationController {
+    async batchUpdate(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { ids } = req.body;
+        const path = req.originalUrl.replace('/api/notifications', '');
+        try {
+            const response = await axios.patch(`${NOTIFICATION_SERVICE_ENDPOINT}${path}`, { ids });
+            res.status(response.status).send(response.data);
+        } catch (error: any) {
+            res.status(error.response?.status || 500).send(error.response?.data || 'Internal Server Error');
+        }
+    }
+
     async getAllUserNotifications(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { userId } = req.params;
         try {
@@ -29,8 +40,8 @@ export class NotificationController implements INotificationController {
                 post: postMap.get(n.postId),
             }));
 
-            const newNotifications = updatedNotifications.filter((n: INotification) => n.isRead);
-            const oldNotifications = updatedNotifications.filter((n: INotification) => !n.isRead);
+            const newNotifications = updatedNotifications.filter((n: INotification) => n.isRead === false);
+            const oldNotifications = updatedNotifications.filter((n: INotification) => n.isRead === true);
 
             res.send({ newNotifications, oldNotifications });
         } catch (error: any) {

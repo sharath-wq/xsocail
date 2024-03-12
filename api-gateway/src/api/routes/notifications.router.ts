@@ -9,5 +9,9 @@ export default function NotificationRouter() {
         notificationController.getAllUserNotifications(req, res, next);
     });
 
+    router.patch('/batch/update', async (req: Request, res: Response, next: NextFunction) => {
+        notificationController.batchUpdate(req, res, next);
+    });
+
     return router;
 }

@@ -25,7 +25,7 @@ export const links = [
     {
         label: 'Notifications',
         link: '/notifications',
-        icon: <Bell />,
+        icon: <Bell className='relative' />,
     },
     {
         label: 'Create',

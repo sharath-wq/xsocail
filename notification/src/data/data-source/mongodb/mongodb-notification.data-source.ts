@@ -3,6 +3,14 @@ import { INotificationDataSource } from '../../interface/data-source/notificatio
 import { Notification } from './schema/notification.schema';
 
 export class NotificationDataSource implements INotificationDataSource {
+    async batchUpdate(ids: string[], notifcation: IUpdateNotification): Promise<void> {
+        try {
+            await Notification.updateMany({ _id: { $in: ids } }, notifcation);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async updateNotification(id: string, notifcation: IUpdateNotification): Promise<INotification | null> {
         try {
             const result = await Notification.findByIdAndUpdate(id, {

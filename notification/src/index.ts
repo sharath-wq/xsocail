@@ -8,6 +8,7 @@ import { NotificationRepository } from './domain/repository/notification.reposit
 import { NotificationDataSource } from './data/data-source/mongodb/mongodb-notification.data-source';
 import NotificationRouter from './api/routes/notification.router';
 import { GetAllUserNotifications } from './domain/usecase/notifications/get-all-user-notificatoin.use-case';
+import { BatchUpdate } from './domain/usecase/notifications/batch-update.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -37,7 +38,8 @@ const start = async () => {
     }
 
     const notificationMiddleware = NotificationRouter(
-        new GetAllUserNotifications(new NotificationRepository(new NotificationDataSource()))
+        new GetAllUserNotifications(new NotificationRepository(new NotificationDataSource())),
+        new BatchUpdate(new NotificationRepository(new NotificationDataSource()))
     );
 
     app.use(currentUser);

@@ -18,6 +18,6 @@ export interface INotification {
 }
 
 export interface IUpdateNotification {
-    isRead: boolean;
-    createdAt: Date;
+    isRead?: boolean;
+    createdAt?: Date;
 }
