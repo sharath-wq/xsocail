@@ -1,4 +1,4 @@
-import { PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../entities/post';
+import { NotificationPostModel, PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../entities/post';
 import { PostRepository } from '../interfaces/repository/post.repository';
 import { PostDataSource } from '../../data/interface/data-source/post-data-source';
 
@@ -9,7 +9,7 @@ export class PostRepositoryImpl implements PostRepository {
         this.postDataSource = postDataSource;
     }
 
-    async getBatchPost(postIds: string[]): Promise<[] | PostModel[]> {
+    async getBatchPost(postIds: string[]): Promise<[] | NotificationPostModel[]> {
         return await this.postDataSource.getBatchPost(postIds);
     }
 

@@ -1,4 +1,10 @@
-import { UpdateUserRequstModel, UserModel, UserRequestModel, UserResponseModel } from '../entities/user';
+import {
+    NotificationUserModel,
+    UpdateUserRequstModel,
+    UserModel,
+    UserRequestModel,
+    UserResponseModel,
+} from '../entities/user';
 import { UserRepository } from '../interfaces/repository/user.repository';
 import { UserDataSource } from '../../data/interface/data-source/user-data-source';
 
@@ -9,7 +15,7 @@ export class UserRepositoryImpl implements UserRepository {
         this.UserDataSource = UserDataSource;
     }
 
-    async getUserBatch(userIds: string[]): Promise<UserResponseModel[] | []> {
+    async getUserBatch(userIds: string[]): Promise<NotificationUserModel[] | []> {
         return await this.UserDataSource.getUserBatch(userIds);
     }
 

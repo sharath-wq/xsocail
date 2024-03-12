@@ -114,6 +114,7 @@ export class PostController implements PostControllerInterface {
                     senderId: userId,
                     receiverId: post.author.userId,
                     type: 'Like',
+                    content: 'Liked your post',
                 });
             }
 

@@ -1,4 +1,10 @@
-import { UpdateUserRequstModel, UserModel, UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
+import {
+    NotificationUserModel,
+    UpdateUserRequstModel,
+    UserModel,
+    UserRequestModel,
+    UserResponseModel,
+} from '../../../domain/entities/user';
 
 export interface UserDataSource {
     create(user: UserRequestModel): Promise<UserResponseModel | null>;
@@ -17,5 +23,5 @@ export interface UserDataSource {
     follow(userId: string, followerId: string): Promise<void>;
     unFollow(userId: string, followerId: string): Promise<void>;
     getUserFriends(userId: string): Promise<UserResponseModel[] | []>;
-    getUserBatch(userIds: string[]): Promise<UserResponseModel[] | []>;
+    getUserBatch(userIds: string[]): Promise<NotificationUserModel[] | []>;
 }

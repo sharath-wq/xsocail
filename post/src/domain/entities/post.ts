@@ -18,6 +18,11 @@ export interface PostBulkUpdateRequestModel {
     };
 }
 
+export interface NotificationPostModel {
+    id: string;
+    imageUrls: string[];
+}
+
 export interface PostModel {
     id: string;
     author: {

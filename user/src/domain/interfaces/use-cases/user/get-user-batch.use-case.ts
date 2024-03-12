@@ -1,5 +1,5 @@
-import { UserResponseModel } from '../../../entities/user';
+import { NotificationUserModel, UserResponseModel } from '../../../entities/user';
 
 export interface GetUserBatchUseCase {
-    execute(userIds: string[]): Promise<UserResponseModel[] | []>;
+    execute(userIds: string[]): Promise<NotificationUserModel[] | []>;
 }

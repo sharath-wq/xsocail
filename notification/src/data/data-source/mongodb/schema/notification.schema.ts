@@ -15,6 +15,10 @@ const NotificationSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        content: {
+            type: String,
+            required: true,
+        },
         postId: {
             type: String,
             required: true,

@@ -1,4 +1,4 @@
-import e, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 import { INotificationController } from '../interface/notification.controller';
 import { IGetAllUserNotificationUseCase } from '../../domain/interface/usecase/get-all-user-notificatoin.use-case';

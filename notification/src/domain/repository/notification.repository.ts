@@ -1,5 +1,5 @@
 import { INotificationDataSource } from '../../data/interface/data-source/notification.data-source';
-import { INotificationReq, INotification } from '../entities/notifications';
+import { INotificationReq, INotification, IUpdateNotification } from '../entities/notifications';
 import { INotificationRepository } from '../interface/repository/notification.repository';
 
 export class NotificationRepository implements INotificationRepository {
@@ -7,6 +7,14 @@ export class NotificationRepository implements INotificationRepository {
 
     constructor(notificationDataSource: INotificationDataSource) {
         this.notificationDataSource = notificationDataSource;
+    }
+
+    async getDuplicateNotificatioin(senderId: string, postId: string, type: string): Promise<INotification | null> {
+        return this.notificationDataSource.getDuplicateNotificatioin(senderId, postId, type);
+    }
+
+    async updateNotification(id: string, notifcation: IUpdateNotification): Promise<INotification | null> {
+        return this.notificationDataSource.updateNotification(id, notifcation);
     }
 
     async createOne(notification: INotificationReq): Promise<INotification | null> {

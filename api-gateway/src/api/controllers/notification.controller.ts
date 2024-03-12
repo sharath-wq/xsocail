@@ -29,7 +29,10 @@ export class NotificationController implements INotificationController {
                 post: postMap.get(n.postId),
             }));
 
-            res.send(updatedNotifications);
+            const newNotifications = updatedNotifications.filter((n: INotification) => n.isRead);
+            const oldNotifications = updatedNotifications.filter((n: INotification) => !n.isRead);
+
+            res.send({ newNotifications, oldNotifications });
         } catch (error: any) {
             res.status(error.response?.status || 500).send(error.response?.data || 'Internal Server Error');
         }

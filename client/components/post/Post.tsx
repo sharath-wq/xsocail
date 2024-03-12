@@ -30,7 +30,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Bookmark, CopyIcon, Heart, MessageCircle, MoreVertical, Send } from 'lucide-react';
+import { CopyIcon, MoreVertical } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import { Separator } from '@/components/ui/separator';
 import { PostProps } from '@/types/post';
