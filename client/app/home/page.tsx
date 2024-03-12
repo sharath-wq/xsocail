@@ -17,6 +17,7 @@ const Home = () => {
     const { currentUser } = useUser();
     const router = useRouter();
     const socket = useRef<Socket>();
+    const { getNotifications } = useNotifications();
 
     const { count, setCount } = useNotifications();
 
@@ -51,8 +52,6 @@ const Home = () => {
             count: count + 1,
         });
     };
-
-    const { getNotifications } = useNotifications();
 
     useEffect(() => {
         (async () => {
