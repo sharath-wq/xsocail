@@ -11,6 +11,12 @@ interface User {
     socketId: string;
 }
 
+interface INotification {
+    senderId: string;
+    receiverId: string;
+    count: number;
+}
+
 let users: User[] = [];
 
 const addUser = (userId: string, socketId: string) => {
@@ -42,11 +48,20 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('sendNotification', ({ senderId, receiverId, count }: INotification) => {
+        const user = getUser(receiverId);
+
+        if (user) {
+            io.to(user.socketId).emit('getNotification', {
+                senderId,
+                count,
+            });
+        }
+    });
+
     socket.on('disconnect', () => {
         console.log('a user disconnected');
         removeUser(socket.id);
         io.emit('getUsers', users);
     });
-
-    socket.on('sendNotificatin', ({ receiverId, type }) => {});
 });

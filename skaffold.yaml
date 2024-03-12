@@ -50,14 +50,14 @@ build:
         #       manual:
         #           - src: 'src/**/*.ts'
         #             dest: .
-        # - image: sharathchandranp/xsocial-socketio
-        #   context: socketio
-        #   docker:
-        #       dockerfile: Dockerfile
-        #   sync:
-        #       manual:
-        #           - src: 'src/**/*.ts'
-        #             dest: .
+        - image: sharathchandranp/xsocial-socketio
+          context: socketio
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'src/**/*.ts'
+                    dest: .
         - image: sharathchandranp/xsocial-notifications
           context: notification
           docker:

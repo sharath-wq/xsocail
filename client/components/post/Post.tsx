@@ -44,7 +44,18 @@ import { Input } from '../ui/input';
 import Actions from './actions/Actions';
 import { usePost } from '@/context/postContext';
 
-const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, isEdited }: PostProps) => {
+const Post = ({
+    author,
+    caption,
+    comments,
+    createdAt,
+    id,
+    imageUrls,
+    likes,
+    tags,
+    isEdited,
+    handleNotification,
+}: PostProps) => {
     const { currentUser } = useUser();
     const [likeCount, setLikeCount] = useState(likes.length);
     const [commentCount, setCommentCount] = useState(comments.length);
@@ -226,6 +237,7 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                     id={id}
                     author={author}
                     likes={likes}
+                    handleNotification={handleNotification}
                 />
                 <Separator className='my-2' />
                 <div className='flex w-full ml-8 flex-col items-start'>

@@ -23,6 +23,7 @@ export class CreateNotifications implements ICreateNotificationUseCase {
 
             const newUpdtedNotification = {
                 ...existingNotification,
+                isRead: false,
                 createdAt: new Date(),
             };
 
