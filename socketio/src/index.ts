@@ -15,6 +15,12 @@ interface User {
     socketId: string;
 }
 
+interface INotificationUser {
+    userId: string;
+    socketId: string;
+    count: number;
+}
+
 interface INotification {
     senderId: string;
     receiverId: string;
@@ -22,7 +28,7 @@ interface INotification {
 }
 
 let chatUsers: User[] = [];
-let notificationUsers: User[] = [];
+let notificationUsers: INotificationUser[] = [];
 
 const addChatUser = (userId: string, socketId: string) => {
     !chatUsers.some((user) => user.userId === userId) && chatUsers.push({ userId, socketId });
@@ -36,8 +42,8 @@ const getChatUser = (userId: string) => {
     return chatUsers.find((user) => user.userId === userId);
 };
 
-const addNotificationUser = (userId: string, socketId: string) => {
-    !notificationUsers.some((user) => user.userId === userId) && notificationUsers.push({ userId, socketId });
+const addNotificationUser = (userId: string, socketId: string, count: number) => {
+    !notificationUsers.some((user) => user.userId === userId) && notificationUsers.push({ userId, socketId, count });
 };
 
 const removeNotificationUser = (socketId: string) => {
@@ -60,8 +66,6 @@ chatNamespace.on('connection', (socket) => {
     socket.on('sendMessage', ({ senderId, receiverId, text }: { senderId: string; receiverId: string; text: string }) => {
         const user = getChatUser(receiverId);
 
-        console.log(senderId, user, text);
-
         if (user) {
             chatNamespace.to(user.socketId).emit('getMessage', {
                 senderId,
@@ -81,13 +85,17 @@ chatNamespace.on('connection', (socket) => {
 notificationNamespace.on('connection', (socket) => {
     console.log('a User connected to notifications');
 
-    socket.on('sendNotification', ({ senderId, receiverId, count }: INotification) => {
-        const user = getNotificationUser(receiverId);
+    socket.on('addUser', (userId: string) => {
+        addNotificationUser(userId, socket.id, 0);
+    });
 
+    socket.on('sendNotification', ({ senderId, receiverId }: INotification) => {
+        const user = getNotificationUser(receiverId);
         if (user) {
+            user.count += 1;
             notificationNamespace.to(user.socketId).emit('getNotification', {
                 senderId,
-                count,
+                count: user.count,
             });
         }
     });

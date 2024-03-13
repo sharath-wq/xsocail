@@ -33,6 +33,10 @@ const Home = () => {
 
     useEffect(() => {
         socket.current = io('wss://xsocial.dev/notification');
+
+        return () => {
+            socket.current?.disconnect();
+        };
     }, []);
 
     useEffect(() => {
@@ -49,7 +53,6 @@ const Home = () => {
         socket.current?.emit('sendNotification', {
             senderId,
             receiverId,
-            count: count + 1,
         });
     };
 
