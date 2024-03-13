@@ -32,7 +32,7 @@ const Home = () => {
     }, [currentUser, router]);
 
     useEffect(() => {
-        socket.current = io('wss://xsocial.dev');
+        socket.current = io('wss://xsocial.dev/notification');
     }, []);
 
     useEffect(() => {
