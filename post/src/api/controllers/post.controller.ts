@@ -164,7 +164,9 @@ export class PostController implements PostControllerInterface {
             }
 
             for (const file of filesToUpload) {
-                const resizedBuffer: Buffer = await sharp(file.buffer).resize({ width: 900 }).toBuffer();
+                const resizedBuffer: Buffer = await sharp(file.buffer)
+                    .resize({ width: 1000, height: 1000, fit: 'cover' })
+                    .toBuffer();
                 const uploadPromise = new Promise<void>((resolve, reject) => {
                     const uploadStream = cloudinary.uploader.upload_stream(
                         {

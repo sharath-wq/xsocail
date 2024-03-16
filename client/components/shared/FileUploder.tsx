@@ -4,7 +4,6 @@ import { FileWithPath, useDropzone } from 'react-dropzone';
 import { Button } from '../ui/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import { Card, CardContent } from '../ui/card';
-import Image from 'next/image';
 
 type FileUploderProps = {
     fieldChange: (files: File[]) => void;
@@ -48,7 +47,7 @@ const FileUploder = ({ fieldChange, mediaUrl }: FileUploderProps) => {
                                             <img
                                                 src={url}
                                                 alt={`image-${index}`}
-                                                style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+                                                style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                                             />
                                         </CardContent>
                                     </Card>
