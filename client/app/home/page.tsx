@@ -5,7 +5,7 @@ import React, { useRef } from 'react';
 import { Socket, io } from 'socket.io-client';
 
 import { useEffect } from 'react';
-import { IPost, PostProps } from '@/types/post';
+import { IPost } from '@/types/post';
 import { useUser } from '@/context/userContext';
 import { useRouter } from 'next/navigation';
 import { usePost } from '@/context/postContext';
