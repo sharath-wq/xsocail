@@ -78,7 +78,7 @@ const Home = () => {
             </div>
 
             <div className='hidden sm:block p-4'>
-                <Suggetions />
+                <Suggetions handleNotification={handleNotification} />
             </div>
         </div>
     );

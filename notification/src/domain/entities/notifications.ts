@@ -3,7 +3,7 @@ export interface INotificationReq {
     receiverId: string;
     type: string;
     content: string;
-    postId: string;
+    postId?: string;
 }
 
 export interface INotification {
@@ -12,7 +12,7 @@ export interface INotification {
     receiverId: string;
     type: string;
     content: string;
-    postId: string;
+    postId?: string;
     isRead: boolean;
     createdAt: Date;
 }

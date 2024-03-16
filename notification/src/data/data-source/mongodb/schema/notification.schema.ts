@@ -21,7 +21,6 @@ const NotificationSchema = new mongoose.Schema(
         },
         postId: {
             type: String,
-            required: true,
         },
         isRead: {
             type: Boolean,

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useUser } from '@/context/userContext';
 import SingleSuggesteduser from './SingleSuggestedUser/SingleSuggesteduser';
 
-export function Suggetions() {
+export function Suggetions({ handleNotification }: { handleNotification: (senderId: string, receiverId: string) => void }) {
     const [suggestedUsers, setSuggestedusers] = useState<UserData[]>();
 
     const getSuggestedUsers = async () => {
@@ -39,7 +39,7 @@ export function Suggetions() {
                                 currentUser &&
                                 user.id !== currentUser!.userId && (
                                     <div key={user.id}>
-                                        <SingleSuggesteduser {...user} />
+                                        <SingleSuggesteduser handleNotification={handleNotification} {...user} />
                                         {idx < suggestedUsers.length - 1 && <Separator className='my-2' />}
                                     </div>
                                 )

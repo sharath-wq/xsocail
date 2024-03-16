@@ -9,6 +9,10 @@ export class NotificationRepository implements INotificationRepository {
         this.notificationDataSource = notificationDataSource;
     }
 
+    async getOneBySenderAndReceiverId(senderId: string, receiverId: string, type: string): Promise<INotification | null> {
+        return this.notificationDataSource.getOneBySenderAndReceiverId(senderId, receiverId, type);
+    }
+
     async batchUpdate(ids: string[], notifcation: IUpdateNotification): Promise<void> {
         this.notificationDataSource.batchUpdate(ids, notifcation);
     }

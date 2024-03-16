@@ -13,7 +13,30 @@ export class CreateNotifications implements ICreateNotificationUseCase {
         if (notifcation.type === 'Like') {
             const existingNotification = await this.notificationRepository.getDuplicateNotificatioin(
                 notifcation.senderId,
-                notifcation.postId,
+                notifcation.postId!,
+                notifcation.type
+            );
+
+            if (!existingNotification) {
+                return await this.notificationRepository.createOne(notifcation);
+            }
+
+            const newUpdtedNotification = {
+                ...existingNotification,
+                isRead: false,
+                createdAt: new Date(),
+            };
+
+            const updatedNotification = await this.notificationRepository.updateNotification(
+                existingNotification.id,
+                newUpdtedNotification
+            );
+
+            return updatedNotification;
+        } else if (notifcation.type === 'Follow') {
+            const existingNotification = await this.notificationRepository.getOneBySenderAndReceiverId(
+                notifcation.senderId,
+                notifcation.receiverId,
                 notifcation.type
             );
 
