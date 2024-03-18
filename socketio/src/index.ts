@@ -69,11 +69,13 @@ chatNamespace.on('connection', (socket) => {
             senderId,
             receiverId,
             text,
+            imageUrl,
             conversationId,
         }: {
             senderId: string;
             receiverId: string;
             text: string;
+            imageUrl: string;
             conversationId: string;
         }) => {
             const user = getChatUser(receiverId);
@@ -83,6 +85,7 @@ chatNamespace.on('connection', (socket) => {
                     senderId,
                     text,
                     conversationId,
+                    imageUrl,
                 });
             }
         }

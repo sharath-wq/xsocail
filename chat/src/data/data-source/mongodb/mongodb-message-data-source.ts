@@ -11,13 +11,14 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 return null;
             }
 
-            const { id, conversationId, sender, text, createdAt, updatedAt } = result;
+            const { id, conversationId, sender, text, createdAt, updatedAt, imageUrl } = result;
 
             return {
                 id,
                 conversationId,
                 sender,
                 text,
+                imageUrl,
                 createdAt,
                 updatedAt,
             };
@@ -35,7 +36,7 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 return null;
             }
 
-            const { id, conversationId, sender, text, createdAt, updatedAt } = result;
+            const { id, conversationId, sender, text, createdAt, updatedAt, imageUrl } = result;
 
             return {
                 id,
@@ -44,6 +45,7 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 text,
                 createdAt,
                 updatedAt,
+                imageUrl,
             };
         } catch (error) {
             console.log(error);
@@ -57,13 +59,14 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 conversationId,
             });
 
-            return result.map(({ id, conversationId, sender, createdAt, text, updatedAt }) => ({
+            return result.map(({ id, conversationId, sender, createdAt, text, updatedAt, imageUrl }) => ({
                 id,
                 conversationId,
                 createdAt,
                 sender,
                 text,
                 updatedAt,
+                imageUrl,
             }));
         } catch (error) {
             console.log(error);
