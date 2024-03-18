@@ -129,9 +129,6 @@ export class PostController implements PostControllerInterface {
 
     async createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            let imageUrls = [];
-            imageUrls.push(req.body.imageUrls);
-
             const nwePost: PostRequestModel = {
                 caption: req.body.caption,
                 tags: req.body.tags,
@@ -140,7 +137,7 @@ export class PostController implements PostControllerInterface {
                     username: req.body.username,
                     imageUrl: req.body.userImageUrl,
                 },
-                imageUrls,
+                imageUrls: req.body.imageUrls,
                 isEdited: false,
             };
 

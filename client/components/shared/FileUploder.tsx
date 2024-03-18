@@ -6,21 +6,18 @@ import { Button } from '../ui/button';
 import { toast } from '../ui/use-toast';
 
 type FileUploaderProps = {
-    fieldChange: (files: File[]) => void;
-    mediaUrl: string;
     setImageUrls: React.Dispatch<string[]>;
+    imageUrls: string[];
 };
 
-const FileUploader = ({ setImageUrls, fieldChange, mediaUrl }: FileUploaderProps) => {
+const FileUploader = ({ setImageUrls, imageUrls }: FileUploaderProps) => {
     const [fileUrls, setFileUrls] = useState<string[]>([]);
 
     const onUploadSuccessHandler = useCallback(
         (response: any, { widget }: any) => {
             const croppedImageUrl = response?.info?.secure_url;
-
             setFileUrls([...fileUrls, croppedImageUrl]);
-            setImageUrls(croppedImageUrl);
-
+            setImageUrls([...imageUrls, croppedImageUrl]);
             widget.close();
         },
         [fileUrls]
@@ -35,6 +32,32 @@ const FileUploader = ({ setImageUrls, fieldChange, mediaUrl }: FileUploaderProps
 
     return (
         <div className='flex flex-col gap-3 py-10 justify-center items-center rounded-xl cursor-pointer border'>
+            {fileUrls.length > 0 && (
+                <CldUploadWidget
+                    uploadPreset='imaginify'
+                    options={{
+                        multiple: true,
+                        resourceType: 'image',
+                        cropping: true,
+                        croppingCoordinatesMode: 'custom',
+                        croppingAspectRatio: 1,
+                        croppingDefaultSelectionRatio: 100 / 100,
+                        showSkipCropButton: false,
+                        maxFiles: 5,
+                    }}
+                    onSuccess={onUploadSuccessHandler}
+                    onError={onUploadErrorHandler}
+                >
+                    {({ open }) => (
+                        <div className='flex flex-col items-center justify-center'>
+                            <Button type='button' variant={'ghost'} onClick={(event) => open()}>
+                                Add more
+                            </Button>
+                        </div>
+                    )}
+                </CldUploadWidget>
+            )}
+
             {fileUrls.length ? (
                 <Carousel className='w-1/2'>
                     <CarouselContent>

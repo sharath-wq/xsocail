@@ -49,7 +49,7 @@ const PostForm = ({ post }: any) => {
         url: '/api/posts',
         method: 'post',
         body: {
-            imageUrls,
+            imageUrls: imageUrls,
         },
         onSuccess: () => {
             setisSubmiting(false);
@@ -82,11 +82,7 @@ const PostForm = ({ post }: any) => {
                         <FormItem>
                             <FormLabel className=''>Add Photos</FormLabel>
                             <FormControl>
-                                <FileUploder
-                                    setImageUrls={setImageUrls}
-                                    fieldChange={field.onChange}
-                                    mediaUrl={post?.imageUrl}
-                                />
+                                <FileUploder imageUrls={imageUrls} setImageUrls={setImageUrls} />
                             </FormControl>
                             <FormMessage className='' />
                         </FormItem>
