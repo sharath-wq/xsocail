@@ -34,7 +34,7 @@ const FileUploader = ({ setImageUrls, imageUrls }: FileUploaderProps) => {
         <div className='flex flex-col gap-3 py-10 justify-center items-center rounded-xl cursor-pointer border'>
             {fileUrls.length > 0 && (
                 <CldUploadWidget
-                    uploadPreset='imaginify'
+                    uploadPreset='xsocial'
                     options={{
                         multiple: true,
                         resourceType: 'image',

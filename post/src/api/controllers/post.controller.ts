@@ -15,7 +15,7 @@ import {
 } from '../../domain/interfaces/use-cases/';
 
 import { PostControllerInterface } from '../interfaces/controllers/post.controller';
-import { NotFoundError } from '@scxsocialcommon/errors';
+import { NotAuthorizedError, NotFoundError } from '@scxsocialcommon/errors';
 
 import { PostRequestModel } from '../../domain/entities/post';
 
@@ -129,6 +129,10 @@ export class PostController implements PostControllerInterface {
 
     async createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            if (!req.currentUser) {
+                throw new NotAuthorizedError();
+            }
+
             const nwePost: PostRequestModel = {
                 caption: req.body.caption,
                 tags: req.body.tags,
@@ -141,7 +145,7 @@ export class PostController implements PostControllerInterface {
                 isEdited: false,
             };
 
-            const post = await this.createPostUseCase.execute(nwePost, req.body.userId);
+            const post = await this.createPostUseCase.execute(nwePost, req.currentUser.userId);
 
             if (post) {
                 await new PostCreatedPublisher(natsWrapper.client).publish({
@@ -166,6 +170,10 @@ export class PostController implements PostControllerInterface {
 
             if (!existingPost) {
                 throw new NotFoundError();
+            }
+
+            if (existingPost.author.userId !== userId) {
+                throw new NotAuthorizedError();
             }
 
             const updatedPost = await this.updatePostUseCase.execute(id, req.body, userId!);
