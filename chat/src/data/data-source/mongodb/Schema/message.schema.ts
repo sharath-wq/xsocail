@@ -12,7 +12,9 @@ const MessageSchema = new mongoose.Schema(
         },
         text: {
             type: String,
-            required: true,
+        },
+        imageUrl: {
+            type: String,
         },
         createdAt: {
             type: Date,

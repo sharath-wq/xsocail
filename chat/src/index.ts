@@ -41,11 +41,17 @@ const start = async () => {
     const ConversationMiddleware = ConversationRouter(
         new CreateConversation(new ConversationReposity(new MongoDBConversationDataSource())),
         new GetBySenderAndReceiverId(new ConversationReposity(new MongoDBConversationDataSource())),
-        new GetByUserId(new ConversationReposity(new MongoDBConversationDataSource()))
+        new GetByUserId(
+            new ConversationReposity(new MongoDBConversationDataSource()),
+            new MessageRepository(new MongoDBMessageDataSource())
+        )
     );
 
     const MessageMiddleware = MessageRouter(
-        new CreateMessage(new MessageRepository(new MongoDBMessageDataSource())),
+        new CreateMessage(
+            new MessageRepository(new MongoDBMessageDataSource()),
+            new ConversationReposity(new MongoDBConversationDataSource())
+        ),
         new FindAllMessageByConversationId(new MessageRepository(new MongoDBMessageDataSource()))
     );
 

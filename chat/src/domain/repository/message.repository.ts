@@ -9,6 +9,10 @@ export class MessageRepository implements IMessageRepository {
         this.messageDataSource = messageDataSource;
     }
 
+    async getLastMessage(cId: string): Promise<IMessage | null> {
+        return await this.messageDataSource.getRecentMessage(cId);
+    }
+
     async create(message: IMessageReq): Promise<IMessage | null> {
         return await this.messageDataSource.create(message);
     }

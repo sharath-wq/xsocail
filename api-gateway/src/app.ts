@@ -9,6 +9,7 @@ const app = express();
 app.set('trust proxy', true);
 app.use(morgan('dev'));
 app.use(json());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(

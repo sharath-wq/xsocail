@@ -3,6 +3,31 @@ import { IMessageDataSource } from '../../interface/data-source/message-data-sou
 import { Message } from './Schema/message.schema';
 
 export class MongoDBMessageDataSource implements IMessageDataSource {
+    async getRecentMessage(cId: string): Promise<IMessage | null> {
+        try {
+            const result = await Message.findOne({ conversationId: cId }).sort({ _id: -1 }).limit(1);
+
+            if (!result) {
+                return null;
+            }
+
+            const { id, conversationId, sender, text, createdAt, updatedAt, imageUrl } = result;
+
+            return {
+                id,
+                conversationId,
+                sender,
+                text,
+                imageUrl,
+                createdAt,
+                updatedAt,
+            };
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+
     async create(message: IMessageReq): Promise<IMessage | null> {
         try {
             const result = await Message.create(message);
@@ -11,7 +36,7 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 return null;
             }
 
-            const { id, conversationId, sender, text, createdAt, updatedAt } = result;
+            const { id, conversationId, sender, text, createdAt, updatedAt, imageUrl } = result;
 
             return {
                 id,
@@ -20,6 +45,7 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 text,
                 createdAt,
                 updatedAt,
+                imageUrl,
             };
         } catch (error) {
             console.log(error);
@@ -33,13 +59,14 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 conversationId,
             });
 
-            return result.map(({ id, conversationId, sender, createdAt, text, updatedAt }) => ({
+            return result.map(({ id, conversationId, sender, createdAt, text, updatedAt, imageUrl }) => ({
                 id,
                 conversationId,
                 createdAt,
                 sender,
                 text,
                 updatedAt,
+                imageUrl,
             }));
         } catch (error) {
             console.log(error);

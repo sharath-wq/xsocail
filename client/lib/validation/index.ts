@@ -19,7 +19,7 @@ export const SigninValidation = z.object({
 });
 
 export const MessageValidation = z.object({
-    text: z.string().min(4, { message: 'Name must be at least 4 characters.' }),
+    text: z.string(),
 });
 
 export const PostValidation = z.object({
