@@ -30,7 +30,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Bookmark, CopyIcon, Heart, MessageCircle, MoreVertical, Send } from 'lucide-react';
+import { CopyIcon, MoreVertical } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import { Separator } from '@/components/ui/separator';
 import { PostProps } from '@/types/post';
@@ -44,7 +44,18 @@ import { Input } from '../ui/input';
 import Actions from './actions/Actions';
 import { usePost } from '@/context/postContext';
 
-const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags, isEdited }: PostProps) => {
+const Post = ({
+    author,
+    caption,
+    comments,
+    createdAt,
+    id,
+    imageUrls,
+    likes,
+    tags,
+    isEdited,
+    handleNotification,
+}: PostProps) => {
     const { currentUser } = useUser();
     const [likeCount, setLikeCount] = useState(likes.length);
     const [commentCount, setCommentCount] = useState(comments.length);
@@ -206,7 +217,7 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                                             <img
                                                 src={imageUrls[index]}
                                                 alt={`image-${index}`}
-                                                style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+                                                style={{ objectFit: 'fill', width: '100%', height: '100%' }}
                                             />
                                         </CardContent>
                                     </Card>
@@ -226,6 +237,7 @@ const Post = ({ author, caption, comments, createdAt, id, imageUrls, likes, tags
                     id={id}
                     author={author}
                     likes={likes}
+                    handleNotification={handleNotification}
                 />
                 <Separator className='my-2' />
                 <div className='flex w-full ml-8 flex-col items-start'>

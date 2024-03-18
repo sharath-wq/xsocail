@@ -1,4 +1,4 @@
-import { PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../../entities/post';
+import { NotificationPostModel, PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../../entities/post';
 
 export interface PostRepository {
     createPost(post: PostRequestModel, authorId: string): Promise<PostModel | null>;
@@ -13,5 +13,5 @@ export interface PostRepository {
     getUserFeeds(): Promise<PostModel[] | []>;
     getSavedPosts(postIds: string[]): Promise<PostModel[] | []>;
     findPostsByUserIdAndUpdate(userId: string, post: PostBulkUpdateRequestModel): Promise<void>;
-    getBatchPost(postIds: string[]): Promise<PostModel[] | []>;
+    getBatchPost(postIds: string[]): Promise<NotificationPostModel[] | []>;
 }

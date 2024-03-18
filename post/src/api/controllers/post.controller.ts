@@ -1,9 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { cloudinary } from '../../config/cloudinary.config';
-
-import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
-
 import {
     CreatePostUseCase,
     DeletePostUseCase,
@@ -21,17 +17,12 @@ import {
 import { PostControllerInterface } from '../interfaces/controllers/post.controller';
 import { NotAuthorizedError, NotFoundError } from '@scxsocialcommon/errors';
 
-import { CloudinaryFile } from '../../config/cloudinary.config';
-import sharp from 'sharp';
 import { PostRequestModel } from '../../domain/entities/post';
 
 import { PostCreatedPublisher } from '../events/pub/post-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 import { PostDeletedPublisher } from '../events/pub/post-deleted-publisher';
 import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
-
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
     deletePostUseCase: DeletePostUseCase;
@@ -114,6 +105,7 @@ export class PostController implements PostControllerInterface {
                     senderId: userId,
                     receiverId: post.author.userId,
                     type: 'Like',
+                    content: 'Liked your post',
                 });
             }
 
@@ -136,8 +128,6 @@ export class PostController implements PostControllerInterface {
     }
 
     async createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const files = req.files as Express.Multer.File[];
-
         try {
             if (!req.currentUser) {
                 throw new NotAuthorizedError();
@@ -149,46 +139,11 @@ export class PostController implements PostControllerInterface {
                 author: {
                     userId: req.body.userId,
                     username: req.body.username,
-                    imageUrl: req.body.imageUrl,
+                    imageUrl: req.body.userImageUrl,
                 },
-                imageUrls: [],
+                imageUrls: req.body.imageUrls,
                 isEdited: false,
             };
-
-            const uploadPromises: Promise<void>[] = [];
-
-            const filesToUpload: CloudinaryFile[] = req.files as CloudinaryFile[];
-            if (!filesToUpload || filesToUpload.length === 0) {
-                return next(new Error('No files provided'));
-            }
-
-            for (const file of filesToUpload) {
-                const resizedBuffer: Buffer = await sharp(file.buffer).resize({ width: 900 }).toBuffer();
-                const uploadPromise = new Promise<void>((resolve, reject) => {
-                    const uploadStream = cloudinary.uploader.upload_stream(
-                        {
-                            resource_type: 'auto',
-                            folder: 'posts',
-                        } as any,
-                        (err: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
-                            if (err) {
-                                console.error('Cloudinary upload error:', err);
-                                reject(err);
-                            } else if (!result) {
-                                console.error('Cloudinary upload error: Result is undefined');
-                                reject(new Error('Cloudinary upload result is undefined'));
-                            } else {
-                                nwePost.imageUrls.push(result.secure_url);
-                                resolve();
-                            }
-                        }
-                    );
-                    uploadStream.end(resizedBuffer);
-                });
-                uploadPromises.push(uploadPromise);
-            }
-
-            await Promise.all(uploadPromises);
 
             const post = await this.createPostUseCase.execute(nwePost, req.currentUser.userId);
 
@@ -236,10 +191,6 @@ export class PostController implements PostControllerInterface {
 
             if (!post) {
                 throw new NotFoundError();
-            }
-
-            if (post.author.userId !== userId) {
-                throw new NotAuthorizedError();
             }
 
             await this.deletePostUseCase.execute(id);

@@ -15,12 +15,15 @@ const NotificationSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        postId: {
+        content: {
             type: String,
             required: true,
         },
-        isRead: {
+        postId: {
             type: String,
+        },
+        isRead: {
+            type: Boolean,
             required: true,
             default: false,
         },

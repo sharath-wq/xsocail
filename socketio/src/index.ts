@@ -1,4 +1,4 @@
-import { Server } from 'socket.io';
+import { Server, Namespace } from 'socket.io';
 
 const io = new Server(8900, {
     cors: {
@@ -6,36 +6,68 @@ const io = new Server(8900, {
     },
 });
 
+// Create separate namespaces for chat and notifications
+const chatNamespace: Namespace = io.of('/chat');
+const notificationNamespace: Namespace = io.of('/notification');
+
 interface User {
     userId: string;
     socketId: string;
 }
 
-let users: User[] = [];
+interface INotificationUser {
+    userId: string;
+    socketId: string;
+    count: number;
+}
 
-const addUser = (userId: string, socketId: string) => {
-    !users.some((user) => user.userId === userId) && users.push({ userId, socketId });
+interface INotification {
+    senderId: string;
+    receiverId: string;
+    count: number;
+}
+
+let chatUsers: User[] = [];
+let notificationUsers: INotificationUser[] = [];
+
+const addChatUser = (userId: string, socketId: string) => {
+    !chatUsers.some((user) => user.userId === userId) && chatUsers.push({ userId, socketId });
 };
 
-const removeUser = (socketId: string) => {
-    users = users.filter((user) => user.socketId !== socketId);
+const removeChatUser = (socketId: string) => {
+    chatUsers = chatUsers.filter((user) => user.socketId !== socketId);
 };
 
-const getUser = (userId: string) => {
-    return users.find((user) => user.userId === userId);
+const getChatUser = (userId: string) => {
+    return chatUsers.find((user) => user.userId === userId);
 };
 
-io.on('connection', (socket) => {
-    console.log('a User connected');
+const addNotificationUser = (userId: string, socketId: string, count: number) => {
+    !notificationUsers.some((user) => user.userId === userId) && notificationUsers.push({ userId, socketId, count });
+};
+
+const removeNotificationUser = (socketId: string) => {
+    notificationUsers = notificationUsers.filter((user) => user.socketId !== socketId);
+};
+
+const getNotificationUser = (userId: string) => {
+    return notificationUsers.find((user) => user.userId === userId);
+};
+
+// Handling chat connections
+chatNamespace.on('connection', (socket) => {
+    console.log('a User connected to chat');
+
     socket.on('addUser', (userId: string) => {
-        addUser(userId, socket.id);
-        io.emit('getUsers', users);
+        addChatUser(userId, socket.id);
+        chatNamespace.emit('getUsers', chatUsers);
     });
 
     socket.on('sendMessage', ({ senderId, receiverId, text }: { senderId: string; receiverId: string; text: string }) => {
-        const user = getUser(receiverId);
+        const user = getChatUser(receiverId);
+
         if (user) {
-            io.to(user.socketId).emit('getMessage', {
+            chatNamespace.to(user.socketId).emit('getMessage', {
                 senderId,
                 text,
             });
@@ -43,8 +75,33 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log('a user disconnected');
-        removeUser(socket.id);
-        io.emit('getUsers', users);
+        console.log('a user disconnected from chat');
+        removeChatUser(socket.id);
+        chatNamespace.emit('getUsers', chatUsers);
+    });
+});
+
+// Handling notification connections
+notificationNamespace.on('connection', (socket) => {
+    console.log('a User connected to notifications');
+
+    socket.on('addUser', (userId: string) => {
+        addNotificationUser(userId, socket.id, 0);
+    });
+
+    socket.on('sendNotification', ({ senderId, receiverId }: INotification) => {
+        const user = getNotificationUser(receiverId);
+        if (user) {
+            user.count += 1;
+            notificationNamespace.to(user.socketId).emit('getNotification', {
+                senderId,
+                count: user.count,
+            });
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('a user disconnected from notifications');
+        removeNotificationUser(socket.id);
     });
 });

@@ -31,6 +31,7 @@ import sharp from 'sharp';
 import { CloudinaryFile, cloudinary } from '../../config/cloudinary.config';
 import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
 import { GetUserBatchUseCase } from '../../domain/interfaces/use-cases/user/get-user-batch.use-case';
+import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -120,6 +121,18 @@ export class UserController implements UserControllerInterface {
         try {
             await this.followUserUseCase.execute(userId, followerId);
             res.send({ status: 'ok' });
+
+            const user = await this.getUserUseCase.execute(userId);
+            const friend = await this.getUserUseCase.execute(followerId);
+
+            if (user && friend) {
+                await new NotificationCreatedPublisher(natsWrapper.client).publish({
+                    senderId: user.id,
+                    receiverId: friend.id,
+                    type: 'Follow',
+                    content: `started following you.`,
+                });
+            }
         } catch (error) {
             next(error);
         }

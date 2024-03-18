@@ -18,6 +18,7 @@ import CommentRouter from './api/routes/comment.router';
 import { ChatController } from './api/controllers/chat.controller';
 import ChatRouter from './api/routes/chat.router';
 import NotificationRouter from './api/routes/notifications.router';
+import PostRouter from './api/routes/post.router';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -57,6 +58,7 @@ const start = async () => {
     const CommentMiddleware = CommentRouter(new GetUser(new UserRepositoryImpl(datasource)));
     const ChatMiddleware = ChatRouter();
     const NotificationMiddleware = NotificationRouter();
+    const PostMiddleware = PostRouter();
 
     app.use(currentUser);
 
@@ -73,16 +75,17 @@ const start = async () => {
     app.use('/api/comments/', CommentMiddleware);
     app.use('/api/chat', ChatMiddleware);
     app.use('/api/notifications', NotificationMiddleware);
+    app.use('/api/posts', PostMiddleware);
 
-    app.use(
-        '/api/posts',
-        requireAuth,
-        createProxyMiddleware({
-            target: POST_SERVICE_ENDPOINT,
-            changeOrigin: true,
-            pathRewrite: { '^/api/posts': '/' },
-        })
-    );
+    // app.use(
+    //     '/api/posts',
+    //     requireAuth,
+    //     createProxyMiddleware({
+    //         target: POST_SERVICE_ENDPOINT,
+    //         changeOrigin: true,
+    //         pathRewrite: { '^/api/posts': '/' },
+    //     })
+    // );
 
     app.use(errorHandler);
 

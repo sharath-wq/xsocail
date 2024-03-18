@@ -17,16 +17,5 @@ export interface UserRequestModel {
 export interface UserResponseModel {
     id: string;
     username: string;
-    email: string;
-    fullName: string;
-    bio: string;
     imageUrl: string;
-    followers: string[];
-    following: string[];
-    savedPosts: string[];
-    posts: string[];
-    createdAt: Date;
-    isAdmin: boolean;
-    verified: boolean;
-    isBlocked: boolean;
 }

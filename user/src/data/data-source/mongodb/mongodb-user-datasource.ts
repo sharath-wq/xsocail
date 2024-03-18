@@ -1,27 +1,22 @@
-import { UpdateUserRequstModel, UserModel, UserRequestModel, UserResponseModel } from '../../../domain/entities/user';
+import {
+    NotificationUserModel,
+    UpdateUserRequstModel,
+    UserModel,
+    UserRequestModel,
+    UserResponseModel,
+} from '../../../domain/entities/user';
 import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
 export class MongoDBUserDataSource implements UserDataSource {
-    async getUserBatch(userIds: string[]): Promise<UserResponseModel[] | []> {
+    async getUserBatch(userIds: string[]): Promise<NotificationUserModel[] | []> {
         try {
             const results = await User.find({ _id: { $in: userIds } });
 
             return results.map((item) => ({
                 id: item.id,
-                bio: item.bio,
-                followers: item.followers,
-                following: item.following,
-                savedPosts: item.savedPosts,
-                username: item.username,
-                email: item.email,
-                fullName: item.fullName,
-                createdAt: item.createdAt,
-                isAdmin: item.isAdmin,
                 imageUrl: item.imageUrl,
-                posts: item.posts,
-                verified: item.verified,
-                isBlocked: item.isBlocked,
+                username: item.username,
             }));
         } catch (error) {
             console.log(error);

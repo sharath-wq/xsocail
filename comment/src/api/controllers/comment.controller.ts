@@ -7,6 +7,8 @@ import {
     IDislikeCommentUseCase,
 } from '../../domain/interface/use-case';
 import { Request, Response, NextFunction } from 'express';
+import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
+import { natsWrapper } from '../../../nats-wrapper';
 
 export class CommentController implements ICommentController {
     createCommentUseCase: ICreateCommentUseCase;
@@ -52,8 +54,20 @@ export class CommentController implements ICommentController {
     }
 
     async createComment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { postAuthorId } = req.body;
         try {
             const comment = await this.createCommentUseCase.execute(req.body);
+
+            if (comment) {
+                await new NotificationCreatedPublisher(natsWrapper.client).publish({
+                    postId: comment.postId,
+                    senderId: comment.author.userId,
+                    receiverId: postAuthorId,
+                    type: 'Comment',
+                    content: `Commented: ${comment.content}`,
+                });
+            }
+
             res.send(comment);
         } catch (error) {
             next(error);

@@ -19,6 +19,7 @@ import { useUser } from '@/context/userContext';
 
 const PostForm = ({ post }: any) => {
     const [isSubmiting, setisSubmiting] = useState(false);
+    const [imageUrls, setImageUrls] = useState<string[]>([]);
     const { currentUser } = useUser();
 
     const router = useRouter();
@@ -40,14 +41,16 @@ const PostForm = ({ post }: any) => {
             ...values,
             username: currentUser?.username,
             userId: currentUser?.userId,
-            imageUrl: currentUser?.imageUrl,
+            userImageUrl: currentUser?.imageUrl,
         });
     }
 
     const { doRequest, errors } = useRequest({
         url: '/api/posts',
         method: 'post',
-        body: {},
+        body: {
+            imageUrls: imageUrls,
+        },
         onSuccess: () => {
             setisSubmiting(false);
             toast({
@@ -55,7 +58,6 @@ const PostForm = ({ post }: any) => {
             });
             router.push('/home');
         },
-        contentType: 'multipart/form-data',
     });
     return (
         <Form {...form}>
@@ -80,7 +82,7 @@ const PostForm = ({ post }: any) => {
                         <FormItem>
                             <FormLabel className=''>Add Photos</FormLabel>
                             <FormControl>
-                                <FileUploder fieldChange={field.onChange} mediaUrl={post?.imageUrl} />
+                                <FileUploder imageUrls={imageUrls} setImageUrls={setImageUrls} />
                             </FormControl>
                             <FormMessage className='' />
                         </FormItem>

@@ -43,6 +43,12 @@ export interface UserResponseModel {
     isBlocked: boolean;
 }
 
+export interface NotificationUserModel {
+    id: string;
+    username: string;
+    imageUrl: string;
+}
+
 export interface UserModel {
     id: string;
     username: string;

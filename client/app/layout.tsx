@@ -9,6 +9,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { UserProvider } from '@/context/userContext';
 
 import { AuthContextProvider } from '@/context/authContext';
+import { NotificationsProvider } from '@/context/notificationContext';
 
 export const fontSans = FontSans({
     subsets: ['latin'],
@@ -26,10 +27,13 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
                 {/* @ts-ignore */}
                 <UserProvider>
                     <AuthContextProvider>
-                        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-                            {children}
-                            <Toaster />
-                        </ThemeProvider>
+                        {/* @ts-ignore */}
+                        <NotificationsProvider>
+                            <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+                                {children}
+                                <Toaster />
+                            </ThemeProvider>
+                        </NotificationsProvider>
                     </AuthContextProvider>
                 </UserProvider>
             </body>

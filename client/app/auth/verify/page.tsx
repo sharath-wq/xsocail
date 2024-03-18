@@ -37,6 +37,8 @@ const VerifyOtpPage: React.FC = () => {
             return () => {
                 clearInterval(timerId);
             };
+        } else {
+            router.back();
         }
     }, [timeLeft]);
 
