@@ -63,16 +63,30 @@ chatNamespace.on('connection', (socket) => {
         chatNamespace.emit('getUsers', chatUsers);
     });
 
-    socket.on('sendMessage', ({ senderId, receiverId, text }: { senderId: string; receiverId: string; text: string }) => {
-        const user = getChatUser(receiverId);
+    socket.on(
+        'sendMessage',
+        ({
+            senderId,
+            receiverId,
+            text,
+            conversationId,
+        }: {
+            senderId: string;
+            receiverId: string;
+            text: string;
+            conversationId: string;
+        }) => {
+            const user = getChatUser(receiverId);
 
-        if (user) {
-            chatNamespace.to(user.socketId).emit('getMessage', {
-                senderId,
-                text,
-            });
+            if (user) {
+                chatNamespace.to(user.socketId).emit('getMessage', {
+                    senderId,
+                    text,
+                    conversationId,
+                });
+            }
         }
-    });
+    );
 
     socket.on('disconnect', () => {
         console.log('a user disconnected from chat');
