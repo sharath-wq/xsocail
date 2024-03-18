@@ -16,6 +16,9 @@ const ConversationSchema = new mongoose.Schema(
             required: true,
             default: Date.now,
         },
+        recentMessage: {
+            type: String,
+        },
     },
     {
         toJSON: {
