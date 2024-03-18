@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { links } from '@/lib/constants/Links';
 import Link from 'next/link';
-import { LogOut } from 'lucide-react';
+import { ChevronRight, LogOut } from 'lucide-react';
 import useRequest from '@/hooks/useRequest';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
@@ -12,14 +12,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { useUser } from '@/context/userContext';
 import { useNotifications } from '@/context/notificationContext';
 
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+
 const Sidebar = () => {
-    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
     const router = useRouter();
     const { count } = useNotifications();
-
-    const toggleMobileMenu = () => {
-        setMobileMenuOpen(!isMobileMenuOpen);
-    };
 
     const { getCurrentUser } = useUser();
 
@@ -43,7 +40,7 @@ const Sidebar = () => {
     const { currentUser } = useUser();
 
     return (
-        <div className={`flex h-screen fixed left-0 ${isMobileMenuOpen ? 'overflow-hidden' : ''}`}>
+        <div className={`flex h-screen fixed left-0`}>
             <div className=' w-64 hidden sm:flex justify-between flex-col'>
                 <div className='flex flex-col gap-14'>
                     <div className='pt-10 text-center flex items-center justify-center'>
@@ -88,49 +85,47 @@ const Sidebar = () => {
                 </div>
             </div>
 
-            <button className='sm:hidden fixed right-0 top-0 p-4 z-50' onClick={toggleMobileMenu}>
-                <span className='dark:text-white text-black text-2xl'>☰</span>
-            </button>
+            <div className='sm:hidden relative block justify-center items-center'>
+                <Sheet>
+                    <SheetTrigger>
+                        <span className='text-2xl absolute'>
+                            <ChevronRight />
+                        </span>
+                    </SheetTrigger>
+                    <SheetContent side={'left'}>
+                        <div className='sm:hidden fixed inset-0  bg-opacity-25 z-40'>
+                            <div className=' h-screen w-64 p-4 flex flex-col justify-between'>
+                                <div className='text-center'>
+                                    <h2 className='text-2xl font-bold '>LOGO</h2>
+                                </div>
 
-            {isMobileMenuOpen && (
-                <div className='sm:hidden fixed inset-0 bg-black bg-opacity-25 z-40'>
-                    <div className='text-white h-screen w-64 p-4 flex flex-col justify-between'>
-                        <div className='text-center'>
-                            <h2 className='text-2xl font-bold dark:text-white text-black'>LOGO</h2>
+                                <nav>
+                                    <ul className='space-y-4 flex-grow'>
+                                        {links.map((link) => (
+                                            <li key={link.label} className='p-4 cursor-pointer flex gap-5 items-center'>
+                                                {link.icon}
+                                                <Link href={link.link}>{link.label}</Link>
+                                                {link.link === '/notifications' && count > 0 && (
+                                                    <div className='w-[10px] h-[10px] bg-red-600 rounded-full p-[10px] tex-xm flex items-center justify-center'>
+                                                        {count}
+                                                    </div>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </nav>
+
+                                <div className='p-4 '>
+                                    <Button onClick={handleLogout} variant={'ghost'} className=' p-2 rounded-md'>
+                                        <LogOut />
+                                        Logout
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
-
-                        <nav>
-                            <ul className='space-y-4 flex-grow'>
-                                {links.map((link) => (
-                                    <li
-                                        key={link.label}
-                                        className='p-4 cursor-pointer dark:text-white text-black hover:bg-slate-200 dark:hover:bg-slate-600 flex gap-5 items-center'
-                                    >
-                                        {link.icon}
-                                        <Link href={link.link}>{link.label}</Link>
-                                        {link.link === '/notifications' && count > 0 && (
-                                            <div className='w-[10px] h-[10px] bg-red-600 rounded-full p-[10px] tex-xm flex items-center justify-center'>
-                                                {count}
-                                            </div>
-                                        )}
-                                    </li>
-                                ))}
-                            </ul>
-                        </nav>
-
-                        <div className='p-4 '>
-                            <Button
-                                onClick={handleLogout}
-                                variant={'ghost'}
-                                className='dark:text-white text-black p-2 rounded-md'
-                            >
-                                <LogOut />
-                                Logout
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                    </SheetContent>
+                </Sheet>
+            </div>
         </div>
     );
 };
