@@ -82,7 +82,7 @@ const FileUploader = ({ setImageUrls, imageUrls }: FileUploaderProps) => {
                 </Carousel>
             ) : (
                 <CldUploadWidget
-                    uploadPreset='imaginify'
+                    uploadPreset='xsocial_posts'
                     options={{
                         multiple: true,
                         resourceType: 'image',
