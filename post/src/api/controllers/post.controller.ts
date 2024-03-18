@@ -165,6 +165,8 @@ export class PostController implements PostControllerInterface {
         const userId = req.currentUser?.userId;
         const id = req.params.id;
 
+        console.log(req.body);
+
         try {
             const existingPost = await this.getOnePostUseCase.execute(id);
 

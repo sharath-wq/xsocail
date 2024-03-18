@@ -10,7 +10,7 @@ export class PostController implements IPostController {
         try {
             let axiosMethod;
             let axiosConfig: AxiosRequestConfig = {
-                headers: req.headers, // Pass all headers from incoming request
+                headers: req.headers,
             };
 
             switch (req.method) {
@@ -22,6 +22,7 @@ export class PostController implements IPostController {
                     break;
                 case 'PATCH':
                     axiosMethod = axios.patch;
+                    console.log(req.body);
                     break;
                 case 'PUT':
                     axiosMethod = axios.put;

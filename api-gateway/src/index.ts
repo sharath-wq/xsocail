@@ -77,16 +77,6 @@ const start = async () => {
     app.use('/api/notifications', NotificationMiddleware);
     app.use('/api/posts', PostMiddleware);
 
-    // app.use(
-    //     '/api/posts',
-    //     requireAuth,
-    //     createProxyMiddleware({
-    //         target: POST_SERVICE_ENDPOINT,
-    //         changeOrigin: true,
-    //         pathRewrite: { '^/api/posts': '/' },
-    //     })
-    // );
-
     app.use(errorHandler);
 
     app.all('*', async () => {
