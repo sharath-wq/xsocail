@@ -1,10 +1,6 @@
 import express, { Request, Response } from 'express';
 
 import { PostController } from '../controllers/post.controller';
-import multer, { Multer } from 'multer';
-
-const storage = multer.memoryStorage();
-export const upload: Multer = multer({ storage: storage });
 
 import {
     CreatePostUseCase,
@@ -59,7 +55,7 @@ export default function PostRouter(
         postController.disLikePost(req, res, next);
     });
 
-    router.get('/feed', requireAuth, async (req: Request, res: Response, next: NextFunction) => {
+    router.get('/feed', async (req: Request, res: Response, next: NextFunction) => {
         postController.getUserFeed(req, res, next);
     });
 
@@ -67,7 +63,7 @@ export default function PostRouter(
         postController.getAllPosts(req, res);
     });
 
-    router.post('/', upload.array('files[]'), validateRequest, async (req: Request, res: Response, next: NextFunction) => {
+    router.post('/', validateRequest, async (req: Request, res: Response, next: NextFunction) => {
         postController.createPost(req, res, next);
     });
 
@@ -75,14 +71,9 @@ export default function PostRouter(
         postController.getBatchPosts(req, res, next);
     });
 
-    router.patch(
-        '/:id',
-        upload.array('files[]'),
-        validateRequest,
-        async (req: Request, res: Response, next: NextFunction) => {
-            postController.updatePost(req, res, next);
-        }
-    );
+    router.patch('/:id', validateRequest, async (req: Request, res: Response, next: NextFunction) => {
+        postController.updatePost(req, res, next);
+    });
 
     router.get('/:id', async (req, res) => {
         postController.getOnePost(req, res);

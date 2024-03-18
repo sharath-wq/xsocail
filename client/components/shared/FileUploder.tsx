@@ -1,41 +1,40 @@
-import { ImagePlus } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
-import { FileWithPath, useDropzone } from 'react-dropzone';
-import { Button } from '../ui/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import { Card, CardContent } from '../ui/card';
+import { CldUploadWidget } from 'next-cloudinary';
+import { Button } from '../ui/button';
+import { toast } from '../ui/use-toast';
 
-type FileUploderProps = {
+type FileUploaderProps = {
     fieldChange: (files: File[]) => void;
     mediaUrl: string;
+    setImageUrls: React.Dispatch<string[]>;
 };
 
-const FileUploder = ({ fieldChange, mediaUrl }: FileUploderProps) => {
-    const [file, setFile] = useState<File[]>([]);
+const FileUploader = ({ setImageUrls, fieldChange, mediaUrl }: FileUploaderProps) => {
     const [fileUrls, setFileUrls] = useState<string[]>([]);
 
-    const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
-        setFile(acceptedFiles);
-        fieldChange(acceptedFiles);
+    const onUploadSuccessHandler = useCallback(
+        (response: any, { widget }: any) => {
+            const croppedImageUrl = response?.info?.secure_url;
 
-        const newFileUrls = acceptedFiles.map((file) => URL.createObjectURL(file));
-        setFileUrls(newFileUrls);
+            setFileUrls([...fileUrls, croppedImageUrl]);
+            setImageUrls(croppedImageUrl);
+
+            widget.close();
+        },
+        [fileUrls]
+    );
+
+    const onUploadErrorHandler = useCallback((error: any) => {
+        toast({
+            title: 'Error uploading Image',
+            description: 'try again later',
+        });
     }, []);
 
-    const { getRootProps, getInputProps } = useDropzone({
-        onDrop,
-        accept: {
-            'image/*': ['.png', '.jpeg', '.jpg'],
-        },
-    });
-
     return (
-        <div
-            {...getRootProps()}
-            className='flex flex-col gap-3 py-10 justify-center items-center rounded-xl cursor-pointer border'
-        >
-            <input className='cursor-pointer' {...getInputProps()} />
-
+        <div className='flex flex-col gap-3 py-10 justify-center items-center rounded-xl cursor-pointer border'>
             {fileUrls.length ? (
                 <Carousel className='w-1/2'>
                     <CarouselContent>
@@ -59,17 +58,32 @@ const FileUploder = ({ fieldChange, mediaUrl }: FileUploderProps) => {
                     <CarouselNext />
                 </Carousel>
             ) : (
-                <div className='flex flex-col items-center justify-center'>
-                    <ImagePlus width={96} height={77} />
-                    <h3>Drag photo here</h3>
-                    <p className='text-sm mb-6'>SVG, JPG, JPEG</p>
-                    <Button type='button' variant={'secondary'}>
-                        Select from computer
-                    </Button>
-                </div>
+                <CldUploadWidget
+                    uploadPreset='imaginify'
+                    options={{
+                        multiple: true,
+                        resourceType: 'image',
+                        cropping: true,
+                        croppingCoordinatesMode: 'custom',
+                        croppingAspectRatio: 1,
+                        croppingDefaultSelectionRatio: 100 / 100,
+                        showSkipCropButton: false,
+                        maxFiles: 5,
+                    }}
+                    onSuccess={onUploadSuccessHandler}
+                    onError={onUploadErrorHandler}
+                >
+                    {({ open }) => (
+                        <div className='flex flex-col items-center justify-center'>
+                            <Button type='button' variant={'secondary'} onClick={(event) => open()}>
+                                Upload an Image
+                            </Button>
+                        </div>
+                    )}
+                </CldUploadWidget>
             )}
         </div>
     );
 };
 
-export default FileUploder;
+export default FileUploader;

@@ -1,9 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { cloudinary } from '../../config/cloudinary.config';
-
-import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
-
 import {
     CreatePostUseCase,
     DeletePostUseCase,
@@ -19,19 +15,14 @@ import {
 } from '../../domain/interfaces/use-cases/';
 
 import { PostControllerInterface } from '../interfaces/controllers/post.controller';
-import { NotAuthorizedError, NotFoundError } from '@scxsocialcommon/errors';
+import { NotFoundError } from '@scxsocialcommon/errors';
 
-import { CloudinaryFile } from '../../config/cloudinary.config';
-import sharp from 'sharp';
 import { PostRequestModel } from '../../domain/entities/post';
 
 import { PostCreatedPublisher } from '../events/pub/post-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 import { PostDeletedPublisher } from '../events/pub/post-deleted-publisher';
 import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
-
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
     deletePostUseCase: DeletePostUseCase;
@@ -137,12 +128,9 @@ export class PostController implements PostControllerInterface {
     }
 
     async createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const files = req.files as Express.Multer.File[];
-
         try {
-            if (!req.currentUser) {
-                throw new NotAuthorizedError();
-            }
+            let imageUrls = [];
+            imageUrls.push(req.body.imageUrls);
 
             const nwePost: PostRequestModel = {
                 caption: req.body.caption,
@@ -150,50 +138,13 @@ export class PostController implements PostControllerInterface {
                 author: {
                     userId: req.body.userId,
                     username: req.body.username,
-                    imageUrl: req.body.imageUrl,
+                    imageUrl: req.body.userImageUrl,
                 },
-                imageUrls: [],
+                imageUrls,
                 isEdited: false,
             };
 
-            const uploadPromises: Promise<void>[] = [];
-
-            const filesToUpload: CloudinaryFile[] = req.files as CloudinaryFile[];
-            if (!filesToUpload || filesToUpload.length === 0) {
-                return next(new Error('No files provided'));
-            }
-
-            for (const file of filesToUpload) {
-                const resizedBuffer: Buffer = await sharp(file.buffer)
-                    .resize({ width: 1000, height: 1000, fit: 'cover' })
-                    .toBuffer();
-                const uploadPromise = new Promise<void>((resolve, reject) => {
-                    const uploadStream = cloudinary.uploader.upload_stream(
-                        {
-                            resource_type: 'auto',
-                            folder: 'posts',
-                        } as any,
-                        (err: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
-                            if (err) {
-                                console.error('Cloudinary upload error:', err);
-                                reject(err);
-                            } else if (!result) {
-                                console.error('Cloudinary upload error: Result is undefined');
-                                reject(new Error('Cloudinary upload result is undefined'));
-                            } else {
-                                nwePost.imageUrls.push(result.secure_url);
-                                resolve();
-                            }
-                        }
-                    );
-                    uploadStream.end(resizedBuffer);
-                });
-                uploadPromises.push(uploadPromise);
-            }
-
-            await Promise.all(uploadPromises);
-
-            const post = await this.createPostUseCase.execute(nwePost, req.currentUser.userId);
+            const post = await this.createPostUseCase.execute(nwePost, req.body.userId);
 
             if (post) {
                 await new PostCreatedPublisher(natsWrapper.client).publish({
@@ -220,10 +171,6 @@ export class PostController implements PostControllerInterface {
                 throw new NotFoundError();
             }
 
-            if (existingPost.author.userId !== userId) {
-                throw new NotAuthorizedError();
-            }
-
             const updatedPost = await this.updatePostUseCase.execute(id, req.body, userId!);
             res.status(200).send(updatedPost);
         } catch (error: any) {
@@ -239,10 +186,6 @@ export class PostController implements PostControllerInterface {
 
             if (!post) {
                 throw new NotFoundError();
-            }
-
-            if (post.author.userId !== userId) {
-                throw new NotAuthorizedError();
             }
 
             await this.deletePostUseCase.execute(id);
