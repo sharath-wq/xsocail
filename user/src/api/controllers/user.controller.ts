@@ -332,13 +332,19 @@ export class UserController implements UserControllerInterface {
         }
     }
     async getAllUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        let { q } = req.query;
         try {
-            const users = await this.getAllUserUseCase.execute();
+            if (typeof q !== 'string') {
+                q = '';
+            }
+
+            const users = await this.getAllUserUseCase.execute(q);
             res.send(users);
         } catch (error) {
             next(error);
         }
     }
+
     async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const id = req.params.id;

@@ -179,7 +179,7 @@ const Post = ({
                                                         </Label>
                                                         <Input
                                                             id='link'
-                                                            defaultValue={`http://xsocial.dev/post/${id}`}
+                                                            defaultValue={`http://xsocial.dev/post/view/${id}`}
                                                             readOnly
                                                         />
                                                     </div>

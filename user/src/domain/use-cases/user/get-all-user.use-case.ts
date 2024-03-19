@@ -9,8 +9,8 @@ export class GetAllUsers implements GetAllUserUseCase {
         this.UserRepository = UserRepository;
     }
 
-    async execute(): Promise<[] | UserResponseModel[]> {
-        const result = await this.UserRepository.getUsers();
+    async execute(query: string): Promise<[] | UserResponseModel[]> {
+        const result = await this.UserRepository.getUsers(query);
         return result;
     }
 }
