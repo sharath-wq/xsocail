@@ -16,6 +16,8 @@ import {
     FollowUserUseCase,
     UnfollowUserUseCase,
     GetUserFriendsUseCase,
+    GetUserFollowingUseCase,
+    GetUserFollowersUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
@@ -25,7 +27,7 @@ import { natsWrapper } from '../../../nats-wrapper';
 import { UserCreatedPublisher } from '../events/pub/user-created-publisher';
 import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
 import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
-import { BadRequestError, currentUser } from '@scxsocialcommon/errors';
+import { BadRequestError } from '@scxsocialcommon/errors';
 
 import sharp from 'sharp';
 import { CloudinaryFile, cloudinary } from '../../config/cloudinary.config';
@@ -53,6 +55,8 @@ export class UserController implements UserControllerInterface {
     unfollowUserUseCase: UnfollowUserUseCase;
     getUserFriendsUseCase: GetUserFriendsUseCase;
     getUserBatchUseCase: GetUserBatchUseCase;
+    getUserFollowingUseCase: GetUserFollowingUseCase;
+    getUserFollowersUseCase: GetUserFollowersUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -73,7 +77,9 @@ export class UserController implements UserControllerInterface {
         followUserUseCase: FollowUserUseCase,
         unfollowUserUseCase: UnfollowUserUseCase,
         getUserFriendsUseCase: GetUserFriendsUseCase,
-        getUserBatchUseCase: GetUserBatchUseCase
+        getUserBatchUseCase: GetUserBatchUseCase,
+        getUserFollowingUseCase: GetUserFollowingUseCase,
+        getUserFollowersUseCase: GetUserFollowersUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -94,6 +100,27 @@ export class UserController implements UserControllerInterface {
         this.unfollowUserUseCase = unfollowUserUseCase;
         this.getUserFriendsUseCase = getUserFriendsUseCase;
         this.getUserBatchUseCase = getUserBatchUseCase;
+        this.getUserFollowingUseCase = getUserFollowingUseCase;
+        this.getUserFollowersUseCase = getUserFollowersUseCase;
+    }
+    async getUserFollowing(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { userId } = req.params;
+        try {
+            const followings = await this.getUserFollowingUseCase.execute(userId);
+            res.send(followings);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getUserFollowers(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { userId } = req.params;
+        try {
+            const followers = await this.getUserFollowersUseCase.execute(userId);
+            res.send(followers);
+        } catch (error) {
+            next(error);
+        }
     }
 
     async getUserBatch(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -332,13 +359,19 @@ export class UserController implements UserControllerInterface {
         }
     }
     async getAllUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        let { q } = req.query;
         try {
-            const users = await this.getAllUserUseCase.execute();
+            if (typeof q !== 'string') {
+                q = '';
+            }
+
+            const users = await this.getAllUserUseCase.execute(q);
             res.send(users);
         } catch (error) {
             next(error);
         }
     }
+
     async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const id = req.params.id;

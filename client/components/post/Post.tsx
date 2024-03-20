@@ -43,6 +43,9 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import Actions from './actions/Actions';
 import { usePost } from '@/context/postContext';
+import Link from 'next/link';
+import Image from 'next/image';
+import axios from 'axios';
 
 const Post = ({
     author,
@@ -94,11 +97,22 @@ const Post = ({
         timeAgo = <TimeAgo date={createdAt} />;
     }
 
+    const handleUnfollow = async () => {
+        try {
+            await axios.put(`/api/users/unfollow/${author.userId}`);
+            toast({
+                description: `unfollowed`,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <Card>
             <CardHeader>
                 <div className='flex justify-between'>
-                    <div className='flex gap-4'>
+                    <Link href={`/user/${author.userId}`} className='flex gap-4'>
                         <Avatar>
                             <AvatarImage src={author.imageUrl} alt={author.username} />
                             <AvatarFallback>CN</AvatarFallback>
@@ -110,7 +124,7 @@ const Post = ({
                             </CardTitle>
                             <CardDescription>{timeAgo}</CardDescription>
                         </div>
-                    </div>
+                    </Link>
 
                     <div>
                         <DropdownMenu>
@@ -128,7 +142,9 @@ const Post = ({
                                     )}
                                     {currentUser?.userId !== author.userId && (
                                         <DropdownMenuItem>
-                                            <span className='text-red-500'>Unfollow</span>
+                                            <span onClick={handleUnfollow} className='text-red-500'>
+                                                Unfollow
+                                            </span>
                                         </DropdownMenuItem>
                                     )}
                                     {currentUser?.userId === author.userId && (
@@ -179,7 +195,7 @@ const Post = ({
                                                         </Label>
                                                         <Input
                                                             id='link'
-                                                            defaultValue={`http://xsocial.dev/post/${id}`}
+                                                            defaultValue={`http://xsocial.dev/post/view/${id}`}
                                                             readOnly
                                                         />
                                                     </div>
@@ -231,6 +247,10 @@ const Post = ({
             </CardContent>
             <CardFooter className='flex flex-col'>
                 <Actions
+                    caption={caption}
+                    commentCount={commentCount}
+                    imageUrls={imageUrls}
+                    tags={tags}
                     likeCount={likeCount}
                     setCommentCount={setCommentCount}
                     setLikeCount={setLikeCount}

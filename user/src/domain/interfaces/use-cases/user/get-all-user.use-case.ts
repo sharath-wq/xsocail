@@ -1,5 +1,5 @@
 import { UserResponseModel } from '../../../entities/user';
 
 export interface GetAllUserUseCase {
-    execute(): Promise<UserResponseModel[] | []>;
+    execute(query: string): Promise<UserResponseModel[] | []>;
 }

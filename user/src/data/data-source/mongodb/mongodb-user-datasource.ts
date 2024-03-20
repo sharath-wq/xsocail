@@ -164,11 +164,18 @@ export class MongoDBUserDataSource implements UserDataSource {
             console.log(error);
         }
     }
-    async getAll(): Promise<UserResponseModel[]> {
+    async getAll(query: string): Promise<UserResponseModel[]> {
         try {
-            const results = await User.find();
+            let users;
+            if (query) {
+                users = await User.find({
+                    $or: [{ username: { $regex: query, $options: 'i' } }, { fullName: { $regex: query, $options: 'i' } }],
+                }).limit(10);
+            } else {
+                users = await User.find({}).limit(10);
+            }
 
-            return results.map((item) => ({
+            return users.map((item) => ({
                 id: item.id,
                 bio: item.bio,
                 followers: item.followers,
@@ -185,7 +192,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                 isBlocked: item.isBlocked,
             }));
         } catch (error: any) {
-            console.log('Error Finding User');
+            console.log('Error Finding User:', error.message);
             return [];
         }
     }

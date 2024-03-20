@@ -22,8 +22,8 @@ export class PostRepositoryImpl implements PostRepository {
         return results;
     }
 
-    async getUserFeeds(): Promise<[] | PostModel[]> {
-        const result = await this.postDataSource.getUserFeed();
+    async getUserFeeds(userIds: string[]): Promise<[] | PostModel[]> {
+        const result = await this.postDataSource.getUserFeed(userIds);
         return result;
     }
 

@@ -56,9 +56,9 @@ export class MongoDBPostDataSource implements PostDataSource {
         }
     }
 
-    async getUserFeed(): Promise<[] | PostModel[]> {
+    async getUserFeed(userIds: string[]): Promise<[] | PostModel[]> {
         try {
-            const result = await Post.find({}).sort({ createdAt: -1 });
+            const result = await Post.find({ 'author.userId': { $in: userIds } }).sort({ createdAt: -1 });
 
             return result.map((item) => ({
                 id: item.id,

@@ -18,9 +18,11 @@ import {
     FollowUserUseCase,
     UnfollowUserUseCase,
     GetUserFriendsUseCase,
+    GetUserFollowersUseCase,
+    GetUserFollowingUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
-import { requireAdmin, requireAuth, validateRequest } from '@scxsocialcommon/errors';
+import { validateRequest } from '@scxsocialcommon/errors';
 import { SendResetTokenUseCase } from '../../domain/interfaces/use-cases/token/send-reset-token.use-caes';
 import { ResetPasswordUseCase } from '../../domain/interfaces/use-cases/token/reset-password.use-case';
 import { GetUserBatchUseCase } from '../../domain/interfaces/use-cases/user/get-user-batch.use-case';
@@ -47,7 +49,9 @@ export default function UserRouter(
     followUserUseCase: FollowUserUseCase,
     unfollowUserUseCase: UnfollowUserUseCase,
     getUserFriendsUseCase: GetUserFriendsUseCase,
-    getUserBatchUseCase: GetUserBatchUseCase
+    getUserBatchUseCase: GetUserBatchUseCase,
+    getUserFollowingUseCase: GetUserFollowingUseCase,
+    getUserFollowersUseCase: GetUserFollowersUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -69,7 +73,9 @@ export default function UserRouter(
         followUserUseCase,
         unfollowUserUseCase,
         getUserFriendsUseCase,
-        getUserBatchUseCase
+        getUserBatchUseCase,
+        getUserFollowersUseCase,
+        getUserFollowingUseCase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
@@ -89,6 +95,10 @@ export default function UserRouter(
     router.get('/:id', async (req, res, next) => userController.getUser(req, res, next));
 
     router.get('/friends/:userId', async (req, res, next) => userController.getUserFriends(req, res, next));
+
+    router.get('/following/:userId', async (req, res, next) => userController.getUserFollowing(req, res, next));
+
+    router.get('/followers/:userId', async (req, res, next) => userController.getUserFollowers(req, res, next));
 
     router.delete('/:id', async (req, res, next) => userController.deleteUser(req, res, next));
 

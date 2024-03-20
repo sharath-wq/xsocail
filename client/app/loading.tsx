@@ -1,7 +1,12 @@
+import { Loader } from 'lucide-react';
 import React from 'react';
 
 const loading = () => {
-    return <div>loading...</div>;
+    return (
+        <div className='w-full h-screen flex justify-center items-center'>
+            <Loader className='animate-spin' />
+        </div>
+    );
 };
 
 export default loading;

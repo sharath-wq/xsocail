@@ -17,6 +17,8 @@ import { UnsavePostUseCase } from './unsave-post.use.case';
 import { FollowUserUseCase } from './follow-user.use-case';
 import { UnfollowUserUseCase } from './unfollow-user.use-case';
 import { GetUserFriendsUseCase } from './get-user-friends.use-case';
+import { GetUserFollowersUseCase } from './get-user-followers.use-case';
+import { GetUserFollowingUseCase } from './get-user-following.use-case';
 
 export {
     CretaeUserUseCase,
@@ -38,4 +40,6 @@ export {
     FollowUserUseCase,
     UnfollowUserUseCase,
     GetUserFriendsUseCase,
+    GetUserFollowersUseCase,
+    GetUserFollowingUseCase,
 };
