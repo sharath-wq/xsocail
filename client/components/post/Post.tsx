@@ -230,7 +230,11 @@ const Post = ({
                                 <div className='p-1'>
                                     <Card>
                                         <CardContent className='flex aspect-square items-center justify-center p-6'>
-                                            <Image src={imageUrls[index]} alt={`image-${index}`} layout='fill' />
+                                            <img
+                                                src={imageUrls[index]}
+                                                alt={`image-${index}`}
+                                                style={{ objectFit: 'fill', width: '100%', height: '100%' }}
+                                            />
                                         </CardContent>
                                     </Card>
                                 </div>
@@ -243,6 +247,10 @@ const Post = ({
             </CardContent>
             <CardFooter className='flex flex-col'>
                 <Actions
+                    caption={caption}
+                    commentCount={commentCount}
+                    imageUrls={imageUrls}
+                    tags={tags}
                     likeCount={likeCount}
                     setCommentCount={setCommentCount}
                     setLikeCount={setLikeCount}
