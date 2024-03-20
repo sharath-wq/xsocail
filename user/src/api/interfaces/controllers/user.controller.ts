@@ -18,4 +18,6 @@ export interface UserControllerInterface {
     unfollow(req: Request, res: Response, next: NextFunction): Promise<void>;
     getUserFriends(req: Request, res: Response, next: NextFunction): Promise<void>;
     getUserBatch(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getUserFollowing(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getUserFollowers(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

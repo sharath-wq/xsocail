@@ -6,6 +6,10 @@ export default function PostRouter() {
 
     const postController = new PostController();
 
+    router.get('/feed', async (req, res, next) => {
+        postController.postFeed(req, res, next);
+    });
+
     router.all('/*', async (req, res, next) => {
         postController.postService(req, res, next);
     });

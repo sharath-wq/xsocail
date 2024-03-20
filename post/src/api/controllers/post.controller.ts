@@ -82,8 +82,9 @@ export class PostController implements PostControllerInterface {
         }
     }
     async getUserFeed(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { userIds } = req.body;
         try {
-            const feedPosts = await this.getUserFeedPostsUseCase.execute();
+            const feedPosts = await this.getUserFeedPostsUseCase.execute(userIds);
 
             res.send(feedPosts);
         } catch (error) {

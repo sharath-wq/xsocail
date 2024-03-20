@@ -9,8 +9,8 @@ export class GetUserFeedPosts implements GetUserFeedPostsUseCase {
         this.postRepository = postRepository;
     }
 
-    async execute(): Promise<[] | PostModel[]> {
-        const result = await this.postRepository.getUserFeeds();
+    async execute(userIds: string[]): Promise<[] | PostModel[]> {
+        const result = await this.postRepository.getUserFeeds(userIds);
         return result;
     }
 }

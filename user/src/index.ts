@@ -10,6 +10,8 @@ import {
     DeleteUser,
     GetAllUsers,
     GetUser,
+    GetUserFollowers,
+    GetUserFollowing,
     GetUserFriends,
     Login,
     ResetPassword,
@@ -78,7 +80,9 @@ const start = async () => {
         new FollowUser(new UserRepositoryImpl(datasource)),
         new UnfollowUser(new UserRepositoryImpl(datasource)),
         new GetUserFriends(new UserRepositoryImpl(datasource)),
-        new GetUserBatch(new UserRepositoryImpl(datasource))
+        new GetUserBatch(new UserRepositoryImpl(datasource)),
+        new GetUserFollowing(new UserRepositoryImpl(datasource)),
+        new GetUserFollowers(new UserRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

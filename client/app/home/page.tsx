@@ -19,7 +19,7 @@ const Home = () => {
     const socket = useRef<Socket>();
     const { getNotifications } = useNotifications();
 
-    const { count, setCount } = useNotifications();
+    const { setCount } = useNotifications();
 
     useEffect(() => {
         const sessionCookie = document.cookie.split(';').find((cookie) => cookie.trim().startsWith('session='));

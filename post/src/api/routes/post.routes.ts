@@ -16,8 +16,7 @@ import {
     GetBatchPostUseCase,
 } from '../../domain/interfaces/use-cases';
 import { NextFunction } from 'express-serve-static-core';
-import { body } from 'express-validator';
-import { requireAuth, validateRequest } from '@scxsocialcommon/errors';
+import { validateRequest } from '@scxsocialcommon/errors';
 
 export default function PostRouter(
     createPostUseCase: CreatePostUseCase,
@@ -55,7 +54,7 @@ export default function PostRouter(
         postController.disLikePost(req, res, next);
     });
 
-    router.get('/feed', async (req: Request, res: Response, next: NextFunction) => {
+    router.post('/feed', async (req: Request, res: Response, next: NextFunction) => {
         postController.getUserFeed(req, res, next);
     });
 

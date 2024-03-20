@@ -18,6 +18,8 @@ import { UnblockUser } from './unblock-user.use-case';
 import { SavePost } from './save-post.use-case';
 import { UnsavePost } from './unsave-post.use-case';
 import { GetUserFriends } from './get-user-friends.use-case';
+import { GetUserFollowers } from './get-user-followers.use-case';
+import { GetUserFollowing } from './get-user-following.use-case';
 
 export {
     CreateUser,
@@ -40,4 +42,6 @@ export {
     SavePost,
     UnsavePost,
     GetUserFriends,
+    GetUserFollowers,
+    GetUserFollowing,
 };

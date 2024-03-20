@@ -10,7 +10,7 @@ export interface PostRepository {
     getPostById(id: string): Promise<PostModel | null>;
     likePost(userId: string, postId: string): Promise<void>;
     dislikePost(userIndex: number, postId: string): Promise<void>;
-    getUserFeeds(): Promise<PostModel[] | []>;
+    getUserFeeds(userIds: string[]): Promise<PostModel[] | []>;
     getSavedPosts(postIds: string[]): Promise<PostModel[] | []>;
     findPostsByUserIdAndUpdate(userId: string, post: PostBulkUpdateRequestModel): Promise<void>;
     getBatchPost(postIds: string[]): Promise<NotificationPostModel[] | []>;
