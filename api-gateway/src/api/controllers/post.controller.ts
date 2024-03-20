@@ -5,7 +5,6 @@ import { POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from '../../constants/en
 
 export class PostController implements IPostController {
     async postFeed(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const path = req.originalUrl.replace('/api/users', '');
         const userId = req.currentUser!.userId;
 
         try {
@@ -14,7 +13,7 @@ export class PostController implements IPostController {
             const userIds = data.following;
 
             const response = await axios.post(`${POST_SERVICE_ENDPOINT}/feed`, {
-                userIds,
+                userIds: [...userIds, userId],
             });
 
             res.status(response.status).send(response.data);
