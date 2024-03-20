@@ -8,6 +8,7 @@ export interface PostRequestModel {
         imageUrl: string;
     };
     isEdited: boolean;
+    reportedBy?: string[];
 }
 
 export interface PostBulkUpdateRequestModel {
@@ -37,4 +38,5 @@ export interface PostModel {
     comments: string[];
     createdAt: Date;
     isEdited: boolean;
+    reportedBy: string[];
 }

@@ -1,4 +1,4 @@
-import { GetOnePostUseCase } from '../../interfaces/use-cases';
+import { GetOnePostUseCase } from '../../interfaces/use-cases/posts';
 
 import { PostRepository } from '../../interfaces/repository/post.repository';
 import { PostModel } from '../../entities/post';

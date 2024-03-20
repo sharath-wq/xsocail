@@ -1,6 +1,6 @@
 import { PostModel } from '../../entities/post';
 import { PostRepository } from '../../interfaces/repository/post.repository';
-import { GetUserFeedPostsUseCase } from '../../interfaces/use-cases';
+import { GetUserFeedPostsUseCase } from '../../interfaces/use-cases/posts';
 
 export class GetUserFeedPosts implements GetUserFeedPostsUseCase {
     postRepository: PostRepository;

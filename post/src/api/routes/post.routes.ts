@@ -14,7 +14,7 @@ import {
     GetUserFeedPostsUseCase,
     GetSavedPostsUseCase,
     GetBatchPostUseCase,
-} from '../../domain/interfaces/use-cases';
+} from '../../domain/interfaces/use-cases/posts';
 import { NextFunction } from 'express-serve-static-core';
 import { validateRequest } from '@scxsocialcommon/errors';
 

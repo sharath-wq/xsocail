@@ -1,4 +1,4 @@
-import { DeletePostUseCase } from '../../interfaces/use-cases';
+import { DeletePostUseCase } from '../../interfaces/use-cases/posts';
 import { PostRepository } from '../../interfaces/repository/post.repository';
 
 export class DeletePost implements DeletePostUseCase {

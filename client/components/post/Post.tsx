@@ -30,7 +30,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { CopyIcon, MoreVertical } from 'lucide-react';
+import { ChevronRight, CopyIcon, MoreVertical } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import { Separator } from '@/components/ui/separator';
 import { PostProps } from '@/types/post';
@@ -46,6 +46,8 @@ import { usePost } from '@/context/postContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import axios from 'axios';
+import { ScrollArea } from '../ui/scroll-area';
+import { reasonsToReport } from '@/constants';
 
 const Post = ({
     author,
@@ -108,6 +110,25 @@ const Post = ({
         }
     };
 
+    const hanldeReport = async (reason: string) => {
+        try {
+            await axios.post(`/api/posts/reports`, {
+                postId: id,
+                reason: reason,
+            });
+            toast({
+                title: 'Reported',
+                description: `Post Reported with the reason ${reason}`,
+            });
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: 'Error reporting post',
+                description: `${error}`,
+            });
+        }
+    };
+
     return (
         <Card>
             <CardHeader>
@@ -137,7 +158,46 @@ const Post = ({
                                 <DropdownMenuGroup>
                                     {currentUser?.userId !== author.userId && (
                                         <DropdownMenuItem>
-                                            <span className='text-red-500'>Report</span>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <span onClick={(e) => e.stopPropagation()} className='text-red-500'>
+                                                        Report
+                                                    </span>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Report</AlertDialogTitle>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <ScrollArea className='h-auto w-full rounded-md border'>
+                                                            <div className='p-4'>
+                                                                <h4 className='mb-6 text-lg font-bold leading-none'>
+                                                                    Why are you reporting the post
+                                                                </h4>
+                                                                {reasonsToReport.map((reason, _) => (
+                                                                    <>
+                                                                        <div
+                                                                            key={_}
+                                                                            className='text-base flex justify-between'
+                                                                        >
+                                                                            {reason}
+                                                                            <ChevronRight
+                                                                                onClick={() => {
+                                                                                    hanldeReport(reason);
+                                                                                }}
+                                                                                className='cursor-pointer'
+                                                                            />
+                                                                        </div>
+                                                                        {_ < reasonsToReport.length - 1 && (
+                                                                            <Separator className='my-3' />
+                                                                        )}
+                                                                    </>
+                                                                ))}
+                                                            </div>
+                                                        </ScrollArea>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                         </DropdownMenuItem>
                                     )}
                                     {currentUser?.userId !== author.userId && (

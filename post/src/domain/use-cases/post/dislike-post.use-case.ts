@@ -1,6 +1,6 @@
 import { NotFoundError } from '@scxsocialcommon/errors';
 import { PostRepository } from '../../interfaces/repository/post.repository';
-import { DisLikePostUseCase } from '../../interfaces/use-cases';
+import { DisLikePostUseCase } from '../../interfaces/use-cases/posts';
 
 export class DisLikePost implements DisLikePostUseCase {
     postRepository: PostRepository;

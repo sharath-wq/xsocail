@@ -12,7 +12,7 @@ import {
     GetUserPostsUseCase,
     LikePostUseCase,
     UpdatePostUseCase,
-} from '../../domain/interfaces/use-cases/';
+} from '../../domain/interfaces/use-cases/posts';
 
 import { PostControllerInterface } from '../interfaces/controllers/post.controller';
 import { NotAuthorizedError, NotFoundError } from '@scxsocialcommon/errors';

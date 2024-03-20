@@ -1,6 +1,6 @@
 import { PostBulkUpdateRequestModel } from '../../entities/post';
 import { PostRepository } from '../../interfaces/repository/post.repository';
-import { UpdatePostsByUserIdUseCase } from '../../interfaces/use-cases';
+import { UpdatePostsByUserIdUseCase } from '../../interfaces/use-cases/posts';
 
 export class UpdatePostsByUserId implements UpdatePostsByUserIdUseCase {
     postRepository: PostRepository;
