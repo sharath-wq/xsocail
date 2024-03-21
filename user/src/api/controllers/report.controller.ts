@@ -6,6 +6,8 @@ import {
     GetOneReportsUseCase,
     UpdateReportUseCase,
 } from '../../domain/interfaces/use-cases/report';
+import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
+import { natsWrapper } from '../../../nats-wrapper';
 
 export class ReportController implements ReportControllerInterface {
     createReportUseCase: CreateReportUseCase;
@@ -37,10 +39,24 @@ export class ReportController implements ReportControllerInterface {
     }
     async update(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { id } = req.params;
+        const userId = req.body.currentUser.userId;
+
+        console.log(userId);
+
         try {
             const report = await this.updateReportUseCase.execute(id, {
                 ...req.body,
             });
+
+            if (report && req.body.actionTaken === 'Warning Issued') {
+                await new NotificationCreatedPublisher(natsWrapper.client).publish({
+                    senderId: userId,
+                    receiverId: report.userId,
+                    type: 'Warning',
+                    content: `You have been reported with ${report.reason}. If this behavior persists, your account will be blocked.`,
+                });
+            }
+
             res.send(report);
         } catch (error) {
             next(error);

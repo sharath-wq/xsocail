@@ -10,12 +10,11 @@ import { natsWrapper } from './nats-wrapper';
 import { UserCreatedListener } from './api/events/user-created-listener';
 
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { CHAT_SERVICE_ENDPOINT, POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from './constants/endpoints';
+import { USER_SERVICE_ENDPOINT } from './constants/endpoints';
 import { GetByUsername } from './domain/use-cases/get-by-user-name.use-case';
 import { GetUserByEmail } from './domain/use-cases/get-user-by-email.use-case';
 import { UserUpdatedListener } from './api/events/user-updated-listener';
 import CommentRouter from './api/routes/comment.router';
-import { ChatController } from './api/controllers/chat.controller';
 import ChatRouter from './api/routes/chat.router';
 import NotificationRouter from './api/routes/notifications.router';
 import PostRouter from './api/routes/post.router';

@@ -22,6 +22,7 @@ export interface ReportUpdate {
 }
 
 export interface ReportRes {
+    id: string;
     timestamp: Date;
     userId: string;
     reporterId: string;

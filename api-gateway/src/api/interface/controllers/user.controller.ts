@@ -15,4 +15,5 @@ export interface UserControllerInterface {
     getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
     follow(req: Request, res: Response, next: NextFunction): Promise<void>;
     unfollow(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getReportedUsers(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

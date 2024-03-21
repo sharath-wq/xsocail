@@ -90,10 +90,10 @@ const start = async () => {
     );
 
     const ReportMiddleware = ReportRouter(
-        new CreateReport(new ReportRepository(new MongoDBReportDatasource())),
+        new CreateReport(new ReportRepository(new MongoDBReportDatasource()), new UserRepositoryImpl(datasource)),
         new GetAllReports(new ReportRepository(new MongoDBReportDatasource())),
         new GetOneReport(new ReportRepository(new MongoDBReportDatasource())),
-        new UpdateReport(new ReportRepository(new MongoDBReportDatasource()))
+        new UpdateReport(new ReportRepository(new MongoDBReportDatasource()), new UserRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

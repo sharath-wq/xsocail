@@ -11,9 +11,10 @@ export class MongoDBReportDatasource implements ReportDataSource {
                 return null;
             }
 
-            const { timestamp, userId, reporterId, reason, actionTaken } = result;
+            const { id, timestamp, userId, reporterId, reason, actionTaken } = result;
 
             return {
+                id,
                 timestamp,
                 userId,
                 reporterId,
@@ -33,9 +34,10 @@ export class MongoDBReportDatasource implements ReportDataSource {
                 return null;
             }
 
-            const { timestamp, userId, reporterId, reason, actionTaken } = result;
+            const { id, timestamp, userId, reporterId, reason, actionTaken } = result;
 
             return {
+                id,
                 timestamp,
                 userId,
                 reporterId,
@@ -55,9 +57,10 @@ export class MongoDBReportDatasource implements ReportDataSource {
                 return null;
             }
 
-            const { timestamp, userId, reporterId, reason, actionTaken } = result;
+            const { id, timestamp, userId, reporterId, reason, actionTaken } = result;
 
             return {
+                id,
                 timestamp,
                 userId,
                 reporterId,
@@ -71,10 +74,11 @@ export class MongoDBReportDatasource implements ReportDataSource {
     }
     async getAll(): Promise<[] | ReportRes[]> {
         try {
-            const results = await Report.find();
+            const results = await Report.find({ actionTaken: { $ne: 'Account Blocked' } });
             return results.map((result) => {
-                const { timestamp, userId, reporterId, reason, actionTaken } = result;
+                const { id, timestamp, userId, reporterId, reason, actionTaken } = result;
                 return {
+                    id,
                     timestamp,
                     userId,
                     reporterId,
