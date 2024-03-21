@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, query } from 'express';
 
 import {
     CreatePostUseCase,
@@ -82,9 +82,9 @@ export class PostController implements PostControllerInterface {
         }
     }
     async getUserFeed(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { userIds } = req.body;
+        const { userIds, userId } = req.body;
         try {
-            const feedPosts = await this.getUserFeedPostsUseCase.execute(userIds);
+            const feedPosts = await this.getUserFeedPostsUseCase.execute([...userIds, userId], userId);
 
             res.send(feedPosts);
         } catch (error) {
@@ -166,8 +166,6 @@ export class PostController implements PostControllerInterface {
         const userId = req.currentUser?.userId;
         const id = req.params.id;
 
-        console.log(req.body);
-
         try {
             const existingPost = await this.getOnePostUseCase.execute(id);
 
@@ -210,8 +208,12 @@ export class PostController implements PostControllerInterface {
     }
 
     async getAllPosts(req: Request, res: Response): Promise<void> {
+        let { q } = req.query;
         try {
-            const posts = await this.getAllPostsUseCase.execute();
+            if (typeof q !== 'string') {
+                q = '';
+            }
+            const posts = await this.getAllPostsUseCase.execute(q);
 
             res.send(posts);
         } catch (error) {

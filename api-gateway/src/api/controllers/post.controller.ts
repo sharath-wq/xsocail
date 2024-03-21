@@ -13,7 +13,8 @@ export class PostController implements IPostController {
             const userIds = data.following;
 
             const response = await axios.post(`${POST_SERVICE_ENDPOINT}/feed`, {
-                userIds: [...userIds, userId],
+                userIds,
+                userId: userId,
             });
 
             res.status(response.status).send(response.data);

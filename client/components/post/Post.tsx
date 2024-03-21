@@ -30,7 +30,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, CopyIcon, MoreVertical } from 'lucide-react';
+import { ChevronRight, CopyIcon, MoreVertical, X } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import { Separator } from '@/components/ui/separator';
 import { PostProps } from '@/types/post';
@@ -116,6 +116,7 @@ const Post = ({
                 postId: id,
                 reason: reason,
             });
+
             toast({
                 title: 'Reported',
                 description: `Post Reported with the reason ${reason}`,
@@ -166,7 +167,12 @@ const Post = ({
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent>
                                                     <AlertDialogHeader>
-                                                        <AlertDialogTitle>Report</AlertDialogTitle>
+                                                        <div className='flex justify-between'>
+                                                            <AlertDialogTitle>Report</AlertDialogTitle>
+                                                            <AlertDialogCancel className='justify-end'>
+                                                                <X />
+                                                            </AlertDialogCancel>
+                                                        </div>
                                                     </AlertDialogHeader>
                                                     <AlertDialogFooter>
                                                         <ScrollArea className='h-auto w-full rounded-md border'>

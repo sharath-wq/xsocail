@@ -198,11 +198,19 @@ export class MongoDBPostDataSource implements PostDataSource {
         }
     }
 
-    async getAll(): Promise<PostModel[] | []> {
+    async getAll(q: string): Promise<PostModel[] | []> {
         try {
-            const result = await Post.find({});
+            let results;
+            if (q) {
+                results = await Post.find({
+                    $or: [{ caption: { $regex: q, $options: 'i' } }, { tags: { $regex: q, $options: 'i' } }],
+                }).limit(8);
+            } else {
+                const ids = await Post.aggregate([{ $sample: { size: 8 } }, { $project: { _id: 1 } }]);
+                results = await Post.find({ _id: { $in: ids } });
+            }
 
-            return result.map((item) => ({
+            return results.map((item) => ({
                 id: item.id,
                 author: {
                     userId: item.author!.userId!,

@@ -45,8 +45,8 @@ export class PostRepositoryImpl implements PostRepository {
         return result;
     }
 
-    async getAllPosts(): Promise<PostModel[] | []> {
-        const result = await this.postDataSource.getAll();
+    async getAllPosts(q: string): Promise<PostModel[] | []> {
+        const result = await this.postDataSource.getAll(q);
         return result;
     }
 

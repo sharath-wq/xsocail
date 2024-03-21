@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const ReportSchema = new mongoose.Schema(
     {
-        postId: {
+        userId: {
             type: String,
             required: true,
         },
@@ -21,8 +21,8 @@ const ReportSchema = new mongoose.Schema(
         },
         actionTaken: {
             type: String,
-            enum: ['pending', 'post-removed', 'account-suspended', 'user-blocked'],
-            default: 'pending',
+            enum: ['Warning Issued', 'Account Blocked', 'Pending'],
+            default: 'Pending',
             required: true,
         },
     },
@@ -38,6 +38,6 @@ const ReportSchema = new mongoose.Schema(
     }
 );
 
-const Report = mongoose.model('PostReport', ReportSchema);
+const Report = mongoose.model('UserReport', ReportSchema);
 
 export { Report };

@@ -3,7 +3,7 @@ import { NotificationPostModel, PostBulkUpdateRequestModel, PostModel, PostReque
 export interface PostRepository {
     createPost(post: PostRequestModel, authorId: string): Promise<PostModel | null>;
     updatePost(id: string, post: PostRequestModel): Promise<PostModel | null>;
-    getAllPosts(): Promise<PostModel[] | []>;
+    getAllPosts(q: string): Promise<PostModel[] | []>;
     deletePost(id: string): Promise<void>;
     getOnePost(id: string): Promise<PostModel | null>;
     getPostsByUser(authorId: string): Promise<PostModel[] | []>;

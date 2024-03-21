@@ -37,6 +37,10 @@ import { MongoDBOtpDatasource } from './data/data-source/mongodb/mongodb-otp-dat
 import { FollowUser } from './domain/use-cases/user/follow-user.use-case';
 import { UnfollowUser } from './domain/use-cases/user/unfollow-user.use-case';
 import { GetUserBatch } from './domain/use-cases/user/get-user-batch.use-case';
+import ReportRouter from './api/routes/report.routes';
+import { CreateReport, GetAllReports, GetOneReport, UpdateReport } from './domain/use-cases/report';
+import { ReportRepository } from './domain/repository/report.repository';
+import { MongoDBReportDatasource } from './data/data-source/mongodb/mongodb-report-data-source';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -85,7 +89,16 @@ const start = async () => {
         new GetUserFollowers(new UserRepositoryImpl(datasource))
     );
 
+    const ReportMiddleware = ReportRouter(
+        new CreateReport(new ReportRepository(new MongoDBReportDatasource())),
+        new GetAllReports(new ReportRepository(new MongoDBReportDatasource())),
+        new GetOneReport(new ReportRepository(new MongoDBReportDatasource())),
+        new UpdateReport(new ReportRepository(new MongoDBReportDatasource()))
+    );
+
     app.use(currentUser);
+
+    app.use('/reports', ReportMiddleware);
 
     app.use(UserMiddleware);
 

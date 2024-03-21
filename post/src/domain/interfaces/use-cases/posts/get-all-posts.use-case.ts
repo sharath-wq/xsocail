@@ -1,5 +1,5 @@
 import { PostModel } from '../../../entities/post';
 
 export interface GetAllPostsUseCase {
-    execute(): Promise<PostModel[] | []>;
+    execute(q: string): Promise<PostModel[] | []>;
 }
