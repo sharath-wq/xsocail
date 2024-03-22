@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction, query } from 'express';
 
 import {
+    AdminUpdatePostUseCase,
     CreatePostUseCase,
     DeletePostUseCase,
     DisLikePostUseCase,
@@ -35,6 +36,7 @@ export class PostController implements PostControllerInterface {
     getUserFeedPostsUseCase: GetUserFeedPostsUseCase;
     getSavedPostsUseCase: GetSavedPostsUseCase;
     getBatchPostUseCase: GetBatchPostUseCase;
+    adminUpdatePostUseCase: AdminUpdatePostUseCase;
 
     constructor(
         createPostUseCase: CreatePostUseCase,
@@ -47,7 +49,8 @@ export class PostController implements PostControllerInterface {
         disLikePostUseCase: DisLikePostUseCase,
         getUserFeedPostsUseCase: GetUserFeedPostsUseCase,
         getSavedPostsUseCase: GetSavedPostsUseCase,
-        getBatchPostUseCase: GetBatchPostUseCase
+        getBatchPostUseCase: GetBatchPostUseCase,
+        adminUpdatePostUseCase: AdminUpdatePostUseCase
     ) {
         this.createPostUseCase = createPostUseCase;
         this.deletePostUseCase = deletePostUseCase;
@@ -60,6 +63,7 @@ export class PostController implements PostControllerInterface {
         this.getUserFeedPostsUseCase = getUserFeedPostsUseCase;
         this.getSavedPostsUseCase = getSavedPostsUseCase;
         this.getBatchPostUseCase = getBatchPostUseCase;
+        this.adminUpdatePostUseCase = adminUpdatePostUseCase;
     }
 
     async getBatchPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -171,6 +175,12 @@ export class PostController implements PostControllerInterface {
 
             if (!existingPost) {
                 throw new NotFoundError();
+            }
+
+            if (req.currentUser?.isAdmin) {
+                const updatedPost = await this.adminUpdatePostUseCase.execute(id, req.body);
+                res.status(200).send(updatedPost);
+                return;
             }
 
             if (existingPost.author.userId !== userId) {

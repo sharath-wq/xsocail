@@ -3,11 +3,12 @@ import {
     PostBulkUpdateRequestModel,
     PostModel,
     PostRequestModel,
+    PostUpdateModel,
 } from '../../../domain/entities/post';
 
 export interface PostDataSource {
     create(post: PostRequestModel, authorId: string): Promise<PostModel | null>;
-    updateOne(id: string, post: PostRequestModel): Promise<PostModel | null>;
+    updateOne(id: string, post: PostUpdateModel): Promise<PostModel | null>;
     getAll(q: string): Promise<PostModel[] | []>;
     deleteOne(id: string): Promise<void>;
     getOne(id: string): Promise<PostModel | null>;

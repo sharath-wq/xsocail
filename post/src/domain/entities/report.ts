@@ -3,14 +3,14 @@ export interface IReport {
     postId: string;
     reporterId: string;
     reason: string;
-    actionTaken: string;
+    actionTaken: 'pending' | 'Post Removed' | 'Warning Issued';
 }
 
 export interface IReportReq {
     postId: string;
     reporterId: string;
     reason: string;
-    actionTaken?: string;
+    actionTaken: 'pending' | 'Post Removed' | 'Warning Issued';
 }
 
 export interface IReportUpdate {
@@ -18,7 +18,7 @@ export interface IReportUpdate {
     postId?: string;
     reporterId?: string;
     reason?: string;
-    actionTaken?: string;
+    actionTaken: 'pending' | 'Post Removed' | 'Warning Issued';
 }
 
 export interface IReportResponse {
@@ -27,5 +27,5 @@ export interface IReportResponse {
     postId: string;
     reporterId: string;
     reason: string;
-    actionTaken: string;
+    actionTaken: 'pending' | 'Post Removed' | 'Warning Issued';
 }

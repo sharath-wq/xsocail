@@ -19,6 +19,7 @@ export class CreateReport implements ICreateReportUseCase {
             await this.postRepository.updatePost(post.id, {
                 ...post,
                 reportedBy: [...post.reportedBy, report.reporterId],
+                actionTaken: 'Pending',
             });
         }
 

@@ -1,8 +1,14 @@
-import { NotificationPostModel, PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../../entities/post';
+import {
+    NotificationPostModel,
+    PostBulkUpdateRequestModel,
+    PostModel,
+    PostRequestModel,
+    PostUpdateModel,
+} from '../../entities/post';
 
 export interface PostRepository {
     createPost(post: PostRequestModel, authorId: string): Promise<PostModel | null>;
-    updatePost(id: string, post: PostRequestModel): Promise<PostModel | null>;
+    updatePost(id: string, post: PostUpdateModel): Promise<PostModel | null>;
     getAllPosts(q: string): Promise<PostModel[] | []>;
     deletePost(id: string): Promise<void>;
     getOnePost(id: string): Promise<PostModel | null>;

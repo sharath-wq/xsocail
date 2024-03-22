@@ -10,6 +10,7 @@ import { GetSavedPosts } from './get-saved-post.use-case';
 import { GetBatchPost } from './get-batch-post.use-case';
 import { GetUserFeedPosts } from './get-user-feed-post.use-case';
 import { UpdatePostsByUserId } from './update-posts-by-user-id.use-case';
+import { AdminUpdatePost } from './admin-update-post.use-caes';
 
 export {
     GetUserPosts,
@@ -24,4 +25,5 @@ export {
     GetBatchPost,
     GetUserFeedPosts,
     UpdatePostsByUserId,
+    AdminUpdatePost,
 };

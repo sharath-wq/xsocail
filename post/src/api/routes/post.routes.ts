@@ -14,6 +14,7 @@ import {
     GetUserFeedPostsUseCase,
     GetSavedPostsUseCase,
     GetBatchPostUseCase,
+    AdminUpdatePostUseCase,
 } from '../../domain/interfaces/use-cases/posts';
 import { NextFunction } from 'express-serve-static-core';
 import { validateRequest } from '@scxsocialcommon/errors';
@@ -29,7 +30,8 @@ export default function PostRouter(
     disLikePostUseCase: DisLikePostUseCase,
     getUserFeedPostsUseCase: GetUserFeedPostsUseCase,
     getSavedPostsUseCase: GetSavedPostsUseCase,
-    getBatchPostUseCase: GetBatchPostUseCase
+    getBatchPostUseCase: GetBatchPostUseCase,
+    adminUpdatePostUseCase: AdminUpdatePostUseCase
 ) {
     const router = express.Router();
     const postController = new PostController(
@@ -43,7 +45,8 @@ export default function PostRouter(
         disLikePostUseCase,
         getUserFeedPostsUseCase,
         getSavedPostsUseCase,
-        getBatchPostUseCase
+        getBatchPostUseCase,
+        adminUpdatePostUseCase
     );
 
     router.patch('/like/:postId', async (req, res, next) => {

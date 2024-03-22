@@ -5,6 +5,7 @@ import PostRouter from './api/routes/post.routes';
 import { PostRepositoryImpl } from './domain/repository/post.repository';
 import { natsWrapper } from '../nats-wrapper';
 import {
+    AdminUpdatePost,
     CreatePost,
     DeletePost,
     DisLikePost,
@@ -62,14 +63,15 @@ const start = async () => {
         new DisLikePost(new PostRepositoryImpl(datasource)),
         new GetUserFeedPosts(new PostRepositoryImpl(datasource)),
         new GetSavedPosts(new PostRepositoryImpl(datasource)),
-        new GetBatchPost(new PostRepositoryImpl(datasource))
+        new GetBatchPost(new PostRepositoryImpl(datasource)),
+        new AdminUpdatePost(new PostRepositoryImpl(datasource))
     );
 
     const ReportMiddleware = ReportRouter(
         new CreateReport(new ReportRepository(new MongoDBReportDataSource()), new PostRepositoryImpl(datasource)),
         new GetAllReport(new ReportRepository(new MongoDBReportDataSource())),
         new GetOneReport(new ReportRepository(new MongoDBReportDataSource())),
-        new UpdateReport(new ReportRepository(new MongoDBReportDataSource()))
+        new UpdateReport(new ReportRepository(new MongoDBReportDataSource()), new PostRepositoryImpl(datasource))
     );
 
     app.use(currentUser);

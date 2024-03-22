@@ -56,7 +56,6 @@ export class UserController implements UserControllerInterface {
 
             res.status(200).send(combinedData);
         } catch (error: any) {
-            // Handle errors
             res.status(error?.response?.status || 500).send(error.response.data || 'Internal Server Error');
         }
     }

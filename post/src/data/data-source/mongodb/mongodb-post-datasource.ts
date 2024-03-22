@@ -3,6 +3,7 @@ import {
     PostBulkUpdateRequestModel,
     PostModel,
     PostRequestModel,
+    PostUpdateModel,
 } from '../../../domain/entities/post';
 import { PostDataSource } from '../../interface/data-source/post-data-source';
 
@@ -16,6 +17,12 @@ export class MongoDBPostDataSource implements PostDataSource {
             return results.map((item) => ({
                 id: item.id,
                 imageUrls: item.imageUrls,
+                author: {
+                    userId: item.author!.userId!,
+                    username: item.author!.username!,
+                    imageUrl: item.author!.imageUrl!,
+                },
+                reportedBy: item.reportedBy,
             }));
         } catch (error) {
             console.log(error);
@@ -33,7 +40,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async getSavedPosts(postsIds: string[]): Promise<[] | PostModel[]> {
         try {
-            const results = await Post.find({ _id: { $in: postsIds } });
+            const results = await Post.find({ _id: { $in: postsIds }, isDeleted: false });
 
             return results.map((item) => ({
                 id: item.id,
@@ -50,6 +57,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                 comments: item.comments,
                 createdAt: item.createdAt,
                 isEdited: item.isEdited,
+                isDeleted: item.isDeleted,
             }));
         } catch (error) {
             console.log(error);
@@ -59,7 +67,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async getUserFeed(userIds: string[]): Promise<[] | PostModel[]> {
         try {
-            const result = await Post.find({ 'author.userId': { $in: userIds } }).sort({ createdAt: -1 });
+            const result = await Post.find({ 'author.userId': { $in: userIds }, isDeleted: false }).sort({ createdAt: -1 });
 
             return result.map((item) => ({
                 id: item.id,
@@ -76,6 +84,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                 comments: item.comments,
                 createdAt: item.createdAt,
                 isEdited: item.isEdited,
+                isDeleted: item.isDeleted,
             }));
         } catch (error) {
             console.error('Error getting Post', error);
@@ -108,7 +117,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async findByAuthor(authorId: string): Promise<PostModel[] | []> {
         try {
-            const results = await Post.find({});
+            const results = await Post.find({ isDeleted: false });
             const userPosts = results.filter((item: any) => item.author.userId === authorId);
             if (userPosts && userPosts.length) {
                 return userPosts.map((item) => ({
@@ -126,6 +135,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     comments: item.comments,
                     createdAt: item.createdAt,
                     isEdited: item.isEdited,
+                    isDeleted: item.isDeleted,
                 }));
             }
 
@@ -136,7 +146,7 @@ export class MongoDBPostDataSource implements PostDataSource {
         }
     }
 
-    async updateOne(id: string, post: PostRequestModel): Promise<PostModel | null> {
+    async updateOne(id: string, post: PostUpdateModel): Promise<PostModel | null> {
         try {
             const result = await Post.findByIdAndUpdate(id, post);
 
@@ -156,6 +166,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     comments: result.comments,
                     createdAt: result.createdAt,
                     isEdited: result.isEdited,
+                    isDeleted: result.isDeleted,
                 };
             } else {
                 return null;
@@ -188,6 +199,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     comments: result.comments,
                     createdAt: result.createdAt,
                     isEdited: result.isEdited,
+                    isDeleted: result.isDeleted,
                 };
             } else {
                 return null;
@@ -204,6 +216,7 @@ export class MongoDBPostDataSource implements PostDataSource {
             if (q) {
                 results = await Post.find({
                     $or: [{ caption: { $regex: q, $options: 'i' } }, { tags: { $regex: q, $options: 'i' } }],
+                    isDeleted: false,
                 }).limit(8);
             } else {
                 const ids = await Post.aggregate([{ $sample: { size: 8 } }, { $project: { _id: 1 } }]);
@@ -225,6 +238,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                 comments: item.comments,
                 createdAt: item.createdAt,
                 isEdited: item.isEdited,
+                isDeleted: item.isDeleted,
             }));
         } catch (error) {
             console.error('Error getting Post', error);
@@ -243,7 +257,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async getPostById(id: string): Promise<PostModel | null> {
         try {
-            const result = await Post.findById(id);
+            const result = await Post.findOne({ _id: id });
 
             if (result) {
                 return {
@@ -261,6 +275,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     comments: result.comments,
                     createdAt: result.createdAt,
                     isEdited: result.isEdited,
+                    isDeleted: result.isDeleted,
                 };
             } else {
                 return null;
@@ -273,7 +288,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async getOne(id: string): Promise<PostModel | null> {
         try {
-            const result = await Post.findById(id);
+            const result = await Post.findOne({ _id: id });
 
             if (result) {
                 return {
@@ -291,6 +306,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     comments: result.comments,
                     createdAt: result.createdAt,
                     isEdited: result.isEdited,
+                    isDeleted: result.isDeleted,
                 };
             }
 

@@ -51,6 +51,11 @@ const PostSchema = new mongoose.Schema(
             required: true,
             default: false,
         },
+        isDeleted: {
+            type: Boolean,
+            rerquried: true,
+            default: false,
+        },
     },
     {
         toJSON: {

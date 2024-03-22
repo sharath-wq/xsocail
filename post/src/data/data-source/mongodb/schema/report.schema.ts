@@ -21,7 +21,7 @@ const ReportSchema = new mongoose.Schema(
         },
         actionTaken: {
             type: String,
-            enum: ['pending', 'post-removed', 'account-suspended', 'user-blocked'],
+            enum: ['pending', 'Post Removed', 'Warning Issued'],
             default: 'pending',
             required: true,
         },
