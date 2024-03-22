@@ -11,6 +11,7 @@ import { GetSavedPostsUseCase } from './get-saved-post.use-case';
 import { UpdatePostsByUserIdUseCase } from './update-posts-by-user-id.use-case';
 import { GetBatchPostUseCase } from './get-batch-post.use-case';
 import { AdminUpdatePostUseCase } from './admin-update-post.use-case';
+import { GetPopularPostsUseCase } from './get-popular-posts.use-case';
 
 export {
     CreatePostUseCase,
@@ -26,4 +27,5 @@ export {
     UpdatePostsByUserIdUseCase,
     GetBatchPostUseCase,
     AdminUpdatePostUseCase,
+    GetPopularPostsUseCase,
 };

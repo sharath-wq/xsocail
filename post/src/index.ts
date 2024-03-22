@@ -12,6 +12,7 @@ import {
     GetAllPosts,
     GetBatchPost,
     GetOnePost,
+    GetPopularPosts,
     GetSavedPosts,
     GetUserFeedPosts,
     GetUserPosts,
@@ -64,7 +65,8 @@ const start = async () => {
         new GetUserFeedPosts(new PostRepositoryImpl(datasource)),
         new GetSavedPosts(new PostRepositoryImpl(datasource)),
         new GetBatchPost(new PostRepositoryImpl(datasource)),
-        new AdminUpdatePost(new PostRepositoryImpl(datasource))
+        new AdminUpdatePost(new PostRepositoryImpl(datasource)),
+        new GetPopularPosts(new PostRepositoryImpl(datasource))
     );
 
     const ReportMiddleware = ReportRouter(

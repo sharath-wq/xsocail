@@ -8,6 +8,7 @@ import {
     GetAllPostsUseCase,
     GetBatchPostUseCase,
     GetOnePostUseCase,
+    GetPopularPostsUseCase,
     GetSavedPostsUseCase,
     GetUserFeedPostsUseCase,
     GetUserPostsUseCase,
@@ -24,6 +25,8 @@ import { PostCreatedPublisher } from '../events/pub/post-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 import { PostDeletedPublisher } from '../events/pub/post-deleted-publisher';
 import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
     deletePostUseCase: DeletePostUseCase;
@@ -37,6 +40,7 @@ export class PostController implements PostControllerInterface {
     getSavedPostsUseCase: GetSavedPostsUseCase;
     getBatchPostUseCase: GetBatchPostUseCase;
     adminUpdatePostUseCase: AdminUpdatePostUseCase;
+    getPopularPostsUseCase: GetPopularPostsUseCase;
 
     constructor(
         createPostUseCase: CreatePostUseCase,
@@ -50,7 +54,8 @@ export class PostController implements PostControllerInterface {
         getUserFeedPostsUseCase: GetUserFeedPostsUseCase,
         getSavedPostsUseCase: GetSavedPostsUseCase,
         getBatchPostUseCase: GetBatchPostUseCase,
-        adminUpdatePostUseCase: AdminUpdatePostUseCase
+        adminUpdatePostUseCase: AdminUpdatePostUseCase,
+        getPopularPostsUseCase: GetPopularPostsUseCase
     ) {
         this.createPostUseCase = createPostUseCase;
         this.deletePostUseCase = deletePostUseCase;
@@ -64,6 +69,16 @@ export class PostController implements PostControllerInterface {
         this.getSavedPostsUseCase = getSavedPostsUseCase;
         this.getBatchPostUseCase = getBatchPostUseCase;
         this.adminUpdatePostUseCase = adminUpdatePostUseCase;
+        this.getPopularPostsUseCase = getPopularPostsUseCase;
+    }
+
+    async getPopularposts(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const popularPosts = await this.getPopularPostsUseCase.execute();
+            res.send(popularPosts);
+        } catch (error) {
+            next(error);
+        }
     }
 
     async getBatchPosts(req: Request, res: Response, next: NextFunction): Promise<void> {

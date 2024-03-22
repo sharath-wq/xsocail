@@ -20,4 +20,5 @@ export interface PostRepository {
     getSavedPosts(postIds: string[]): Promise<PostModel[] | []>;
     findPostsByUserIdAndUpdate(userId: string, post: PostBulkUpdateRequestModel): Promise<void>;
     getBatchPost(postIds: string[]): Promise<NotificationPostModel[] | []>;
+    getPopularPosts(): Promise<PostModel[] | []>;
 }

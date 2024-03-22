@@ -18,6 +18,7 @@ import CommentRouter from './api/routes/comment.router';
 import ChatRouter from './api/routes/chat.router';
 import NotificationRouter from './api/routes/notifications.router';
 import PostRouter from './api/routes/post.router';
+import AdminRouter from './api/routes/admin.router';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -58,6 +59,7 @@ const start = async () => {
     const ChatMiddleware = ChatRouter();
     const NotificationMiddleware = NotificationRouter();
     const PostMiddleware = PostRouter();
+    const AdminMiddleware = AdminRouter();
 
     app.use(currentUser);
 
@@ -75,6 +77,7 @@ const start = async () => {
     app.use('/api/chat', ChatMiddleware);
     app.use('/api/notifications', NotificationMiddleware);
     app.use('/api/posts', PostMiddleware);
+    app.use('/api/admin', AdminMiddleware);
 
     app.use(errorHandler);
 

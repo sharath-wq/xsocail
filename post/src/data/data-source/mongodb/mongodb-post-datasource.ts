@@ -10,6 +10,50 @@ import { PostDataSource } from '../../interface/data-source/post-data-source';
 import { Post } from './schema/post.schema';
 
 export class MongoDBPostDataSource implements PostDataSource {
+    async getPopularPosts(): Promise<[] | PostModel[]> {
+        try {
+            const results = await Post.aggregate([
+                {
+                    $match: { isDeleted: false },
+                },
+                {
+                    $addFields: {
+                        totalLikesAndComments: {
+                            $add: [{ $size: '$likes' }, { $size: '$comments' }],
+                        },
+                    },
+                },
+                {
+                    $sort: { totalLikesAndComments: -1 },
+                },
+                {
+                    $limit: 5,
+                },
+            ]);
+
+            return results.map((item: any) => ({
+                id: item.id,
+                author: {
+                    userId: item.author.userId,
+                    username: item.author.username,
+                    imageUrl: item.author.imageUrl,
+                },
+                reportedBy: item.reportedBy,
+                caption: item.caption,
+                tags: item.tags,
+                imageUrls: item.imageUrls,
+                likes: item.likes,
+                comments: item.comments,
+                createdAt: item.createdAt,
+                isEdited: item.isEdited,
+                isDeleted: item.isDeleted,
+            }));
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+
     async getBatchPost(postIds: string[]): Promise<[] | NotificationPostModel[]> {
         try {
             const results = await Post.find({ _id: { $in: postIds } });

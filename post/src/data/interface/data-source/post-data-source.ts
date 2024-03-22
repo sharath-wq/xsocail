@@ -20,4 +20,5 @@ export interface PostDataSource {
     getSavedPosts(postsIds: string[]): Promise<PostModel[] | []>;
     updatePostsByUserId(userId: string, post: PostBulkUpdateRequestModel): Promise<void>;
     getBatchPost(postIds: string[]): Promise<NotificationPostModel[] | []>;
+    getPopularPosts(): Promise<PostModel[] | []>;
 }

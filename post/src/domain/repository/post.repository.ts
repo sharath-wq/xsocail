@@ -15,6 +15,10 @@ export class PostRepositoryImpl implements PostRepository {
         this.postDataSource = postDataSource;
     }
 
+    async getPopularPosts(): Promise<[] | PostModel[]> {
+        return await this.postDataSource.getPopularPosts();
+    }
+
     async getBatchPost(postIds: string[]): Promise<[] | NotificationPostModel[]> {
         return await this.postDataSource.getBatchPost(postIds);
     }

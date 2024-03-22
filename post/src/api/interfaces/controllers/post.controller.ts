@@ -12,4 +12,5 @@ export interface PostControllerInterface {
     getUserFeed(req: Request, res: Response, next: NextFunction): Promise<void>;
     getSavedPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
     getBatchPosts(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getPopularposts(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
