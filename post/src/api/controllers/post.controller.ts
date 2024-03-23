@@ -1,18 +1,20 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, query } from 'express';
 
 import {
+    AdminUpdatePostUseCase,
     CreatePostUseCase,
     DeletePostUseCase,
     DisLikePostUseCase,
     GetAllPostsUseCase,
     GetBatchPostUseCase,
     GetOnePostUseCase,
+    GetPopularPostsUseCase,
     GetSavedPostsUseCase,
     GetUserFeedPostsUseCase,
     GetUserPostsUseCase,
     LikePostUseCase,
     UpdatePostUseCase,
-} from '../../domain/interfaces/use-cases/';
+} from '../../domain/interfaces/use-cases/posts';
 
 import { PostControllerInterface } from '../interfaces/controllers/post.controller';
 import { NotAuthorizedError, NotFoundError } from '@scxsocialcommon/errors';
@@ -23,6 +25,8 @@ import { PostCreatedPublisher } from '../events/pub/post-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 import { PostDeletedPublisher } from '../events/pub/post-deleted-publisher';
 import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 export class PostController implements PostControllerInterface {
     createPostUseCase: CreatePostUseCase;
     deletePostUseCase: DeletePostUseCase;
@@ -35,6 +39,8 @@ export class PostController implements PostControllerInterface {
     getUserFeedPostsUseCase: GetUserFeedPostsUseCase;
     getSavedPostsUseCase: GetSavedPostsUseCase;
     getBatchPostUseCase: GetBatchPostUseCase;
+    adminUpdatePostUseCase: AdminUpdatePostUseCase;
+    getPopularPostsUseCase: GetPopularPostsUseCase;
 
     constructor(
         createPostUseCase: CreatePostUseCase,
@@ -47,7 +53,9 @@ export class PostController implements PostControllerInterface {
         disLikePostUseCase: DisLikePostUseCase,
         getUserFeedPostsUseCase: GetUserFeedPostsUseCase,
         getSavedPostsUseCase: GetSavedPostsUseCase,
-        getBatchPostUseCase: GetBatchPostUseCase
+        getBatchPostUseCase: GetBatchPostUseCase,
+        adminUpdatePostUseCase: AdminUpdatePostUseCase,
+        getPopularPostsUseCase: GetPopularPostsUseCase
     ) {
         this.createPostUseCase = createPostUseCase;
         this.deletePostUseCase = deletePostUseCase;
@@ -60,6 +68,17 @@ export class PostController implements PostControllerInterface {
         this.getUserFeedPostsUseCase = getUserFeedPostsUseCase;
         this.getSavedPostsUseCase = getSavedPostsUseCase;
         this.getBatchPostUseCase = getBatchPostUseCase;
+        this.adminUpdatePostUseCase = adminUpdatePostUseCase;
+        this.getPopularPostsUseCase = getPopularPostsUseCase;
+    }
+
+    async getPopularposts(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const popularPosts = await this.getPopularPostsUseCase.execute();
+            res.send(popularPosts);
+        } catch (error) {
+            next(error);
+        }
     }
 
     async getBatchPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -82,9 +101,9 @@ export class PostController implements PostControllerInterface {
         }
     }
     async getUserFeed(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { userIds } = req.body;
+        const { userIds, userId } = req.body;
         try {
-            const feedPosts = await this.getUserFeedPostsUseCase.execute(userIds);
+            const feedPosts = await this.getUserFeedPostsUseCase.execute([...userIds, userId], userId);
 
             res.send(feedPosts);
         } catch (error) {
@@ -166,13 +185,17 @@ export class PostController implements PostControllerInterface {
         const userId = req.currentUser?.userId;
         const id = req.params.id;
 
-        console.log(req.body);
-
         try {
             const existingPost = await this.getOnePostUseCase.execute(id);
 
             if (!existingPost) {
                 throw new NotFoundError();
+            }
+
+            if (req.currentUser?.isAdmin) {
+                const updatedPost = await this.adminUpdatePostUseCase.execute(id, req.body);
+                res.status(200).send(updatedPost);
+                return;
             }
 
             if (existingPost.author.userId !== userId) {
@@ -210,8 +233,12 @@ export class PostController implements PostControllerInterface {
     }
 
     async getAllPosts(req: Request, res: Response): Promise<void> {
+        let { q } = req.query;
         try {
-            const posts = await this.getAllPostsUseCase.execute();
+            if (typeof q !== 'string') {
+                q = '';
+            }
+            const posts = await this.getAllPostsUseCase.execute(q);
 
             res.send(posts);
         } catch (error) {

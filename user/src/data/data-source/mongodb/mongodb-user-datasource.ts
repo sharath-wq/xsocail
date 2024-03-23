@@ -17,6 +17,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                 id: item.id,
                 imageUrl: item.imageUrl,
                 username: item.username,
+                reportedBy: item.reportedBy,
             }));
         } catch (error) {
             console.log(error);
@@ -50,6 +51,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     posts: item!.posts,
                     verified: item!.verified,
                     isBlocked: item!.isBlocked,
+                    reportedBy: item!.reportedBy,
                 }));
             }
 
@@ -117,6 +119,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     posts: updateduser.posts,
                     verified: updateduser.verified,
                     isBlocked: updateduser.isBlocked,
+                    reportedBy: updateduser!.reportedBy,
                 };
             }
             return null;
@@ -171,8 +174,9 @@ export class MongoDBUserDataSource implements UserDataSource {
                 users = await User.find({
                     $or: [{ username: { $regex: query, $options: 'i' } }, { fullName: { $regex: query, $options: 'i' } }],
                 }).limit(10);
+                users = users.filter((user) => !user.isAdmin);
             } else {
-                users = await User.find({}).limit(10);
+                users = await User.find({ isAdmin: false }).limit(10);
             }
 
             return users.map((item) => ({
@@ -190,6 +194,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                 posts: item.posts,
                 verified: item.verified,
                 isBlocked: item.isBlocked,
+                reportedBy: item!.reportedBy,
             }));
         } catch (error: any) {
             console.log('Error Finding User:', error.message);
@@ -216,6 +221,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     posts: result.posts,
                     verified: result.verified,
                     isBlocked: result.isBlocked,
+                    reportedBy: result!.reportedBy,
                 };
             } else {
                 return null;
@@ -251,6 +257,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     imageUrl: existingUser.imageUrl,
                     posts: existingUser.posts,
                     verified: existingUser.verified,
+                    reportedBy: existingUser!.reportedBy,
                     isBlocked: existingUser.isBlocked,
                 };
             } else {
@@ -280,6 +287,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     imageUrl: result.imageUrl,
                     posts: result.posts,
                     verified: result.verified,
+                    reportedBy: result.reportedBy,
                     isBlocked: result.isBlocked,
                 };
             } else {
@@ -311,6 +319,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     password: result.password,
                     posts: result.posts,
                     verified: result.verified,
+                    reportedBy: result.reportedBy,
                 };
             } else {
                 return null;
@@ -340,6 +349,7 @@ export class MongoDBUserDataSource implements UserDataSource {
                     posts: result.posts,
                     verified: result.verified,
                     isBlocked: result.isBlocked,
+                    reportedBy: result.reportedBy,
                 };
             } else {
                 return null;

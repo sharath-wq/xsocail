@@ -8,6 +8,10 @@ import { LikePost } from './like-post.use-case';
 import { DisLikePost } from './dislike-post.use-case';
 import { GetSavedPosts } from './get-saved-post.use-case';
 import { GetBatchPost } from './get-batch-post.use-case';
+import { GetUserFeedPosts } from './get-user-feed-post.use-case';
+import { UpdatePostsByUserId } from './update-posts-by-user-id.use-case';
+import { AdminUpdatePost } from './admin-update-post.use-caes';
+import { GetPopularPosts } from './get-popular-post.use-case';
 
 export {
     GetUserPosts,
@@ -20,4 +24,8 @@ export {
     DisLikePost,
     GetSavedPosts,
     GetBatchPost,
+    GetUserFeedPosts,
+    UpdatePostsByUserId,
+    AdminUpdatePost,
+    GetPopularPosts,
 };

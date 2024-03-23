@@ -35,6 +35,31 @@ export class UserController implements UserControllerInterface {
         this.getUserByEmailUseCase = getUserByEmailUseCase;
     }
 
+    async getReportedUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const path = req.originalUrl.replace('/api/users', '');
+        try {
+            const { data: userReports } = await axios.get(`${USER_SERVICE_ENDPOINT}/reports`);
+
+            const userIds = userReports.map((report: any) => report.userId);
+
+            const { data: users } = await axios.post(`${USER_SERVICE_ENDPOINT}/batch`, { ids: userIds });
+
+            const combinedData = userReports.map((report: any) => {
+                const user = users.find((user: any) => user.id === report.userId);
+                return {
+                    ...report,
+                    imageUrl: user.imageUrl,
+                    username: user.username,
+                    reportedBy: user.reportedBy,
+                };
+            });
+
+            res.status(200).send(combinedData);
+        } catch (error: any) {
+            res.status(error?.response?.status || 500).send(error.response.data || 'Internal Server Error');
+        }
+    }
+
     async follow(req: Request, res: Response, next: NextFunction): Promise<void> {
         const userId = req.currentUser!.userId;
         const { followerId } = req.params;
@@ -229,8 +254,9 @@ export class UserController implements UserControllerInterface {
 
             const response = await axiosMethod(
                 `${USER_SERVICE_ENDPOINT}${path}`,
-                req.method === 'GET' ? undefined : { ...req.body }
+                req.method === 'GET' ? undefined : { ...req.body, currentUser: req.currentUser }
             );
+
             res.status(response.status).send(response.data);
         } catch (error: any) {
             res.status(error.response.status).send(error.response.data);

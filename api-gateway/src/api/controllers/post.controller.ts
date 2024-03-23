@@ -4,6 +4,32 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { POST_SERVICE_ENDPOINT, USER_SERVICE_ENDPOINT } from '../../constants/endpoints';
 
 export class PostController implements IPostController {
+    async getReportedPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const path = req.originalUrl.replace('/api/posts', '');
+        try {
+            const { data: postReports } = await axios.get(`${POST_SERVICE_ENDPOINT}/reports`);
+
+            const postIds = postReports.map((report: any) => report.postId);
+
+            const { data: posts } = await axios.post(`${POST_SERVICE_ENDPOINT}/batch`, { ids: postIds });
+
+            const combinedData = postReports.map((report: any) => {
+                const post = posts.find((post: any) => post.id === report.postId);
+                return {
+                    ...report,
+                    postId: post.id,
+                    imageUrls: post.imageUrls,
+                    author: post.author,
+                    reportedBy: post.reportedBy,
+                };
+            });
+
+            res.status(200).send(combinedData);
+        } catch (error: any) {
+            res.status(error?.response?.status || 500).send(error.response.data || 'Internal Server Error');
+        }
+    }
+
     async postFeed(req: Request, res: Response, next: NextFunction): Promise<void> {
         const userId = req.currentUser!.userId;
 
@@ -13,7 +39,8 @@ export class PostController implements IPostController {
             const userIds = data.following;
 
             const response = await axios.post(`${POST_SERVICE_ENDPOINT}/feed`, {
-                userIds: [...userIds, userId],
+                userIds,
+                userId: userId,
             });
 
             res.status(response.status).send(response.data);

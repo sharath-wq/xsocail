@@ -9,6 +9,7 @@ import {
 import { Request, Response, NextFunction } from 'express';
 import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
+import { CommentCreatedPublisher } from '../events/pub/comment-created-publisher';
 
 export class CommentController implements ICommentController {
     createCommentUseCase: ICreateCommentUseCase;
@@ -65,6 +66,11 @@ export class CommentController implements ICommentController {
                     receiverId: postAuthorId,
                     type: 'Comment',
                     content: `Commented: ${comment.content}`,
+                });
+
+                await new CommentCreatedPublisher(natsWrapper.client).publish({
+                    commentId: comment.id,
+                    postId: comment.postId,
                 });
             }
 

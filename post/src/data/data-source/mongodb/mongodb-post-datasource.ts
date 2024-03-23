@@ -3,12 +3,57 @@ import {
     PostBulkUpdateRequestModel,
     PostModel,
     PostRequestModel,
+    PostUpdateModel,
 } from '../../../domain/entities/post';
 import { PostDataSource } from '../../interface/data-source/post-data-source';
 
 import { Post } from './schema/post.schema';
 
 export class MongoDBPostDataSource implements PostDataSource {
+    async getPopularPosts(): Promise<[] | PostModel[]> {
+        try {
+            const results = await Post.aggregate([
+                {
+                    $match: { isDeleted: false },
+                },
+                {
+                    $addFields: {
+                        totalLikesAndComments: {
+                            $add: [{ $size: '$likes' }, { $size: '$comments' }],
+                        },
+                    },
+                },
+                {
+                    $sort: { totalLikesAndComments: -1 },
+                },
+                {
+                    $limit: 3,
+                },
+            ]);
+
+            return results.map((item: any) => ({
+                id: item._id,
+                author: {
+                    userId: item.author.userId,
+                    username: item.author.username,
+                    imageUrl: item.author.imageUrl,
+                },
+                reportedBy: item.reportedBy,
+                caption: item.caption,
+                tags: item.tags,
+                imageUrls: item.imageUrls,
+                likes: item.likes,
+                comments: item.comments,
+                createdAt: item.createdAt,
+                isEdited: item.isEdited,
+                isDeleted: item.isDeleted,
+            }));
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+
     async getBatchPost(postIds: string[]): Promise<[] | NotificationPostModel[]> {
         try {
             const results = await Post.find({ _id: { $in: postIds } });
@@ -16,6 +61,12 @@ export class MongoDBPostDataSource implements PostDataSource {
             return results.map((item) => ({
                 id: item.id,
                 imageUrls: item.imageUrls,
+                author: {
+                    userId: item.author!.userId!,
+                    username: item.author!.username!,
+                    imageUrl: item.author!.imageUrl!,
+                },
+                reportedBy: item.reportedBy,
             }));
         } catch (error) {
             console.log(error);
@@ -33,7 +84,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async getSavedPosts(postsIds: string[]): Promise<[] | PostModel[]> {
         try {
-            const results = await Post.find({ _id: { $in: postsIds } });
+            const results = await Post.find({ _id: { $in: postsIds }, isDeleted: false });
 
             return results.map((item) => ({
                 id: item.id,
@@ -42,6 +93,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     username: item.author!.username!,
                     imageUrl: item.author!.imageUrl!,
                 },
+                reportedBy: item.reportedBy,
                 caption: item.caption,
                 tags: item.tags,
                 imageUrls: item.imageUrls,
@@ -49,6 +101,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                 comments: item.comments,
                 createdAt: item.createdAt,
                 isEdited: item.isEdited,
+                isDeleted: item.isDeleted,
             }));
         } catch (error) {
             console.log(error);
@@ -58,7 +111,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async getUserFeed(userIds: string[]): Promise<[] | PostModel[]> {
         try {
-            const result = await Post.find({ 'author.userId': { $in: userIds } }).sort({ createdAt: -1 });
+            const result = await Post.find({ 'author.userId': { $in: userIds }, isDeleted: false }).sort({ createdAt: -1 });
 
             return result.map((item) => ({
                 id: item.id,
@@ -68,12 +121,14 @@ export class MongoDBPostDataSource implements PostDataSource {
                     imageUrl: item.author!.imageUrl!,
                 },
                 caption: item.caption,
+                reportedBy: item.reportedBy,
                 tags: item.tags,
                 imageUrls: item.imageUrls,
                 likes: item.likes,
                 comments: item.comments,
                 createdAt: item.createdAt,
                 isEdited: item.isEdited,
+                isDeleted: item.isDeleted,
             }));
         } catch (error) {
             console.error('Error getting Post', error);
@@ -106,7 +161,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async findByAuthor(authorId: string): Promise<PostModel[] | []> {
         try {
-            const results = await Post.find({});
+            const results = await Post.find({ isDeleted: false });
             const userPosts = results.filter((item: any) => item.author.userId === authorId);
             if (userPosts && userPosts.length) {
                 return userPosts.map((item) => ({
@@ -117,12 +172,14 @@ export class MongoDBPostDataSource implements PostDataSource {
                         imageUrl: item.author!.imageUrl!,
                     },
                     caption: item.caption,
+                    reportedBy: item.reportedBy,
                     tags: item.tags,
                     imageUrls: item.imageUrls,
                     likes: item.likes,
                     comments: item.comments,
                     createdAt: item.createdAt,
                     isEdited: item.isEdited,
+                    isDeleted: item.isDeleted,
                 }));
             }
 
@@ -133,7 +190,7 @@ export class MongoDBPostDataSource implements PostDataSource {
         }
     }
 
-    async updateOne(id: string, post: PostRequestModel): Promise<PostModel | null> {
+    async updateOne(id: string, post: PostUpdateModel): Promise<PostModel | null> {
         try {
             const result = await Post.findByIdAndUpdate(id, post);
 
@@ -146,12 +203,14 @@ export class MongoDBPostDataSource implements PostDataSource {
                         imageUrl: result.author!.imageUrl!,
                     },
                     caption: result.caption,
+                    reportedBy: result.reportedBy,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
                     isEdited: result.isEdited,
+                    isDeleted: result.isDeleted,
                 };
             } else {
                 return null;
@@ -177,12 +236,14 @@ export class MongoDBPostDataSource implements PostDataSource {
                         imageUrl: result.author!.imageUrl!,
                     },
                     caption: result.caption,
+                    reportedBy: result.reportedBy,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
                     isEdited: result.isEdited,
+                    isDeleted: result.isDeleted,
                 };
             } else {
                 return null;
@@ -193,11 +254,20 @@ export class MongoDBPostDataSource implements PostDataSource {
         }
     }
 
-    async getAll(): Promise<PostModel[] | []> {
+    async getAll(q: string): Promise<PostModel[] | []> {
         try {
-            const result = await Post.find({});
+            let results;
+            if (q) {
+                results = await Post.find({
+                    $or: [{ caption: { $regex: q, $options: 'i' } }, { tags: { $regex: q, $options: 'i' } }],
+                    isDeleted: false,
+                }).limit(8);
+            } else {
+                const ids = await Post.aggregate([{ $project: { _id: 1 } }]);
+                results = await Post.find({ _id: { $in: ids } });
+            }
 
-            return result.map((item) => ({
+            return results.map((item) => ({
                 id: item.id,
                 author: {
                     userId: item.author!.userId!,
@@ -205,12 +275,14 @@ export class MongoDBPostDataSource implements PostDataSource {
                     imageUrl: item.author!.imageUrl!,
                 },
                 caption: item.caption,
+                reportedBy: item.reportedBy,
                 tags: item.tags,
                 imageUrls: item.imageUrls,
                 likes: item.likes,
                 comments: item.comments,
                 createdAt: item.createdAt,
                 isEdited: item.isEdited,
+                isDeleted: item.isDeleted,
             }));
         } catch (error) {
             console.error('Error getting Post', error);
@@ -229,7 +301,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async getPostById(id: string): Promise<PostModel | null> {
         try {
-            const result = await Post.findById(id);
+            const result = await Post.findOne({ _id: id });
 
             if (result) {
                 return {
@@ -240,12 +312,14 @@ export class MongoDBPostDataSource implements PostDataSource {
                         imageUrl: result.author!.imageUrl!,
                     },
                     caption: result.caption,
+                    reportedBy: result.reportedBy,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
                     isEdited: result.isEdited,
+                    isDeleted: result.isDeleted,
                 };
             } else {
                 return null;
@@ -258,7 +332,7 @@ export class MongoDBPostDataSource implements PostDataSource {
 
     async getOne(id: string): Promise<PostModel | null> {
         try {
-            const result = await Post.findById(id);
+            const result = await Post.findOne({ _id: id });
 
             if (result) {
                 return {
@@ -269,12 +343,14 @@ export class MongoDBPostDataSource implements PostDataSource {
                         imageUrl: result.author!.imageUrl!,
                     },
                     caption: result.caption,
+                    reportedBy: result.reportedBy,
                     tags: result.tags,
                     imageUrls: result.imageUrls,
                     likes: result.likes,
                     comments: result.comments,
                     createdAt: result.createdAt,
                     isEdited: result.isEdited,
+                    isDeleted: result.isDeleted,
                 };
             }
 

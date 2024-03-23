@@ -78,15 +78,15 @@ build:
                     dest: .
                   - src: 'lib/**{.js,.jsx, .ts, .tsx}'
                     dest: .
-        # - image: sharathchandranp/xsocial-admin
-        #   context: admin
-        #   docker:
-        #       dockerfile: Dockerfile
-        #   sync:
-        #       manual:
-        #           - src: 'app/**{.js,.jsx,.ts, .tsx}'
-        #             dest: .
-        #           - src: 'components/**{.js,.jsx, .ts, .tsx}'
-        #             dest: .
-        #           - src: 'lib/**{.js,.jsx, .ts, .tsx}'
-        #             dest: .
+        - image: sharathchandranp/xsocial-admin
+          context: admin
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'app/**{.js,.jsx,.ts, .tsx}'
+                    dest: .
+                  - src: 'components/**{.js,.jsx, .ts, .tsx}'
+                    dest: .
+                  - src: 'lib/**{.js,.jsx, .ts, .tsx}'
+                    dest: .

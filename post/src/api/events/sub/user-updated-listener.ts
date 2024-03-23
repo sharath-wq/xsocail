@@ -1,8 +1,7 @@
 import { Listener, Subjects, UserUpdatedEvent } from '@scxsocialcommon/event';
 import { Message, Stan } from 'node-nats-streaming';
 import { queueGroupName } from './queueGroupName';
-import { UpdatePost } from '../../../domain/use-cases/post/update-post.use-case';
-import { UpdatePostsByUserIdUseCase } from '../../../domain/interfaces/use-cases';
+import { UpdatePostsByUserIdUseCase } from '../../../domain/interfaces/use-cases/posts';
 
 export class UserUpdatedListener extends Listener<UserUpdatedEvent> {
     subject: Subjects.UserUpdated = Subjects.UserUpdated;

@@ -1,4 +1,10 @@
-import { NotificationPostModel, PostBulkUpdateRequestModel, PostModel, PostRequestModel } from '../entities/post';
+import {
+    NotificationPostModel,
+    PostBulkUpdateRequestModel,
+    PostModel,
+    PostRequestModel,
+    PostUpdateModel,
+} from '../entities/post';
 import { PostRepository } from '../interfaces/repository/post.repository';
 import { PostDataSource } from '../../data/interface/data-source/post-data-source';
 
@@ -7,6 +13,10 @@ export class PostRepositoryImpl implements PostRepository {
 
     constructor(postDataSource: PostDataSource) {
         this.postDataSource = postDataSource;
+    }
+
+    async getPopularPosts(): Promise<[] | PostModel[]> {
+        return await this.postDataSource.getPopularPosts();
     }
 
     async getBatchPost(postIds: string[]): Promise<[] | NotificationPostModel[]> {
@@ -40,13 +50,13 @@ export class PostRepositoryImpl implements PostRepository {
         return result;
     }
 
-    async updatePost(id: string, post: PostRequestModel): Promise<PostModel | null> {
+    async updatePost(id: string, post: PostUpdateModel): Promise<PostModel | null> {
         const result = await this.postDataSource.updateOne(id, post);
         return result;
     }
 
-    async getAllPosts(): Promise<PostModel[] | []> {
-        const result = await this.postDataSource.getAll();
+    async getAllPosts(q: string): Promise<PostModel[] | []> {
+        const result = await this.postDataSource.getAll(q);
         return result;
     }
 

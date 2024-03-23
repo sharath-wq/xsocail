@@ -1,6 +1,6 @@
 import { PostModel } from '../../entities/post';
 import { PostRepository } from '../../interfaces/repository/post.repository';
-import { GetSavedPostsUseCase } from '../../interfaces/use-cases';
+import { GetSavedPostsUseCase } from '../../interfaces/use-cases/posts';
 
 export class GetSavedPosts implements GetSavedPostsUseCase {
     postRepository: PostRepository;

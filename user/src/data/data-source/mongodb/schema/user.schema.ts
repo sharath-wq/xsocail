@@ -71,6 +71,11 @@ const UserSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        reportedBy: [
+            {
+                type: String,
+            },
+        ],
     },
     {
         toJSON: {
@@ -90,10 +95,10 @@ UserSchema.pre('save', async function (done) {
         this.set('password', hashed);
     }
 
-    if (this.email === 'chandranpsharath@gmail.com') {
-        this.set('verified', true);
-        this.set('isAdmin', true);
-    }
+    // if (this.email === 'chandranpsharath@gmail.com') {
+    //     this.set('verified', true);
+    //     this.set('isAdmin', true);
+    // }
 
     done();
 });

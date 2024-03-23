@@ -1,6 +1,6 @@
 import { PostModel } from '../../entities/post';
 import { PostRepository } from '../../interfaces/repository/post.repository';
-import { GetUserFeedPostsUseCase } from '../../interfaces/use-cases';
+import { GetUserFeedPostsUseCase } from '../../interfaces/use-cases/posts';
 
 export class GetUserFeedPosts implements GetUserFeedPostsUseCase {
     postRepository: PostRepository;
@@ -9,8 +9,11 @@ export class GetUserFeedPosts implements GetUserFeedPostsUseCase {
         this.postRepository = postRepository;
     }
 
-    async execute(userIds: string[]): Promise<[] | PostModel[]> {
+    async execute(userIds: string[], userId: string): Promise<[] | PostModel[]> {
         const result = await this.postRepository.getUserFeeds(userIds);
-        return result;
+
+        const filteredResult = result.filter((post) => !post.reportedBy.includes(userId));
+
+        return filteredResult;
     }
 }

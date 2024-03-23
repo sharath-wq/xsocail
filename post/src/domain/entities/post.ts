@@ -8,6 +8,7 @@ export interface PostRequestModel {
         imageUrl: string;
     };
     isEdited: boolean;
+    reportedBy?: string[];
 }
 
 export interface PostBulkUpdateRequestModel {
@@ -21,6 +22,12 @@ export interface PostBulkUpdateRequestModel {
 export interface NotificationPostModel {
     id: string;
     imageUrls: string[];
+    author: {
+        userId: string;
+        username: string;
+        imageUrl: string;
+    };
+    reportedBy: string[];
 }
 
 export interface PostModel {
@@ -37,4 +44,16 @@ export interface PostModel {
     comments: string[];
     createdAt: Date;
     isEdited: boolean;
+    reportedBy: string[];
+    isDeleted: boolean;
+}
+export interface PostUpdateModel {
+    caption?: string;
+    tags?: string[];
+    createdAt?: Date;
+    isEdited?: boolean;
+    reportedBy?: string[];
+    isDeleted?: boolean;
+    comments?: string[];
+    actionTaken?: 'Pending' | 'Post Removed' | 'Warning Issued' | 'User Blocked';
 }

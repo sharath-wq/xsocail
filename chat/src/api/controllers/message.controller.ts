@@ -30,7 +30,7 @@ export class MessageController implements IMessageController {
             const messages = await this.findAllMessageByConversationIdUseCase.execute(conversationId);
             res.send(messages);
         } catch (error) {
-            console.log(error);
+            next(error);
         }
     }
 }

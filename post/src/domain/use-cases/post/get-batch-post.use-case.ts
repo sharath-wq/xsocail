@@ -1,6 +1,6 @@
 import { NotificationPostModel, PostModel } from '../../entities/post';
 import { PostRepository } from '../../interfaces/repository/post.repository';
-import { GetBatchPostUseCase } from '../../interfaces/use-cases';
+import { GetBatchPostUseCase } from '../../interfaces/use-cases/posts';
 
 export class GetBatchPost implements GetBatchPostUseCase {
     postRepository: PostRepository;

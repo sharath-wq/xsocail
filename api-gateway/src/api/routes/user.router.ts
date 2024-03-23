@@ -70,6 +70,10 @@ export default function UserRouter(
         userController.unfollow(req, res, next);
     });
 
+    router.get('/reports', requireAuth, async (req, res, next) => {
+        userController.getReportedUsers(req, res, next);
+    });
+
     router.all('/*', async (req, res, next) => {
         userController.userService(req, res, next);
     });

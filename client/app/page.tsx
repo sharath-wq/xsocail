@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/userContext';
+import { Loader } from 'lucide-react';
 
 const Home: React.FC = () => {
     const { currentUser } = useUser();
@@ -16,7 +17,11 @@ const Home: React.FC = () => {
         }
     }, [currentUser, router]);
 
-    return <div>Loading....</div>;
+    return (
+        <div className='w-full h-screen flex justify-center items-center'>
+            <Loader className='animate-spin' />
+        </div>
+    );
 };
 
 export default Home;
