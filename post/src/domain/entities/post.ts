@@ -54,5 +54,6 @@ export interface PostUpdateModel {
     isEdited?: boolean;
     reportedBy?: string[];
     isDeleted?: boolean;
+    comments?: string[];
     actionTaken?: 'Pending' | 'Post Removed' | 'Warning Issued' | 'User Blocked';
 }

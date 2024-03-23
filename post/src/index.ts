@@ -25,6 +25,8 @@ import ReportRouter from './api/routes/report.routes';
 import { CreateReport, GetAllReport, GetOneReport, UpdateReport } from './domain/use-cases/report';
 import { ReportRepository } from './domain/repository/report.repository';
 import { MongoDBReportDataSource } from './data/data-source/mongodb/mongodb-report-datasource';
+import { CommentCreatedListener } from './api/events/sub/comment-created-listener';
+import { GetPostById } from './domain/use-cases/post/get-post-by-id.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -99,6 +101,12 @@ const start = async () => {
         process.on('SIGTERM', () => natsWrapper.client.close());
 
         new UserUpdatedListener(natsWrapper.client, new UpdatePostsByUserId(new PostRepositoryImpl(datasource))).listen();
+
+        new CommentCreatedListener(
+            natsWrapper.client,
+            new AdminUpdatePost(new PostRepositoryImpl(datasource)),
+            new GetPostById(new PostRepositoryImpl(datasource))
+        ).listen();
     } catch (error) {
         console.log(error);
     }

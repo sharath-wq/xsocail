@@ -34,14 +34,14 @@ build:
               manual:
                   - src: 'src/**/*.ts'
                     dest: .
-        # - image: sharathchandranp/xsocial-comments
-        #   context: comment
-        #   docker:
-        #       dockerfile: Dockerfile
-        #   sync:
-        #       manual:
-        #           - src: 'src/**/*.ts'
-        #             dest: .
+        - image: sharathchandranp/xsocial-comments
+          context: comment
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'src/**/*.ts'
+                    dest: .
         - image: sharathchandranp/xsocial-chat
           context: chat
           docker:

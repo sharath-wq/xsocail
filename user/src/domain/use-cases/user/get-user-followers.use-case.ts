@@ -17,7 +17,6 @@ export class GetUserFollowers implements GetUserFollowersUseCase {
             throw new NotFoundError();
         }
 
-        console.log(user?.followers);
         const followers = await this.UserRepository.getUserBatch(user.followers);
 
         return followers;

@@ -27,12 +27,12 @@ export class MongoDBPostDataSource implements PostDataSource {
                     $sort: { totalLikesAndComments: -1 },
                 },
                 {
-                    $limit: 5,
+                    $limit: 3,
                 },
             ]);
 
             return results.map((item: any) => ({
-                id: item.id,
+                id: item._id,
                 author: {
                     userId: item.author.userId,
                     username: item.author.username,
@@ -263,7 +263,7 @@ export class MongoDBPostDataSource implements PostDataSource {
                     isDeleted: false,
                 }).limit(8);
             } else {
-                const ids = await Post.aggregate([{ $sample: { size: 8 } }, { $project: { _id: 1 } }]);
+                const ids = await Post.aggregate([{ $project: { _id: 1 } }]);
                 results = await Post.find({ _id: { $in: ids } });
             }
 

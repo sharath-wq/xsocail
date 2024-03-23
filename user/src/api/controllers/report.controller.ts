@@ -41,8 +41,6 @@ export class ReportController implements ReportControllerInterface {
         const { id } = req.params;
         const userId = req.body.currentUser.userId;
 
-        console.log(userId);
-
         try {
             const report = await this.updateReportUseCase.execute(id, {
                 ...req.body,
