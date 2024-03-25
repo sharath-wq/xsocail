@@ -20,6 +20,7 @@ import { useForm } from 'react-hook-form';
 import GoogleBtn from '@/components/googleButton/GoogleBtn';
 import { useUser } from '@/context/userContext';
 import Comment from '@/components/post/actions/comment/Comment';
+import { Loader } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
     // 1. Define your form.
@@ -66,7 +67,11 @@ const LoginPage: React.FC = () => {
         }
     }, [currentUser, router]);
 
-    return (
+    return currentUser ? (
+        <div className='w-full h-screen flex justify-center items-center'>
+            <Loader className='animate-spin' />
+        </div>
+    ) : (
         <div className='flex flex-col items-center'>
             {errors}
             <div className='border p-8 m-2 rounded-md shadow-xl flex flex-col w-full sm:w-[400px] shadcn-bg-white shadcn-rounded-md'>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import useRequest from '@/hooks/useRequest';
+import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -65,6 +66,14 @@ const VerifyOtpPage: React.FC = () => {
             doRequest();
         }
     };
+
+    if (!otpData) {
+        return (
+            <div className='w-full h-screen flex justify-center items-center'>
+                <Loader className='animate-spin' />
+            </div>
+        );
+    }
 
     return (
         <div className='flex flex-col items-center'>

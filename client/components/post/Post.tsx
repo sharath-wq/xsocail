@@ -105,8 +105,9 @@ const Post = ({
             toast({
                 description: `unfollowed`,
             });
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
+            toast({ title: 'An Error Occured', description: error });
         }
     };
 
