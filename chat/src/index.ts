@@ -10,6 +10,7 @@ import MessageRouter from './api/routes/message.routes';
 import { CreateMessage, FindAllMessageByConversationId } from './domain/use-case/messages';
 import { MessageRepository } from './domain/repository/message.repository';
 import { MongoDBMessageDataSource } from './data/data-source/mongodb/mongodb-message-data-source';
+import { MarkAsRead } from './domain/use-case/messages/mark-as-read.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -52,7 +53,11 @@ const start = async () => {
             new MessageRepository(new MongoDBMessageDataSource()),
             new ConversationReposity(new MongoDBConversationDataSource())
         ),
-        new FindAllMessageByConversationId(new MessageRepository(new MongoDBMessageDataSource()))
+        new FindAllMessageByConversationId(new MessageRepository(new MongoDBMessageDataSource())),
+        new MarkAsRead(
+            new MessageRepository(new MongoDBMessageDataSource()),
+            new ConversationReposity(new MongoDBConversationDataSource())
+        )
     );
 
     app.use('/conversation', ConversationMiddleware);

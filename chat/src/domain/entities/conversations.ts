@@ -4,13 +4,15 @@ export interface IConversations {
     updatedAt: Date;
 }
 export interface IConversationsUpdate {
-    updatedAt: Date;
+    updatedAt?: Date;
+    unreadCount?: number;
 }
 
 export interface IConversationsRes {
     id: string;
     members: string[];
     recentMessage?: string | null;
+    unreadCount?: number;
     createdAt: Date;
     updatedAt: Date;
 }

@@ -19,8 +19,11 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import GoogleBtn from '@/components/googleButton/GoogleBtn';
 import { useUser } from '@/context/userContext';
+import { Loader } from 'lucide-react';
 
 const Register: React.FC = () => {
+    const [loading, setLoading] = useState(true);
+
     // 1. Define your form.
     const form = useForm<z.infer<typeof SignupValidation>>({
         resolver: zodResolver(SignupValidation),
@@ -67,8 +70,19 @@ const Register: React.FC = () => {
         if (currentUser) {
             getCurrentUser();
             router.replace('/home');
+            setLoading(false);
+        } else {
+            setLoading(false);
         }
     }, [currentUser, router]);
+
+    if (loading) {
+        return (
+            <div className='w-full h-screen flex justify-center items-center'>
+                <Loader className='animate-spin' />
+            </div>
+        );
+    }
 
     return (
         <div className='flex flex-col items-center'>

@@ -13,4 +13,5 @@ export interface IMessage {
     imageUrl?: string | null;
     createdAt: Date;
     updatedAt: Date;
+    isRead: boolean;
 }
