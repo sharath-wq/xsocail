@@ -3,6 +3,19 @@ import { IMessageDataSource } from '../../interface/data-source/message-data-sou
 import { Message } from './Schema/message.schema';
 
 export class MongoDBMessageDataSource implements IMessageDataSource {
+    async markMessageAsRead(cId: string, userId: string): Promise<void> {
+        try {
+            await Message.updateMany(
+                { conversationId: cId, sender: { $ne: userId } },
+                {
+                    isRead: true,
+                }
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async getRecentMessage(cId: string): Promise<IMessage | null> {
         try {
             const result = await Message.findOne({ conversationId: cId }).sort({ _id: -1 }).limit(1);
@@ -11,10 +24,11 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 return null;
             }
 
-            const { id, conversationId, sender, text, createdAt, updatedAt, imageUrl } = result;
+            const { id, conversationId, sender, text, createdAt, updatedAt, imageUrl, isRead } = result;
 
             return {
                 id,
+                isRead,
                 conversationId,
                 sender,
                 text,
@@ -36,13 +50,14 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 return null;
             }
 
-            const { id, conversationId, sender, text, createdAt, updatedAt, imageUrl } = result;
+            const { id, conversationId, sender, text, createdAt, updatedAt, imageUrl, isRead } = result;
 
             return {
                 id,
                 conversationId,
                 sender,
                 text,
+                isRead,
                 createdAt,
                 updatedAt,
                 imageUrl,
@@ -59,11 +74,12 @@ export class MongoDBMessageDataSource implements IMessageDataSource {
                 conversationId,
             });
 
-            return result.map(({ id, conversationId, sender, createdAt, text, updatedAt, imageUrl }) => ({
+            return result.map(({ id, conversationId, sender, createdAt, text, updatedAt, imageUrl, isRead }) => ({
                 id,
                 conversationId,
                 createdAt,
                 sender,
+                isRead,
                 text,
                 updatedAt,
                 imageUrl,
