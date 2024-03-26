@@ -3,7 +3,7 @@ name: deploy-socketio
 on:
   push: 
     branches: 
-      - master
+      - main
     paths: 
       - 'socketio/**'
 
