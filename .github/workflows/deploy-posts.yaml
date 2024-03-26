@@ -3,7 +3,7 @@ name: deploy-posts
 on:
   push: 
     branches: 
-      - master
+      - main
     paths: 
       - 'posts/**'
 
