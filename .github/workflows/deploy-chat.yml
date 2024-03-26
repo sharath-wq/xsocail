@@ -3,7 +3,7 @@ name: deploy-chat
 on:
   push: 
     branches: 
-      - main
+      - prod
     paths: 
       - 'chat/**'
 
