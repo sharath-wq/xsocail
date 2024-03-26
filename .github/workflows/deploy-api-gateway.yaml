@@ -3,7 +3,7 @@ name: deploy-api-gateway
 on:
   push: 
     branches: 
-      - main
+      - prod
     paths: 
       - 'api-gateway/**'
 
