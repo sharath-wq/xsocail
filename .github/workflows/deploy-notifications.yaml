@@ -3,7 +3,7 @@ name: deploy-notifications
 on:
   push: 
     branches: 
-      - main
+      - prod
     paths: 
       - 'notifications/**'
 
