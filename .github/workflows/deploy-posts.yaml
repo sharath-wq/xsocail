@@ -3,7 +3,7 @@ name: deploy-posts
 on:
   push: 
     branches: 
-      - main
+      - prod
     paths: 
       - 'posts/**'
 
