@@ -40,7 +40,7 @@ const start = async () => {
     const datasource = await connect(process.env.MONGO_URI);
 
     if (!datasource) {
-        throw new Error('Error Connecting Database');
+        throw new Error('Error Connecting to Database');
     }
 
     if (!process.env.NATS_CLIENT_ID) {
