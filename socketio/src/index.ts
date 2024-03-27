@@ -56,7 +56,7 @@ const getNotificationUser = (userId: string) => {
 
 // Handling chat connections
 chatNamespace.on('connection', (socket) => {
-    console.log('a User connected to chat');
+    console.log('a User connected to chat.');
 
     socket.on('addUser', (userId: string) => {
         addChatUser(userId, socket.id);
