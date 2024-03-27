@@ -44,7 +44,7 @@ const start = async () => {
     const datasource = await connect(process.env.MONGO_URI);
 
     if (!datasource) {
-        throw new Error('Error Connecting Database');
+        throw new Error('Error Connecting to Database');
     }
 
     const UserMiddleware = UserRouter(
