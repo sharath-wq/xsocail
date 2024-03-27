@@ -18,13 +18,6 @@ spec:
                             name: api-gateway-srv
                             port:
                                 number: 3000
-                  - path: /socket.io/?(.*)
-                    pathType: ImplementationSpecific
-                    backend:
-                        service:
-                            name: socketio-srv
-                            port:
-                                number: 8900
                   - path: /?(.*)
                     pathType: ImplementationSpecific
                     backend:
@@ -35,13 +28,6 @@ spec:
         - host: admin.xsocial.dev
           http:
               paths:
-                  - path: /api/?(.*)
-                    pathType: ImplementationSpecific
-                    backend:
-                        service:
-                            name: api-gateway-srv
-                            port:
-                                number: 3000
                   - path: /?(.*)
                     pathType: ImplementationSpecific
                     backend:
@@ -49,7 +35,3 @@ spec:
                             name: admin-srv
                             port:
                                 number: 3000
-    tls:
-        - hosts:
-              - xsocial.dev
-          secretName: xsocial-tls-secret
