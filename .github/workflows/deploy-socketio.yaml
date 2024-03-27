@@ -3,18 +3,18 @@ name: deploy-socketio
 on:
   push: 
     branches: 
-      - prod
+      - main
     paths: 
       - 'socketio/**'
 
 jobs: 
- build:
-   runs-on: ubuntu-latest
-   steps:
-     - uses: actions/checkout@v2
-     - run: cd socketio && docker build -t sharathchandranp/xsocial-socketio .
-     - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-       env: 
-         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-     - run: docker push sharathchandranp/xsocial-socketio
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd socketio && docker build -t sharathchandranp/xsocial-socketio .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env: 
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push sharathchandranp/xsocial-socketio
