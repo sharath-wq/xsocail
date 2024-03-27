@@ -5,14 +5,14 @@ on:
     branches: 
       - main
     paths: 
-      - 'users/**'
+      - 'user/**'
 
 jobs: 
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd users && docker build -t sharathchandranp/xsocial-users .
+      - run: cd user && docker build -t sharathchandranp/xsocial-users .
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env: 
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -22,4 +22,4 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - run: doctl kubernetes cluster kubeconfig save xsocail-cluster
-      - run: kubectl rollout restart deployment users-depl
+      - run: kubectl rollout restart deployment user-depl
