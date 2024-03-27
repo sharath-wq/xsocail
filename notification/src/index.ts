@@ -71,7 +71,7 @@ const start = async () => {
     }
 
     app.listen(3000, () => {
-        console.log('Notification Server running on port 3000 🚀.');
+        console.log('Notification Server running on port 3000 🚀');
     });
 };
 
