@@ -53,4 +53,4 @@ spec:
     tls:
         - hosts:
               - www.scportfolio.online
-          secretName: letsencrypt-prod
+          secretName: letsencrypt-prod-kgp77
