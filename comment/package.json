@@ -4,12 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/index.ts",
+    "start": "ts-node-dev src/index.ts",
     "test": "jest --watchAll --no-cache",
-    "test:ci": "jest",
-    "start": "node dist/index.js",
-    "build": "tsc",
-    "start:prod": "npm run build && npm start"
+    "test:ci": "jest"
   },
   "jest": {
     "preset": "ts-jest",
