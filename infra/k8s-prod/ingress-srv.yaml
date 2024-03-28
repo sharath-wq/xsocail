@@ -32,7 +32,7 @@ spec:
                             name: client-srv
                             port:
                                 number: 3000
-        - host: admin.xsocial.dev
+        - host: www.admin.scportfolio.online
           http:
               paths:
                   - path: /api/?(.*)

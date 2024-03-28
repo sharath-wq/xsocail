@@ -15,6 +15,27 @@ spec:
             containers:
                 - name: client
                   image: sharathchandranp/xsocial-client
+                  env:
+                      - name: NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+                        valueFrom:
+                            secretKeyRef:
+                                name: next-public-cloudinary-cloud-name
+                                key: NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+                      - name: CLOUDINARY_API_KEY
+                        valueFrom:
+                            secretKeyRef:
+                                name: cloudinary-api-key
+                                key: CLOUDINARY_API_KEY
+                      - name: CLOUDINARY_API_SECRET
+                        valueFrom:
+                            secretKeyRef:
+                                name: cloudinary-api-secret
+                                key: CLOUDINARY_API_SECRET
+                      - name: ZEGO_CLOUD_SERVER_SECRET
+                        valueFrom:
+                            secretKeyRef:
+                                name: zego-cloud-server-secret
+                                key: ZEGO_CLOUD_SERVER_SECRET
 ---
 apiVersion: v1
 kind: Service
