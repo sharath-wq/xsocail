@@ -50,3 +50,7 @@ spec:
                             name: admin-srv
                             port:
                                 number: 3000
+    tls:
+        - hosts:
+              - www.scportfolio.online
+          secretName: letsencrypt-prod
