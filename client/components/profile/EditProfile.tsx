@@ -76,7 +76,9 @@ const EditProfile = ({ username, bio, fullName, email }: EditProfilePorps) => {
                 <DialogHeader>
                     {errors}
                     <DialogTitle>Edit profile</DialogTitle>
-                    <DialogDescription>Make changes to your profile here. Click save when you're done.</DialogDescription>
+                    <DialogDescription>
+                        Make changes to your profile here. Click save when you&apos;re done.
+                    </DialogDescription>
                 </DialogHeader>
 
                 <Form {...form}>

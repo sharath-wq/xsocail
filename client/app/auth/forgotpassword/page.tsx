@@ -50,7 +50,7 @@ const ForgotPage: React.FC = () => {
                 <h3 className='text-2xl font-bold mb-10 text-center'>LOGO</h3>
 
                 <p className='text-gray-600 mb-4 text-center'>
-                    Enter your email and we'll send you a link to get back into your account.
+                    Enter your email and we&apos;ll send you a link to get back into your account.
                 </p>
 
                 <Form {...form}>

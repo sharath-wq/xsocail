@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Actions } from '@/components/dashboard/users/[id]/actions/Actions';
-import { User, UserData } from '@/types/user';
+import { UserData } from '@/types/user';
 import axios, { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 
-const page = () => {
+const Page = () => {
     const { id } = useParams();
 
     const [isBlocked, setIsBlocked] = useState(false);
@@ -74,4 +74,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;

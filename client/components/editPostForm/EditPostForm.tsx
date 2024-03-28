@@ -121,7 +121,7 @@ const EditPostForm = () => {
                     name='tags'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className=''>Add Tags (seperated by comma ", ")</FormLabel>
+                            <FormLabel className=''>Add Tags (separated by comma &quot;, &quot;)</FormLabel>
                             <FormControl>
                                 <Input type='text' className='' placeholder='React, Next, Tailwind' {...field} />
                             </FormControl>

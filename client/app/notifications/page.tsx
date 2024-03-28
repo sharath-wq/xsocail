@@ -49,7 +49,7 @@ const Notifications = () => {
                         New Notifications
                     </h2>
                     {newNotifications.length > 0 ? (
-                        newNotifications.map((n) => <Notification notification={n} />)
+                        newNotifications.map((n) => <Notification key={n.id} notification={n} />)
                     ) : (
                         <p className='text-sm text-muted-foreground'>No new notifications.</p>
                     )}
@@ -57,7 +57,7 @@ const Notifications = () => {
                         Old Notifications
                     </h2>
                     {oldNotifications.length > 0 ? (
-                        oldNotifications.map((n) => <Notification notification={n} />)
+                        oldNotifications.map((n) => <Notification key={n.id} notification={n} />)
                     ) : (
                         <p className='text-sm text-muted-foreground'>No old notifications.</p>
                     )}
