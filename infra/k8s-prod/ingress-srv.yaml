@@ -49,3 +49,4 @@ spec:
                             name: admin-srv
                             port:
                                 number: 3000
+#  change this
