@@ -6,7 +6,6 @@ metadata:
         ingress.kubernetes.io/rewrite-target: /admin
         kubernetes.io/ingress.class: nginx
         nginx.ingress.kubernetes.io/use-regex: 'true'
-        cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
     rules:
         - host: www.scportfolio.online
@@ -50,7 +49,3 @@ spec:
                             name: admin-srv
                             port:
                                 number: 3000
-    tls:
-        - hosts:
-              - www.scportfolio.online
-          secretName: letsencrypt-prod-kgp77
