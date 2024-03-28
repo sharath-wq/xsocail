@@ -21,7 +21,7 @@ const PopularPosts = ({ data }: { data: any[] }) => {
                 <tbody>
                     {data &&
                         data.map((post) => (
-                            <tr>
+                            <tr key={post.id}>
                                 <td className='p-3'>
                                     <Link href={`/dashboard/posts/${post.id}`} className='flex gap-3 items-center'>
                                         <Image

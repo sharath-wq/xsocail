@@ -125,7 +125,7 @@ const LoginPage: React.FC = () => {
 
             <div className='border flex flex-col p-6 m-2 rounded-md shadow-xl w-full sm:w-[400px] text-center shadcn-bg-white'>
                 <span className=''>
-                    Don't have an account?{' '}
+                    Don&apos;t have an account?{' '}
                     <Link href='/auth/register' className='underline font-medium'>
                         Signup
                     </Link>

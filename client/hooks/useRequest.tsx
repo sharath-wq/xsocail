@@ -23,6 +23,7 @@ const useRequest = ({ url, method, body, onSuccess, contentType, onError }: UseR
     const doRequest = async (props: object = {}, headers: object = {}): Promise<any> => {
         try {
             setErrors(null);
+            // @ts-ignore
             const response: AxiosResponse = await axios[method](
                 url,
                 { ...body, ...props },

@@ -30,7 +30,7 @@ const ResendOtp = ({ email, resetTimer }: ResendOtpProps) => {
 
     return (
         <p className=' text-center'>
-            Didn't get a security code?{' '}
+            Didn&apos;t get a security code?{' '}
             <span onClick={handleResend} className='underline'>
                 Resend it.
             </span>
