@@ -40,7 +40,7 @@ export default function Dashboard() {
             <div className='flex-[3] flex flex-col gap-5'>
                 <div className='flex gap-5 justify-between'>
                     {cardData.map((card: any, _: number) => (
-                        <Card {...card} {...CARDS[_]} />
+                        <Card key={_} {...card} {...CARDS[_]} />
                     ))}
                 </div>
                 <PopularPosts data={postData} />
