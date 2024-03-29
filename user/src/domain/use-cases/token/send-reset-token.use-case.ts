@@ -28,7 +28,7 @@ export class SendResetToken implements SendResetTokenUseCase {
             token: crypto.randomBytes(32).toString('hex'),
         });
 
-        const link = `http://xsocial.dev/auth/reset-password/${existingUser.id}/${newToken!.token}`;
+        const link = `https://scportfolio.online/auth/reset-password/${existingUser.id}/${newToken!.token}`;
 
         const emailContent = `<!DOCTYPE html>
 <html lang="en">
