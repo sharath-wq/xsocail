@@ -60,7 +60,7 @@ const Sidebar = () => {
                     <nav className='ml-5'>
                         <ul className='space-y-4 flex-grow'>
                             {links.map((link) => (
-                                <Link href={link.link}>
+                                <Link key={link.link} href={link.link}>
                                     <li
                                         key={link.label}
                                         className='p-4 ml-4 font-bold cursor-pointer dark:text-white text-black flex gap-5 items-center rounded-full transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-md hover:bg-slate-200 dark:hover:bg-slate-600'
