@@ -63,7 +63,7 @@ const Sidebar = () => {
                                 <Link key={link.link} href={link.link}>
                                     <li
                                         key={link.label}
-                                        className='p-4 ml-4 font-bold cursor-pointer dark:text-white text-black flex gap-5 items-center rounded-full transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-md hover:bg-slate-200 dark:hover:bg-slate-600'
+                                        className='p-4 ml-4 font-bold cursor-pointer dark:text-white text-black flex gap-5 items-center rounded-full transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-md hover:bg-slate-200 dark:hover:bg-slate-600 mb-5'
                                     >
                                         {link.icon}
                                         {link.label}
