@@ -32,7 +32,7 @@ spec:
                             name: client-srv
                             port:
                                 number: 3000
-        - host: www.admin.scportfolio.online
+        - host: admin.scportfolio.online
           http:
               paths:
                   - path: /api/?(.*)
@@ -49,4 +49,3 @@ spec:
                             name: admin-srv
                             port:
                                 number: 3000
-#  change this
