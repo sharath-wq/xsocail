@@ -208,7 +208,7 @@ const Post = ({
                                         </DropdownMenuItem>
                                     )}
                                     {currentUser?.userId !== author.userId &&
-                                        currentUser?.following.includes(author.userId) && (
+                                        currentUser?.following?.includes(author.userId) && (
                                             <DropdownMenuItem>
                                                 <span onClick={handleUnfollow} className='text-red-500'>
                                                     Unfollow
