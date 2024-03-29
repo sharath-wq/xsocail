@@ -46,8 +46,8 @@ const Conversation = ({
         const TOKEN = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, currentUser!.userId, userID, userName);
 
         const zp = ZegoUIKitPrebuilt.create(TOKEN);
-        // @ts-ignore
-        zp.addPlugins({ ZIM: ZegoUIKitPrebuilt.ZIM });
+        // Remove the line trying to add 'ZIM' plugin as it is causing the error
+        // zp.addPlugins({ ZIM: ZegoUIKitPrebuilt.ZIM });
 
         const targetUser = {
             userID: user.id,
