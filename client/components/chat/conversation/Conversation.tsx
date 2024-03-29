@@ -47,7 +47,7 @@ const Conversation = ({
 
         const zp = ZegoUIKitPrebuilt.create(TOKEN);
         // @ts-ignore
-        zp.addPlugins({ ZIM });
+        zp.addPlugins({ ZIM: ZegoUIKitPrebuilt.ZIM });
 
         const targetUser = {
             userID: user.id,

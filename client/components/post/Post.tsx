@@ -207,13 +207,14 @@ const Post = ({
                                             </AlertDialog>
                                         </DropdownMenuItem>
                                     )}
-                                    {currentUser?.userId !== author.userId && (
-                                        <DropdownMenuItem>
-                                            <span onClick={handleUnfollow} className='text-red-500'>
-                                                Unfollow
-                                            </span>
-                                        </DropdownMenuItem>
-                                    )}
+                                    {currentUser?.userId !== author.userId &&
+                                        currentUser?.following.includes(author.userId) && (
+                                            <DropdownMenuItem>
+                                                <span onClick={handleUnfollow} className='text-red-500'>
+                                                    Unfollow
+                                                </span>
+                                            </DropdownMenuItem>
+                                        )}
                                     {currentUser?.userId === author.userId && (
                                         <DropdownMenuItem>
                                             <AlertDialog>

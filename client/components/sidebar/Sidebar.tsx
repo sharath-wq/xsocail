@@ -60,18 +60,20 @@ const Sidebar = () => {
                     <nav className='ml-5'>
                         <ul className='space-y-4 flex-grow'>
                             {links.map((link) => (
-                                <li
-                                    key={link.label}
-                                    className='p-4 ml-4 font-bold cursor-pointer dark:text-white text-black flex gap-5 items-center rounded-full transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-md hover:bg-slate-200 dark:hover:bg-slate-600'
-                                >
-                                    {link.icon}
-                                    <Link href={link.link}>{link.label}</Link>
-                                    {link.link === '/notifications' && count > 0 && (
-                                        <div className='w-[10px] h-[10px] bg-red-600 rounded-full p-[10px] tex-xm flex items-center justify-center'>
-                                            {count}
-                                        </div>
-                                    )}
-                                </li>
+                                <Link href={link.link}>
+                                    <li
+                                        key={link.label}
+                                        className='p-4 ml-4 font-bold cursor-pointer dark:text-white text-black flex gap-5 items-center rounded-full transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-md hover:bg-slate-200 dark:hover:bg-slate-600'
+                                    >
+                                        {link.icon}
+                                        {link.label}
+                                        {link.link === '/notifications' && count > 0 && (
+                                            <div className='w-[10px] h-[10px] bg-red-600 rounded-full p-[10px] tex-xm flex items-center justify-center'>
+                                                {count}
+                                            </div>
+                                        )}
+                                    </li>
+                                </Link>
                             ))}
                         </ul>
                     </nav>
