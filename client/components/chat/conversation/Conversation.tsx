@@ -3,6 +3,7 @@ import { User, UserData } from '@/types/user';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Video } from 'lucide-react';
+import { any } from 'zod';
 
 const Conversation = ({
     conversation,
@@ -38,6 +39,7 @@ const Conversation = ({
         if (!user) return;
 
         const { ZegoUIKitPrebuilt } = await import('@zegocloud/zego-uikit-prebuilt');
+        const { ZIM } = await import('zego-zim-web');
 
         const userID = currentUser!.userId.toString();
         const userName = 'userName' + userID;
@@ -46,8 +48,7 @@ const Conversation = ({
         const TOKEN = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, currentUser!.userId, userID, userName);
 
         const zp = ZegoUIKitPrebuilt.create(TOKEN);
-        // Remove the line trying to add 'ZIM' plugin as it is causing the error
-        // zp.addPlugins({ ZIM: ZegoUIKitPrebuilt.ZIM });
+        zp.addPlugins({ ZIM: ZIM });
 
         const targetUser = {
             userID: user.id,
