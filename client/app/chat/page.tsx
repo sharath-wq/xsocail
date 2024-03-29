@@ -48,7 +48,7 @@ const ChatPage = () => {
     }, [currentUser, router]);
 
     useEffect(() => {
-        socket.current = io('wss://xsocial.dev/chat');
+        socket.current = io('wss://www.scportfolio.online/chat');
         socket.current.on('getMessage', (data) => {
             const arrivalMessage = {
                 sender: data.senderId,

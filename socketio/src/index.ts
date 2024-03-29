@@ -2,7 +2,7 @@ import { Server, Namespace } from 'socket.io';
 
 const io = new Server(8900, {
     cors: {
-        origin: 'https://xsocial.dev',
+        origin: 'https://www.scportfolio.online',
     },
 });
 

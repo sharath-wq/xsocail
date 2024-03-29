@@ -32,7 +32,7 @@ const Home = () => {
     }, [currentUser, router]);
 
     useEffect(() => {
-        socket.current = io('wss://xsocial.dev/notification');
+        socket.current = io('wss://www.scportfolio.online/notification');
 
         return () => {
             socket.current?.disconnect();
