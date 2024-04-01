@@ -7,7 +7,7 @@ export default function PostRouter() {
 
     const postController = new PostController();
 
-    router.get('/feed', async (req, res, next) => {
+    router.get('/feed', requireAuth, async (req, res, next) => {
         postController.postFeed(req, res, next);
     });
 
