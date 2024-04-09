@@ -35,7 +35,7 @@ const Save = ({
 
     return (
         <Button onClick={handleLikeButtonClick} variant='ghost'>
-            {isSaved ? <Bookmark fill='#3b82f6' /> : <Bookmark />}
+            {isSaved ? <Bookmark className='border border-blue-500' fill='#3b82f6' /> : <Bookmark />}
         </Button>
     );
 };
