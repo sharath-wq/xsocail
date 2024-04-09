@@ -263,7 +263,7 @@ const Post = ({
                                                         </Label>
                                                         <Input
                                                             id='link'
-                                                            defaultValue={`http://xsocial.dev/post/view/${id}`}
+                                                            defaultValue={`https://scportfolio.online/post/view/${id}`}
                                                             readOnly
                                                         />
                                                     </div>

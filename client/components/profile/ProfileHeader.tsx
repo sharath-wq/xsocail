@@ -18,7 +18,6 @@ import {
 } from '../ui/alert-dialog';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { reasonsToReportUser } from '@/constants';
-import { Separator } from '../ui/separator';
 
 type ProfileHeaderProps = {
     id: string;
@@ -99,23 +98,23 @@ const ProfileHeader = ({
     };
 
     return (
-        <div className='flex p-4'>
-            <div className='flex items-center'>
+        <div className='flex flex-col items-center p-4 md:flex-row'>
+            <div className='flex items-center mb-4 md:mb-0 md:mr-8'>
                 <UserImage own={own} username={username} imageUrl={imageUrl} />
             </div>
 
-            <div className='flex flex-col ml-20 gap-5 mt-6'>
+            <div className='flex flex-col gap-5 mt-6 md:mt-0'>
                 <div className='flex flex-col md:flex-row gap-5 items-center'>
                     <h1 className='text-2xl font-bold mb-2 md:mb-0'>{username}</h1>
                     {own && <EditProfile {...editUserData} />}
 
                     {own ? (
-                        <Button variant={'secondary'}>
+                        <Button variant={'secondary'} className='md:ml-auto'>
                             <Settings />
                         </Button>
                     ) : (
                         <div className='flex gap-2'>
-                            <Button onClick={handleClick} className='ml-auto' variant={'secondary'}>
+                            <Button onClick={handleClick} variant={'secondary'}>
                                 {isFollowing ? 'unfollow' : 'follow'}
                             </Button>
 
@@ -137,21 +136,16 @@ const ProfileHeader = ({
                                     <AlertDialogFooter>
                                         <ScrollArea className='h-auto w-full rounded-md border'>
                                             <div className='p-4'>
-                                                {reasonsToReportUser.map((reason, _) => (
-                                                    <>
-                                                        <div key={reason} className='text-base flex justify-between'>
-                                                            {reason}
-                                                            <AlertDialogAction>
-                                                                <AlertCircle
-                                                                    onClick={() => hanldeReport(reason)}
-                                                                    className='cursor-pointer'
-                                                                />
-                                                            </AlertDialogAction>
-                                                        </div>
-                                                        {_ < reasonsToReportUser.length - 1 && (
-                                                            <Separator className='my-3' />
-                                                        )}
-                                                    </>
+                                                {reasonsToReportUser.map((reason, index) => (
+                                                    <div key={reason} className='text-base flex justify-between'>
+                                                        {reason}
+                                                        <AlertDialogAction>
+                                                            <AlertCircle
+                                                                onClick={() => hanldeReport(reason)}
+                                                                className='cursor-pointer'
+                                                            />
+                                                        </AlertDialogAction>
+                                                    </div>
                                                 ))}
                                             </div>
                                         </ScrollArea>
@@ -163,12 +157,12 @@ const ProfileHeader = ({
                 </div>
                 <span className='text-md font-normal mb-2 md:mb-0'>{fullName}</span>
 
-                <div className='flex flex-wrap md:flex-nowrap gap-4'>
-                    <div className='text-center mb-2 md:mb-0'>
+                <div className='flex flex-wrap gap-4'>
+                    <div className='text-center mb-2'>
                         <span className='block font-bold text-lg'>{posts?.length}</span>
                         <span className=''>Posts</span>
                     </div>
-                    <div className='text-center mb-2 md:mb-0'>
+                    <div className='text-center mb-2'>
                         <span className='block font-bold text-lg'>{followers?.length}</span>
                         <span className=''>Followers</span>
                     </div>
