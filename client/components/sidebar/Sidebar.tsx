@@ -68,7 +68,7 @@ const Sidebar = () => {
                                         {link.icon}
                                         {link.label}
                                         {link.link === '/notifications' && count > 0 && (
-                                            <div className='w-[10px] h-[10px] bg-red-600 rounded-full p-[10px] tex-xm flex items-center justify-center'>
+                                            <div className='w-[10px] h-[10px] dark:text-white bg-red-600 rounded-full p-[10px] tex-xm flex items-center justify-center'>
                                                 {count}
                                             </div>
                                         )}

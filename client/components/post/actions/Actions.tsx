@@ -76,7 +76,7 @@ const Actions = ({
                     setIsSaved={setIsSaved}
                     handleNotification={handleNotification}
                 />
-                <Share />
+                <Share id={id} />
             </div>
             {author.userId !== currentUser?.userId && (
                 <div>

@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { useUser } from '@/context/userContext';
+import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { Bookmark } from 'lucide-react';
-import React, { useState, useEffect, SetStateAction, Dispatch } from 'react';
+import React, { useEffect, SetStateAction, Dispatch } from 'react';
 
 const Save = ({
     postId,
@@ -34,7 +35,7 @@ const Save = ({
 
     return (
         <Button onClick={handleLikeButtonClick} variant='ghost'>
-            {isSaved ? <Bookmark fill='#fff' color='#fff' /> : <Bookmark />}
+            {isSaved ? <Bookmark fill='#3b82f6' /> : <Bookmark />}
         </Button>
     );
 };
