@@ -12,7 +12,7 @@ export function Suggetions({ handleNotification }: { handleNotification: (sender
     const getSuggestedUsers = async () => {
         try {
             // change this and inmpliment custom user suggetion algo
-            const { data } = await axios.get(`/api/users`);
+            const { data } = await axios.get(`/api/users/suggested`);
             setSuggestedusers(data);
         } catch (e) {
             const error = e as AxiosError;

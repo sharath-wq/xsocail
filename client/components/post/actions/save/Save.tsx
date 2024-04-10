@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { useUser } from '@/context/userContext';
-import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { Bookmark } from 'lucide-react';
 import React, { useEffect, SetStateAction, Dispatch } from 'react';

@@ -9,6 +9,32 @@ import { UserDataSource } from '../../interface/data-source/user-data-source';
 import { User } from './schema/user.schema';
 
 export class MongoDBUserDataSource implements UserDataSource {
+    async getAll(): Promise<[] | UserResponseModel[]> {
+        try {
+            const results = await User.find({ isAdmin: false });
+
+            return results.map((item) => ({
+                id: item.id,
+                bio: item.bio,
+                createdAt: item.createdAt,
+                email: item.email,
+                followers: item.followers,
+                following: item.following,
+                fullName: item.fullName,
+                isAdmin: item.isAdmin,
+                isBlocked: item.isBlocked,
+                posts: item.posts,
+                savedPosts: item.savedPosts,
+                verified: item.verified,
+                imageUrl: item.imageUrl,
+                username: item.username,
+                reportedBy: item.reportedBy,
+            }));
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
     async getUserBatch(userIds: string[]): Promise<NotificationUserModel[] | []> {
         try {
             const results = await User.find({ _id: { $in: userIds } });
@@ -167,7 +193,7 @@ export class MongoDBUserDataSource implements UserDataSource {
             console.log(error);
         }
     }
-    async getAll(query: string): Promise<UserResponseModel[]> {
+    async getSuggested(query: string): Promise<UserResponseModel[]> {
         try {
             let users;
             if (query) {

@@ -8,7 +8,8 @@ import {
 
 export interface UserDataSource {
     create(user: UserRequestModel): Promise<UserResponseModel | null>;
-    getAll(query: string): Promise<UserResponseModel[]>;
+    getSuggested(query: string): Promise<UserResponseModel[]>;
+    getAll(): Promise<UserResponseModel[] | []>;
     deleteOne(id: string): Promise<void>;
     updateOne(id: string, user: UpdateUserRequstModel): Promise<UserResponseModel | null>;
     getOne(id: string): Promise<UserResponseModel | null>;

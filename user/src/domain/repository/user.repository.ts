@@ -68,8 +68,13 @@ export class UserRepositoryImpl implements UserRepository {
         return result;
     }
 
-    async getUsers(query: string): Promise<UserResponseModel[] | []> {
-        const result = await this.UserDataSource.getAll(query);
+    async getAll(): Promise<UserResponseModel[] | []> {
+        const result = await this.UserDataSource.getAll();
+        return result;
+    }
+
+    async getSuggested(query: string): Promise<UserResponseModel[] | []> {
+        const result = await this.UserDataSource.getSuggested(query);
         return result;
     }
 

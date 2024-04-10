@@ -41,6 +41,7 @@ import ReportRouter from './api/routes/report.routes';
 import { CreateReport, GetAllReports, GetOneReport, UpdateReport } from './domain/use-cases/report';
 import { ReportRepository } from './domain/repository/report.repository';
 import { MongoDBReportDatasource } from './data/data-source/mongodb/mongodb-report-data-source';
+import { GetSuggestedUser } from './domain/use-cases/user/get-suggested-user.use-case';
 
 const start = async () => {
     if (!process.env.MONGO_URI) {
@@ -86,7 +87,8 @@ const start = async () => {
         new GetUserFriends(new UserRepositoryImpl(datasource)),
         new GetUserBatch(new UserRepositoryImpl(datasource)),
         new GetUserFollowing(new UserRepositoryImpl(datasource)),
-        new GetUserFollowers(new UserRepositoryImpl(datasource))
+        new GetUserFollowers(new UserRepositoryImpl(datasource)),
+        new GetSuggestedUser(new UserRepositoryImpl(datasource))
     );
 
     const ReportMiddleware = ReportRouter(
