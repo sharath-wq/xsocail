@@ -1,16 +1,14 @@
 import { UserResponseModel } from '../../entities/user';
-import { GetAllUserUseCase } from '../../interfaces/use-cases/user';
+import { GetAllUserUseCase, GetSuggestedUsersUseCase } from '../../interfaces/use-cases/user';
 import { UserRepository } from '../../interfaces/repository/user.repository';
 
-export class GetAllUsers implements GetAllUserUseCase {
+export class GetSuggestedUser implements GetSuggestedUsersUseCase {
     UserRepository: UserRepository;
 
     constructor(UserRepository: UserRepository) {
         this.UserRepository = UserRepository;
     }
-
-    async execute(): Promise<[] | UserResponseModel[]> {
-        const result = await this.UserRepository.getAll();
-        return result;
+    execute(query: string): Promise<UserResponseModel[] | []> {
+        return this.UserRepository.getSuggested(query);
     }
 }

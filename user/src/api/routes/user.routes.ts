@@ -20,6 +20,7 @@ import {
     GetUserFriendsUseCase,
     GetUserFollowersUseCase,
     GetUserFollowingUseCase,
+    GetSuggestedUsersUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { body } from 'express-validator';
 import { validateRequest } from '@scxsocialcommon/errors';
@@ -51,7 +52,8 @@ export default function UserRouter(
     getUserFriendsUseCase: GetUserFriendsUseCase,
     getUserBatchUseCase: GetUserBatchUseCase,
     getUserFollowingUseCase: GetUserFollowingUseCase,
-    getUserFollowersUseCase: GetUserFollowersUseCase
+    getUserFollowersUseCase: GetUserFollowersUseCase,
+    getSuggestedUsersUseCase: GetSuggestedUsersUseCase
 ) {
     const router = express.Router();
     const userController = new UserController(
@@ -75,10 +77,12 @@ export default function UserRouter(
         getUserFriendsUseCase,
         getUserBatchUseCase,
         getUserFollowersUseCase,
-        getUserFollowingUseCase
+        getUserFollowingUseCase,
+        getSuggestedUsersUseCase
     );
 
     router.get('/', async (req, res, next) => userController.getAllUser(req, res, next));
+    router.get('/suggested', async (req, res, next) => userController.getSuggestedUsers(req, res, next));
 
     router.post(
         '/',

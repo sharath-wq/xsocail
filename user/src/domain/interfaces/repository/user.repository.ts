@@ -10,7 +10,8 @@ export interface UserRepository {
     createUser(user: UserRequestModel): Promise<UserResponseModel | null>;
     deleteUser(id: string): Promise<void>;
     updateUser(id: string, data: UpdateUserRequstModel): Promise<UserResponseModel | null>;
-    getUsers(query: string): Promise<UserResponseModel[] | []>;
+    getSuggested(query: string): Promise<UserResponseModel[] | []>;
+    getAll(): Promise<UserResponseModel[] | []>;
     getUser(id: string): Promise<UserResponseModel | null>;
     getUserByEmail(email: string): Promise<UserModel | null>;
     getUserByUsername(username: string): Promise<UserResponseModel | null>;

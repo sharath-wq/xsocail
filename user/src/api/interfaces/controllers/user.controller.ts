@@ -20,4 +20,5 @@ export interface UserControllerInterface {
     getUserBatch(req: Request, res: Response, next: NextFunction): Promise<void>;
     getUserFollowing(req: Request, res: Response, next: NextFunction): Promise<void>;
     getUserFollowers(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getSuggestedUsers(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

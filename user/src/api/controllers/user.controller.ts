@@ -18,6 +18,7 @@ import {
     GetUserFriendsUseCase,
     GetUserFollowingUseCase,
     GetUserFollowersUseCase,
+    GetSuggestedUsersUseCase,
 } from '../../domain/interfaces/use-cases/user/index';
 import { UserRequestModel } from '../../domain/entities/user';
 import { UserControllerInterface } from '../interfaces/controllers/user.controller';
@@ -34,6 +35,8 @@ import { CloudinaryFile, cloudinary } from '../../config/cloudinary.config';
 import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
 import { GetUserBatchUseCase } from '../../domain/interfaces/use-cases/user/get-user-batch.use-case';
 import { NotificationCreatedPublisher } from '../events/pub/notification-created-publisher';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 
 export class UserController implements UserControllerInterface {
     createUserUseCase: CretaeUserUseCase;
@@ -57,6 +60,7 @@ export class UserController implements UserControllerInterface {
     getUserBatchUseCase: GetUserBatchUseCase;
     getUserFollowingUseCase: GetUserFollowingUseCase;
     getUserFollowersUseCase: GetUserFollowersUseCase;
+    getSuggestedUsersUseCase: GetSuggestedUsersUseCase;
 
     constructor(
         cretaeUserUseCase: CretaeUserUseCase,
@@ -79,7 +83,8 @@ export class UserController implements UserControllerInterface {
         getUserFriendsUseCase: GetUserFriendsUseCase,
         getUserBatchUseCase: GetUserBatchUseCase,
         getUserFollowingUseCase: GetUserFollowingUseCase,
-        getUserFollowersUseCase: GetUserFollowersUseCase
+        getUserFollowersUseCase: GetUserFollowersUseCase,
+        getSuggestedUsersUseCase: GetSuggestedUsersUseCase
     ) {
         this.createUserUseCase = cretaeUserUseCase;
         this.deleteUserUseCase = deleteUserUseCase;
@@ -102,7 +107,17 @@ export class UserController implements UserControllerInterface {
         this.getUserBatchUseCase = getUserBatchUseCase;
         this.getUserFollowingUseCase = getUserFollowingUseCase;
         this.getUserFollowersUseCase = getUserFollowersUseCase;
+        this.getSuggestedUsersUseCase = getSuggestedUsersUseCase;
     }
+    async getAllUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const users = await this.getAllUserUseCase.execute();
+            res.send(users);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getUserFollowing(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { userId } = req.params;
         try {
@@ -358,14 +373,14 @@ export class UserController implements UserControllerInterface {
             next(error);
         }
     }
-    async getAllUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getSuggestedUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
         let { q } = req.query;
         try {
             if (typeof q !== 'string') {
                 q = '';
             }
 
-            const users = await this.getAllUserUseCase.execute(q);
+            const users = await this.getSuggestedUsersUseCase.execute(q);
             res.send(users);
         } catch (error) {
             next(error);

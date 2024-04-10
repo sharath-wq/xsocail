@@ -238,9 +238,9 @@ const ChatPage = () => {
 
     return (
         currentUser && (
-            <div className='flex flex-col h-screen overflow-hidden sm:flex-row'>
-                <div className='sm:flex-2 border-r'>
-                    <div className='p-3 h-80vh'>
+            <div className='flex h-screen overflow-hidden'>
+                <div className='flex-[2] border-r'>
+                    <div className='p-3 h-[80vh]'>
                         <Input placeholder='Search for friends' />
                         <div className='h-full overflow-y-scroll no-scrollbar'>
                             {sortedConversations.map((c: any) => (
@@ -261,9 +261,9 @@ const ChatPage = () => {
                         </div>
                     </div>
                 </div>
-                <div className='sm:flex-5.5'>
+                <div className='flex-[5.5] '>
                     {currentChat ? (
-                        <div className='flex flex-col w-full justify-between relative p-3 sm:h-screen'>
+                        <div className='flex flex-col w-full justify-between relative p-3 h-screen'>
                             <div className='h-screen overflow-y-scroll no-scrollbar pr-3'>
                                 {messages.map((m: any) => (
                                     <div key={m.id} ref={scrollRef}>
@@ -319,6 +319,7 @@ const ChatPage = () => {
                                                 )}
                                             </CldUploadWidget>
                                         </div>
+
                                         <Button
                                             disabled={!imageUrl && !form.getValues().text ? true : false}
                                             className='px-4 py-2 rounded-md'
@@ -331,11 +332,11 @@ const ChatPage = () => {
                         </div>
                     ) : (
                         <div className='flex justify-center items-center h-full'>
-                            <Image src={noMessagesBg} alt={'No Messages'} />
+                            <Image src={noMessagesBg} alt={'No Messeges'} />
                         </div>
                     )}
                 </div>
-                <div className='sm:flex-2 border-l hidden sm:block'>
+                <div className='flex-[2] border-l hidden sm:block'>
                     <div className='h-screen p-3'>
                         <ChatOnline
                             onlineUsers={onlineUsers}
